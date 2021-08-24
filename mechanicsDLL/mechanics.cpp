@@ -168,7 +168,7 @@ private:
 			(lca12 - lca3ref).normalized(), 
 			((lca1ref - lca2ref).cross(lca12 - lca3ref)).normalized();
 
-		// calculate parameters for plane in LCA cs
+		// calculate parameters for plane in LCA cs ax+by+cz+d=0
 		abcd << 
 			_rotLCA.row(2)(0), 
 			_rotLCA.row(2)(1), 
@@ -454,7 +454,8 @@ public:
 
 			std::cout << "cp  " << std::endl;
 			std::cout << cpGlob << std::endl;
-			return 123;
+			
+			return CalculateCamber(cpGlob, wcnGlob, spnGlob,2);;
 
 			
 
@@ -479,6 +480,40 @@ public:
 		//# print(f"zadovoljstvo cambera je {camberUpObjective}, a sam camber iznosi {self.camberUp[-1]} u gornjoj poziciji kotaca")
 		//# print(f"zadovoljstvo cambera je {camberDownObjective}, a sam camber iznosi {self.camberDown[-1]} u donjoj poziciji kotaca")
 		//self.objectiveSum = 1 - self.camberUpObjective - self.camberDownObjective
+
+	int CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
+	{
+		// position tells the index at which the camber angle should be calculated
+		std::cout << position << '\n';
+		
+		int left_side=position;
+		int right_side=cp.rows()-1-position;
+
+
+		Eigen::Vector3f wheelAxis{
+			wcn.row(left_side)(0) - spn.row(left_side)(0),
+			wcn.row(left_side)(1) - spn.row(left_side)(1),
+			wcn.row(left_side)(2) - spn.row(left_side)(2)
+		};
+		Eigen::Vector3f groundNormal{
+			0,
+			-cp.row(right_side)(2) + cp.row(left_side)(2),
+			-cp.row(right_side)(1) - cp.row(left_side)(1)
+		};
+		// calculate ground with respect to which camber is measured
+		
+		float result = wheelAxis.dot(groundNormal) / wheelAxis.norm() / groundNormal.norm();
+		result = acos(result) * 180 / 3.14159f;
+
+		std::cout << "camber angle" << '\n';
+		std::cout << result << '\n';
+		
+		std::cout << "wheelAxis" << '\n';
+		std::cout << wheelAxis << '\n';	
+		std::cout << "groundNormal" << '\n';
+		std::cout << groundNormal << '\n';
+		return 23456;
+	}
 };
 
 
