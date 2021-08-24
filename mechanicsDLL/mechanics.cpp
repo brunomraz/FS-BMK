@@ -250,7 +250,7 @@ private:
 
 public:
 
-	int CalculateMovement()
+	float CalculateMovement()
 	{
 		Eigen::Matrix3f rotLCA;
 		Eigen::Matrix3f rotUCA;
@@ -454,8 +454,9 @@ public:
 
 			std::cout << "cp  " << std::endl;
 			std::cout << cpGlob << std::endl;
-			
-			return CalculateCamber(cpGlob, wcnGlob, spnGlob,2);;
+			std::cout << "CAMBER_______" << CalculateCamber(cpGlob, wcnGlob, spnGlob, 0) <<"  " << CalculateCamber(cpGlob, wcnGlob, spnGlob, 2) <<"  score  "<< CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob) << '\n';
+
+			return CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob);
 
 			
 
@@ -470,8 +471,23 @@ public:
 
 	}
 
-	double CalculateObjCamberScore()
+	float CalculateObjCamberScore(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn)
 	{
+		float camberUp{ CalculateCamber(cp, wcn, spn, 2) };
+		float camberDown{ CalculateCamber(cp, wcn, spn, 0) };
+
+		float wantedCamberUpHiLim = 90.978;
+		float wantedCamberDownHiLim = 92.653;
+
+		float peakWidth = 100;
+
+		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUpHiLim,2))*0.5f };
+		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDownHiLim,2)) *0.5f};
+
+		float objectiveSum = 1 - camberUpObj - camberDownObj;
+
+		return objectiveSum;
+
 
 	}
 		//# na temelju funkcije za normalnu razdiobu daje ocjenu(0...1) zadovoljstva za dobiveni camber angle
@@ -481,7 +497,7 @@ public:
 		//# print(f"zadovoljstvo cambera je {camberDownObjective}, a sam camber iznosi {self.camberDown[-1]} u donjoj poziciji kotaca")
 		//self.objectiveSum = 1 - self.camberUpObjective - self.camberDownObjective
 
-	int CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
+	float CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
 	{
 		// position tells the index at which the camber angle should be calculated
 		std::cout << position << '\n';
@@ -502,17 +518,17 @@ public:
 		};
 		// calculate ground with respect to which camber is measured
 		
-		float result = wheelAxis.dot(groundNormal) / wheelAxis.norm() / groundNormal.norm();
-		result = acos(result) * 180 / 3.14159f;
-
+		float camber = wheelAxis.dot(groundNormal) / wheelAxis.norm() / groundNormal.norm();
+		camber = acos(camber) * 180 / 3.14159f;
+		
 		std::cout << "camber angle" << '\n';
-		std::cout << result << '\n';
+		std::cout << camber << '\n';
 		
 		std::cout << "wheelAxis" << '\n';
 		std::cout << wheelAxis << '\n';	
 		std::cout << "groundNormal" << '\n';
 		std::cout << groundNormal << '\n';
-		return 23456;
+		return camber;
 	}
 };
 
