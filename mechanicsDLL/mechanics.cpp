@@ -452,9 +452,13 @@ public:
 			cpGlob << -temp3cp * wRadius + wcnGlob;
 
 
-			std::cout << "cp  " << std::endl;
-			std::cout << cpGlob << std::endl;
-			std::cout << "CAMBER_______" << CalculateCamber(cpGlob, wcnGlob, spnGlob, 0) <<"  " << CalculateCamber(cpGlob, wcnGlob, spnGlob, 2) <<"  score  "<< CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob) << '\n';
+
+			std::cout << "RC height________" << 
+				CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 0)
+				<<"  " << 
+				CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 2)
+				<<"  score  "<< 
+				CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob) << '\n';
 
 			return CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob);
 
@@ -476,13 +480,13 @@ public:
 		float camberUp{ CalculateCamber(cp, wcn, spn, 2) };
 		float camberDown{ CalculateCamber(cp, wcn, spn, 0) };
 
-		float wantedCamberUpHiLim = 90.978;
-		float wantedCamberDownHiLim = 92.653;
+		float wantedCamberUp = -2.65318;
+		float wantedCamberDown = -0.978327;
 
 		float peakWidth = 100;
 
-		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUpHiLim,2))*0.5f };
-		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDownHiLim,2)) *0.5f};
+		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2))*0.5f };
+		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) *0.5f};
 
 		float objectiveSum = 1 - camberUpObj - camberDownObj;
 
@@ -490,45 +494,270 @@ public:
 
 
 	}
-		//# na temelju funkcije za normalnu razdiobu daje ocjenu(0...1) zadovoljstva za dobiveni camber angle
-		//self.camberUpObjective = np.exp(-Suspension._peakWidthUp * np.square(self.camberUp[-1] - Suspension._wantedCamberUp_uplim)) * Suspension._upWeightFactor
-		//self.camberDownObjective = np.exp(-Suspension._peakWidthDown * np.square(self.camberDown[-1] - Suspension._wantedCamberDown_uplim)) * Suspension._downWeightFactor
-		//# print(f"zadovoljstvo cambera je {camberUpObjective}, a sam camber iznosi {self.camberUp[-1]} u gornjoj poziciji kotaca")
-		//# print(f"zadovoljstvo cambera je {camberDownObjective}, a sam camber iznosi {self.camberDown[-1]} u donjoj poziciji kotaca")
-		//self.objectiveSum = 1 - self.camberUpObjective - self.camberDownObjective
 
 	float CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
 	{
-		// position tells the index at which the camber angle should be calculated
-		std::cout << position << '\n';
 		
-		int left_side=position;
-		int right_side=cp.rows()-1-position;
-
+		int left_side = position;
+		int right_side = cp.rows() - 1 - position;
+				
 
 		Eigen::Vector3f wheelAxis{
-			wcn.row(left_side)(0) - spn.row(left_side)(0),
-			wcn.row(left_side)(1) - spn.row(left_side)(1),
-			wcn.row(left_side)(2) - spn.row(left_side)(2)
+			-wcn.row(left_side)(0) + cp.row(left_side)(0),
+			-wcn.row(left_side)(1) + cp.row(left_side)(1),
+			-wcn.row(left_side)(2) + cp.row(left_side)(2)
 		};
 		Eigen::Vector3f groundNormal{
 			0,
 			-cp.row(right_side)(2) + cp.row(left_side)(2),
 			-cp.row(right_side)(1) - cp.row(left_side)(1)
 		};
-		// calculate ground with respect to which camber is measured
+		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
 		
-		float camber = wheelAxis.dot(groundNormal) / wheelAxis.norm() / groundNormal.norm();
-		camber = acos(camber) * 180 / 3.14159f;
+		float temp1_wcnpr =
+			spn.row(left_side)(1) * groundNormal(1)
+			+ spn.row(left_side)(2) * groundNormal(2)
+			- wcn.row(left_side)(1) * groundNormal(1)
+			- wcn.row(left_side)(2) * groundNormal(2);
+
+		float temp2_wcnpr =
+			groundNormal(1) * groundNormal(1) + 
+			groundNormal(2) * groundNormal(2);
+
+		Eigen::Vector3f wcnpr{
+			wcn.row(left_side)(0),
+			wcn.row(left_side)(1) + groundNormal(1) * temp1_wcnpr / temp2_wcnpr,
+			wcn.row(left_side)(2) + groundNormal(2) * temp1_wcnpr / temp2_wcnpr
+		};
+
+
+		float camber =
+			(wcnpr - (Eigen::Vector3f)wcn.row(left_side)).norm() /
+			((Eigen::Vector3f)spn.row(left_side) - 
+				(Eigen::Vector3f)wcn.row(left_side)).norm();
+
+
 		
-		std::cout << "camber angle" << '\n';
-		std::cout << camber << '\n';
+		// tests if camber is negative, if it is it returns negative angle
+		if ((wcnpr - (Eigen::Vector3f)wcn.row(left_side))(2) > 0)
+			return -asin(camber) * 180 / 3.14159f;
+		// if camber is not negative, returns positive angle
+		else
+			return asin(camber) * 180 / 3.14159f;
+
+		 
+	}
+
+	float CalculateToe(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
+	{
+		// positive toe angle for toe in and negative for toe out
+		Eigen::Vector3f wheelAxis = wcn.row(position) - spn.row(position);
+		Eigen::Vector3f refAxis{
+			0,
+			wcn.row(position)(1) - spn.row(position)(1),
+			wcn.row(position)(2) - spn.row(position)(2)
+		};
+
+		std::cout << "wheel axis coords_________ ";
+		std::cout << wheelAxis << "\n";
+		std::cout << "wheel axis norm_________ ";
+		std::cout << wheelAxis.norm() << "\n";
+
+
+		std::cout << "ref axis coords_________ ";
+		std::cout << refAxis << "\n";
+		std::cout << "ref axis norm_________ ";
+		std::cout << refAxis.norm() << "\n";
+
+		float toe = acos(refAxis.norm() / wheelAxis.norm());
 		
-		std::cout << "wheelAxis" << '\n';
-		std::cout << wheelAxis << '\n';	
-		std::cout << "groundNormal" << '\n';
-		std::cout << groundNormal << '\n';
-		return camber;
+		if (wcn.row(position)(0) < spn.row(position)(0)) // toe out case
+			return -toe * 180 / 3.14159f;
+		else // toe in case
+			return toe * 180 / 3.14159f;
+
+	}
+
+	float CalculateCaster(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, int position)
+	{
+		float caster =
+			atan2f(
+				(-lca3.row(position)(0) + uca3.row(position)(0))
+				, (-uca3.row(position)(2) + lca3.row(position)(2)));
+		return caster * 180 / 3.14159f;
+	}
+
+	float CalculateRollCentreHeight(Eigen::Vector3f& lca1L, Eigen::Vector3f& lca2L, Eigen::MatrixXf& lca3Lmat, Eigen::Vector3f& uca1L, Eigen::Vector3f& uca2L, Eigen::MatrixXf& uca3Lmat, Eigen::MatrixXf& cpLmat, int position)
+	{
+
+		int L = position;                  // L means left
+		int R = cpLmat.rows() - 1 - position;  // R means right
+
+		float slopePrecision{ 0.001f }; // if difference between slopes is less than this value, than they are considered parallel
+
+		Eigen::Vector3f lca3L{ lca3Lmat.row(L) };
+		Eigen::Vector3f uca3L{ uca3Lmat.row(L) };
+		Eigen::Vector3f cpL{ cpLmat.row(L) };
+
+		Eigen::Vector3f lca1R{ lca1L(0),-lca1L(1),lca1L(2) };
+		Eigen::Vector3f lca2R{ lca2L(0),-lca2L(1),lca2L(2) };
+		Eigen::Vector3f lca3R{ lca3Lmat.row(R)(0),-lca3Lmat.row(R)(1),lca3Lmat.row(R)(2) };
+
+		Eigen::Vector3f uca1R{ uca1L(0),-uca1L(1),uca1L(2) };
+		Eigen::Vector3f uca2R{ uca2L(0),-uca2L(1),uca2L(2) };
+		Eigen::Vector3f uca3R{ uca3Lmat.row(R)(0),-uca3Lmat.row(R)(1),uca3Lmat.row(R)(2) };
+		Eigen::Vector3f cpR{ cpLmat.row(R)(0),-cpLmat.row(R)(1),cpLmat.row(R)(2) };
+
+
+		Eigen::Vector3f lca12Lpr{
+			cpL(0) / 2 + cpR(0) / 2,
+			lca1L(1) - (lca1L(1) - lca2L(1)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1L(0)) / (lca1L(0) - lca2L(0)),
+			lca1L(2) - (lca1L(2) - lca2L(2)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1L(0)) / (lca1L(0) - lca2L(0)) };
+
+
+
+
+
+		Eigen::Vector3f uca12Lpr{
+			cpL(0) / 2 + cpR(0) / 2,
+			uca1L(1) - (uca1L(1) - uca2L(1)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1L(0)) / (uca1L(0) - uca2L(0)),
+			uca1L(2) - (uca1L(2) - uca2L(2)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1L(0)) / (uca1L(0) - uca2L(0)) };
+
+		Eigen::Vector3f lca12Rpr{
+			cpL(0) / 2 + cpR(0) / 2,
+			lca1R(1) - (lca1R(1) - lca2R(1)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1R(0)) / (lca1R(0) - lca2R(0)),
+			lca1R(2) - (lca1R(2) - lca2R(2)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1R(0)) / (lca1R(0) - lca2R(0)) };
+
+		Eigen::Vector3f uca12Rpr{
+			cpL(0) / 2 + cpR(0) / 2,
+			uca1R(1) - (uca1R(1) - uca2R(1)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1R(0)) / (uca1R(0) - uca2R(0)),
+			uca1R(2) - (uca1R(2) - uca2R(2)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1R(0)) / (uca1R(0) - uca2R(0)) };
+
+		float aLCAL = (lca3L(1) - lca12Lpr(1)) / (lca3L(2) - lca12Lpr(2));
+		float bLCAL = -aLCAL * lca12Lpr(2) + lca12Lpr(1);
+
+		float aUCAL = (uca3L(1) - uca12Lpr(1)) / (uca3L(2) - uca12Lpr(2));
+		float bUCAL = -aUCAL * uca12Lpr(2) + uca12Lpr(1);
+
+		float aLCAR = (lca3R(1) - lca12Rpr(1)) / (lca3R(2) - lca12Rpr(2));
+		float bLCAR = -aLCAR * lca12Rpr(2) + lca12Rpr(1);
+
+		float aUCAR = (uca3R(1) - uca12Rpr(1)) / (uca3R(2) - uca12Rpr(2));
+		float bUCAR = -aUCAR * uca12Rpr(2) + uca12Rpr(1);
+
+
+		//float aLCAL;
+		//float aUCAL;
+		//float aLCAR;
+		//float aUCAR;
+
+		//float bLCAL;
+		//float bUCAL;
+		//float bLCAR;
+		//float bUCAR;
+
+
+
+
+		//
+		//// lambda function for calculating slope of LCA and UCA lines after intersecting planes
+		//auto aSlope = [](Eigen::Vector3f& ca1, Eigen::Vector3f& ca2, Eigen::Vector3f& ca3)  // ca short for control arm
+		//{
+		//	float aCA =
+		//		((ca1(0) - ca2(0)) * (ca1(1) - ca3(1)) - (ca1(0) - ca3(0)) * (ca1(1) - ca2(1))) /
+		//		((ca1(0) - ca2(0)) * (ca1(2) - ca3(2)) - (ca1(0) - ca3(0)) * (ca1(2) - ca2(2)));
+		//	return aCA;
+		//};
+
+		//auto bSegment = [&cpL, &cpR](Eigen::Vector3f& ca1, Eigen::Vector3f& ca2, Eigen::Vector3f& ca3)  // ca short for control arm
+		//{
+		//	float bLCAL_temp1 =
+		//		-ca1(0) * ca2(1) * ca3(2) + ca1(0) * ca2(2) * ca3(1) + ca1(1) * ca2(0) * ca3(2);
+		//	float bLCAL_temp2 =
+		//		-ca1(1) * ca2(2) * ca3(0) - ca1(2) * ca2(0) * ca3(1) + ca1(2) * ca2(1) * ca3(0);
+		//	float bLCAL_temp3 =
+		//		(cpL(0) + cpR(0)) / 2 *
+		//		(
+		//			ca1(1) * ca2(2) - ca1(1) * ca3(2) - ca1(2) * ca2(1) +
+		//			ca1(2) * ca3(1) + ca2(1) * ca3(2) - ca2(2) * ca3(1)
+		//			);
+		//	float bLCAL_temp4 =
+		//		ca1(0) * ca2(2) - ca1(0) * ca3(2) - ca1(2) * ca2(0) +
+		//		ca1(2) * ca3(0) + ca2(0) * ca3(2) - ca2(2) * ca3(0);
+
+		//	return (bLCAL_temp1 + bLCAL_temp2 + bLCAL_temp3) / bLCAL_temp4;
+		//};
+		//
+		//aLCAL = aSlope(lca1L, lca2L, lca3L);
+		//std::cout << "aLCAL____ " << aLCAL << "\n";
+		//aUCAL = aSlope(uca1L, uca2L, uca3L);
+		//aLCAR = aSlope(lca1R, lca2R, lca3R);
+		//aUCAR = aSlope(uca1R, uca2R, uca3R);
+
+		//bLCAL = bSegment(lca1L, lca2L, lca3L);
+		//std::cout << "bLCAL____ " << bLCAL << "\n";
+
+		//bUCAL = bSegment(uca1L, uca2L, uca3L);
+		//bLCAR = bSegment(lca1R, lca2R, lca3R);
+		//bUCAR = bSegment(uca1R, uca2R, uca3R);
+
+
+
+		float aICL;
+		float aICR;
+		float bICL;
+		float bICR;
+
+		// case if LEFT LCA and UCA are parallel
+		if (abs(aLCAL - aUCAL) < slopePrecision)
+		{
+			aICL = aLCAL;
+			bICL = cpL(1) - aLCAL * cpL(2);
+		}
+		// case if LEFT LCA and UCA are NOT parallel
+		else
+		{
+			float ICLy = (aLCAL * bUCAL - aUCAL * bLCAL) / (aLCAL - aUCAL);
+			std::cout << "ICLy_____ " << ICLy << "\n";
+			float ICLz = (-bLCAL + bUCAL) / (aLCAL - aUCAL);
+			std::cout << "ICLz_____ " << ICLz << "\n";
+
+
+			aICL = (ICLy - cpL(1)) / (ICLz - cpL(2));
+			bICL = -cpL(2) * (ICLy - cpL(1)) / (ICLz - cpL(2)) + cpL(1);
+		}
+
+		
+		// case if RIGHT LCA and UCA are parallel
+		if (abs(aLCAR - aUCAR) < slopePrecision)
+		{
+			aICR = aLCAR;
+			bICR = cpR(1) - aLCAR * cpR(2);
+		}
+		// case if RIGHT LCA and UCA are NOT parallel
+		else
+		{
+			float ICRy = (aLCAR * bUCAR - aUCAR * bLCAR) / (aLCAR - aUCAR);
+			std::cout << "ICRy_____ " << ICRy << "\n";
+			float ICRz = (-bLCAR + bUCAR) / (aLCAR - aUCAR);
+			std::cout << "ICRz_____ " << ICRz << "\n";
+
+
+			aICR = (ICRy - cpR(1)) / (ICRz - cpR(2));
+			bICR = -cpR(2) * (ICRy - cpR(1)) / (ICRz - cpR(2)) + cpR(1);
+		}
+
+		float RCz = (bICL - bICR) / (aICR - aICL);
+		std::cout << "RCz_____ " << RCz << "\n";
+		float RCy = aICL * (bICL - bICR) / (aICR - aICL) + bICL;
+		std::cout << "RCy_____ " << RCy << "\n";
+
+		float rc_height =
+			((cpR(1) - cpL(1)) * (cpL(2) - RCz) -
+				(cpL(1) - RCy) * (cpR(2) - cpL(2))) /
+			sqrt(pow((cpR(2) - cpL(2)), 2) + pow((cpR(1) - cpL(1)), 2));
+
+		return rc_height;
 	}
 };
 
@@ -545,7 +774,7 @@ double optimisation_obj_res()
 		-2234.8, -411.45, -194.6,
 		-2225, -582, -220,
 		-2143.6, -620.5, -220.07,
-		-2143.6, -595.5, -219.34,
+		-2143.6, -595.5, -219.34,  // biti ce minus toe
 		210, 30, 30, 1,
 		10, 0.01
 	};

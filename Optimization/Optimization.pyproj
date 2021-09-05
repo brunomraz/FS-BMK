@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>Optimization</Name>
     <RootNamespace>Optimization</RootNamespace>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
