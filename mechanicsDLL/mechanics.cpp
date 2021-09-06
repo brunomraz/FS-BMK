@@ -498,48 +498,48 @@ public:
 	float CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
 	{
 		
-		int left_side = position;
-		int right_side = cp.rows() - 1 - position;
+		int L = position;
+		int R = cp.rows() - 1 - position;
 				
 
 		Eigen::Vector3f wheelAxis{
-			-wcn.row(left_side)(0) + cp.row(left_side)(0),
-			-wcn.row(left_side)(1) + cp.row(left_side)(1),
-			-wcn.row(left_side)(2) + cp.row(left_side)(2)
+			-wcn.row(L)(0) + cp.row(L)(0),
+			-wcn.row(L)(1) + cp.row(L)(1),
+			-wcn.row(L)(2) + cp.row(L)(2)
 		};
 		Eigen::Vector3f groundNormal{
 			0,
-			-cp.row(right_side)(2) + cp.row(left_side)(2),
-			-cp.row(right_side)(1) - cp.row(left_side)(1)
+			-cp.row(R)(2) + cp.row(L)(2),
+			-cp.row(R)(1) - cp.row(L)(1)
 		};
 		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
 		
 		float temp1_wcnpr =
-			spn.row(left_side)(1) * groundNormal(1)
-			+ spn.row(left_side)(2) * groundNormal(2)
-			- wcn.row(left_side)(1) * groundNormal(1)
-			- wcn.row(left_side)(2) * groundNormal(2);
+			spn.row(L)(1) * groundNormal(1)
+			+ spn.row(L)(2) * groundNormal(2)
+			- wcn.row(L)(1) * groundNormal(1)
+			- wcn.row(L)(2) * groundNormal(2);
 
 		float temp2_wcnpr =
 			groundNormal(1) * groundNormal(1) + 
 			groundNormal(2) * groundNormal(2);
 
 		Eigen::Vector3f wcnpr{
-			wcn.row(left_side)(0),
-			wcn.row(left_side)(1) + groundNormal(1) * temp1_wcnpr / temp2_wcnpr,
-			wcn.row(left_side)(2) + groundNormal(2) * temp1_wcnpr / temp2_wcnpr
+			wcn.row(L)(0),
+			wcn.row(L)(1) + groundNormal(1) * temp1_wcnpr / temp2_wcnpr,
+			wcn.row(L)(2) + groundNormal(2) * temp1_wcnpr / temp2_wcnpr
 		};
 
 
 		float camber =
-			(wcnpr - (Eigen::Vector3f)wcn.row(left_side)).norm() /
-			((Eigen::Vector3f)spn.row(left_side) - 
-				(Eigen::Vector3f)wcn.row(left_side)).norm();
+			(wcnpr - (Eigen::Vector3f)wcn.row(L)).norm() /
+			((Eigen::Vector3f)spn.row(L) - 
+				(Eigen::Vector3f)wcn.row(L)).norm();
 
 
 		
 		// tests if camber is negative, if it is it returns negative angle
-		if ((wcnpr - (Eigen::Vector3f)wcn.row(left_side))(2) > 0)
+		if ((wcnpr - (Eigen::Vector3f)wcn.row(L))(2) > 0)
 			return -asin(camber) * 180 / 3.14159f;
 		// if camber is not negative, returns positive angle
 		else
@@ -614,10 +614,6 @@ public:
 			lca1L(1) - (lca1L(1) - lca2L(1)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1L(0)) / (lca1L(0) - lca2L(0)),
 			lca1L(2) - (lca1L(2) - lca2L(2)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1L(0)) / (lca1L(0) - lca2L(0)) };
 
-
-
-
-
 		Eigen::Vector3f uca12Lpr{
 			cpL(0) / 2 + cpR(0) / 2,
 			uca1L(1) - (uca1L(1) - uca2L(1)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1L(0)) / (uca1L(0) - uca2L(0)),
@@ -646,63 +642,6 @@ public:
 		float bUCAR = -aUCAR * uca12Rpr(2) + uca12Rpr(1);
 
 
-		//float aLCAL;
-		//float aUCAL;
-		//float aLCAR;
-		//float aUCAR;
-
-		//float bLCAL;
-		//float bUCAL;
-		//float bLCAR;
-		//float bUCAR;
-
-
-
-
-		//
-		//// lambda function for calculating slope of LCA and UCA lines after intersecting planes
-		//auto aSlope = [](Eigen::Vector3f& ca1, Eigen::Vector3f& ca2, Eigen::Vector3f& ca3)  // ca short for control arm
-		//{
-		//	float aCA =
-		//		((ca1(0) - ca2(0)) * (ca1(1) - ca3(1)) - (ca1(0) - ca3(0)) * (ca1(1) - ca2(1))) /
-		//		((ca1(0) - ca2(0)) * (ca1(2) - ca3(2)) - (ca1(0) - ca3(0)) * (ca1(2) - ca2(2)));
-		//	return aCA;
-		//};
-
-		//auto bSegment = [&cpL, &cpR](Eigen::Vector3f& ca1, Eigen::Vector3f& ca2, Eigen::Vector3f& ca3)  // ca short for control arm
-		//{
-		//	float bLCAL_temp1 =
-		//		-ca1(0) * ca2(1) * ca3(2) + ca1(0) * ca2(2) * ca3(1) + ca1(1) * ca2(0) * ca3(2);
-		//	float bLCAL_temp2 =
-		//		-ca1(1) * ca2(2) * ca3(0) - ca1(2) * ca2(0) * ca3(1) + ca1(2) * ca2(1) * ca3(0);
-		//	float bLCAL_temp3 =
-		//		(cpL(0) + cpR(0)) / 2 *
-		//		(
-		//			ca1(1) * ca2(2) - ca1(1) * ca3(2) - ca1(2) * ca2(1) +
-		//			ca1(2) * ca3(1) + ca2(1) * ca3(2) - ca2(2) * ca3(1)
-		//			);
-		//	float bLCAL_temp4 =
-		//		ca1(0) * ca2(2) - ca1(0) * ca3(2) - ca1(2) * ca2(0) +
-		//		ca1(2) * ca3(0) + ca2(0) * ca3(2) - ca2(2) * ca3(0);
-
-		//	return (bLCAL_temp1 + bLCAL_temp2 + bLCAL_temp3) / bLCAL_temp4;
-		//};
-		//
-		//aLCAL = aSlope(lca1L, lca2L, lca3L);
-		//std::cout << "aLCAL____ " << aLCAL << "\n";
-		//aUCAL = aSlope(uca1L, uca2L, uca3L);
-		//aLCAR = aSlope(lca1R, lca2R, lca3R);
-		//aUCAR = aSlope(uca1R, uca2R, uca3R);
-
-		//bLCAL = bSegment(lca1L, lca2L, lca3L);
-		//std::cout << "bLCAL____ " << bLCAL << "\n";
-
-		//bUCAL = bSegment(uca1L, uca2L, uca3L);
-		//bLCAR = bSegment(lca1R, lca2R, lca3R);
-		//bUCAR = bSegment(uca1R, uca2R, uca3R);
-
-
-
 		float aICL;
 		float aICR;
 		float bICL;
@@ -718,9 +657,7 @@ public:
 		else
 		{
 			float ICLy = (aLCAL * bUCAL - aUCAL * bLCAL) / (aLCAL - aUCAL);
-			std::cout << "ICLy_____ " << ICLy << "\n";
 			float ICLz = (-bLCAL + bUCAL) / (aLCAL - aUCAL);
-			std::cout << "ICLz_____ " << ICLz << "\n";
 
 
 			aICL = (ICLy - cpL(1)) / (ICLz - cpL(2));
@@ -738,9 +675,7 @@ public:
 		else
 		{
 			float ICRy = (aLCAR * bUCAR - aUCAR * bLCAR) / (aLCAR - aUCAR);
-			std::cout << "ICRy_____ " << ICRy << "\n";
 			float ICRz = (-bLCAR + bUCAR) / (aLCAR - aUCAR);
-			std::cout << "ICRz_____ " << ICRz << "\n";
 
 
 			aICR = (ICRy - cpR(1)) / (ICRz - cpR(2));
@@ -748,9 +683,7 @@ public:
 		}
 
 		float RCz = (bICL - bICR) / (aICR - aICL);
-		std::cout << "RCz_____ " << RCz << "\n";
 		float RCy = aICL * (bICL - bICR) / (aICR - aICL) + bICL;
-		std::cout << "RCy_____ " << RCy << "\n";
 
 		float rc_height =
 			((cpR(1) - cpL(1)) * (cpL(2) - RCz) -
@@ -758,6 +691,20 @@ public:
 			sqrt(pow((cpR(2) - cpL(2)), 2) + pow((cpR(1) - cpL(1)), 2));
 
 		return rc_height;
+	}
+
+	float CalculateCasterTrail(Eigen::MatrixXf& lca3Mat, Eigen::MatrixXf& uca3Mat, Eigen::MatrixXf& spnMat, Eigen::MatrixXf& wcnMat, Eigen::MatrixXf& cpMat, int position)
+	{
+		int L = position;                  // L means left
+		int R = cpMat.rows() - 1 - position;  // R means right
+
+		Eigen::Vector3f groundNormal{
+			0,
+			-cpMat.row(R)(2) + cpMat.row(L)(2),
+			-cpMat.row(R)(1) - cpMat.row(L)(1)
+		};
+
+
 	}
 };
 
@@ -774,7 +721,7 @@ double optimisation_obj_res()
 		-2234.8, -411.45, -194.6,
 		-2225, -582, -220,
 		-2143.6, -620.5, -220.07,
-		-2143.6, -595.5, -219.34,  // biti ce minus toe
+		-2143.6, -595.5, -219.34,  
 		210, 30, 30, 1,
 		10, 0.01
 	};
