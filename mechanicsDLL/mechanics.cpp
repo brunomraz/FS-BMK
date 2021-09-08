@@ -453,10 +453,10 @@ public:
 
 
 
-			std::cout << "RC height________" << 
-				CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 0)
+			std::cout << "caster trail________" << 
+				CalculateCasterTrail(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, 0)
 				<<"  " << 
-				CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 2)
+				CalculateCasterTrail(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, 2)
 				<<"  score  "<< 
 				CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob) << '\n';
 
@@ -698,12 +698,80 @@ public:
 		int L = position;                  // L means left
 		int R = cpMat.rows() - 1 - position;  // R means right
 
-		Eigen::Vector3f groundNormal{
+		Eigen::Vector3f cpL{ cpMat.row(L) };
+		Eigen::Vector3f cpR{ cpMat.row(R) };
+		Eigen::Vector3f wcn{ wcnMat.row(L) };
+		Eigen::Vector3f spn{ spnMat.row(L) };
+		Eigen::Vector3f lca3L{ lca3Mat.row(L) };
+		Eigen::Vector3f uca3L{ uca3Mat.row(L) };
+
+
+
+		Eigen::Vector3f grndNormal{
 			0,
-			-cpMat.row(R)(2) + cpMat.row(L)(2),
-			-cpMat.row(R)(1) - cpMat.row(L)(1)
+			-cpR(2) + cpL(2),
+			-cpR(1) - cpL(1)
 		};
 
+		float wcnpr_temp1 =
+			grndNormal(0) * cpL(0) - grndNormal(0) * wcn(0) +
+			grndNormal(1) * cpL(1) - grndNormal(1) * wcn(1) +
+			grndNormal(2) * cpL(2) - grndNormal(2) * wcn(2);
+
+		float wcnpr_temp2 =
+			grndNormal(0) * grndNormal(0) +
+			grndNormal(1) * grndNormal(1) +
+			grndNormal(2) * grndNormal(2);
+
+		Eigen::Vector3f wcnpr{
+			grndNormal(0) * wcnpr_temp1 / wcnpr_temp2 + wcn(0),
+			grndNormal(1) * wcnpr_temp1 / wcnpr_temp2 + wcn(1),
+			grndNormal(2) * wcnpr_temp1 / wcnpr_temp2 + wcn(2)
+		};
+
+		float spnpr_temp1 =
+			grndNormal(0) * cpL(0) - grndNormal(0) * wcn(0) +
+			grndNormal(1) * cpL(1) - grndNormal(1) * wcn(1) +
+			grndNormal(2) * cpL(2) - grndNormal(2) * wcn(2);
+
+		float spnpr_temp2 =
+			grndNormal(0) * grndNormal(0) +
+			grndNormal(1) * grndNormal(1) +
+			grndNormal(2) * grndNormal(2);
+
+		Eigen::Vector3f spnpr{
+			grndNormal(0) * spnpr_temp1 / spnpr_temp2 + spn(0),
+			grndNormal(1) * spnpr_temp1 / spnpr_temp2 + spn(1),
+			grndNormal(2) * spnpr_temp1 / spnpr_temp2 + spn(2)
+		};
+
+		float l3u3intrs_temp1 =
+			-grndNormal(0) * cpL(0) + grndNormal(0) * lca3L(0)
+			- grndNormal(1) * cpL(1) + grndNormal(1) * lca3L(1)
+			- grndNormal(2) * cpL(2) + grndNormal(2) * lca3L(2);
+
+		float l3u3intrs_temp2 =
+			grndNormal(0) * lca3L(0) - grndNormal(0) * uca3L(0) +
+			grndNormal(1) * lca3L(1) - grndNormal(1) * uca3L(1) +
+			grndNormal(2) * lca3L(2) - grndNormal(2) * uca3L(2);
+
+		Eigen::Vector3f l3u3intrs{
+			lca3L(0) - (lca3L(0) - uca3L(0)) * l3u3intrs_temp1 / l3u3intrs_temp2,
+			lca3L(1) - (lca3L(1) - uca3L(1)) * l3u3intrs_temp1 / l3u3intrs_temp2,
+			lca3L(2) - (lca3L(2) - uca3L(2)) * l3u3intrs_temp1 / l3u3intrs_temp2
+		};
+
+		float caster_trail =
+			(l3u3intrs - spnpr).cross(l3u3intrs - wcnpr).norm() / (wcnpr - spnpr).norm();
+
+
+		// positive caster trail
+		if ((l3u3intrs - spnpr).cross(l3u3intrs - wcnpr)(2) > 0)
+			return caster_trail;
+
+		// negative caster trail
+		else
+			return -caster_trail;
 
 	}
 };
