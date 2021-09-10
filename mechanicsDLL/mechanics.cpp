@@ -131,6 +131,29 @@ public:
 		steerIncr = steerIncrin;
 		precision = precisionin;
 
+		//std::cout << "lca1ref\n" << lca1ref << "\n";
+		//std::cout << "lca2ref\n" << lca2ref << "\n";
+		//std::cout << "lca3ref\n" << lca3ref << "\n";
+		//
+		//std::cout << "uca1ref\n" << uca1ref << "\n";
+		//std::cout << "uca2ref\n" << uca2ref << "\n";
+		//std::cout << "uca3ref\n" << uca3ref << "\n";
+		//
+		//std::cout << "tr1ref\n" << tr1ref << "\n";
+		//std::cout << "tr2ref\n" << tr2ref << "\n";
+		//
+		//std::cout << "spnref\n" << spnref << "\n";
+		//std::cout << "wcnref\n" << wcnref << "\n";
+
+		//std::cout << "wradius " << wRadius << "\n";
+		//std::cout << "wVert " << wVert << "\n";
+		//std::cout << "wSteer " << wSteer << "\n";
+		//std::cout << "vertIncr " << vertIncr << "\n";
+		//std::cout << "steerIncr " << steerIncr << "\n";
+		//std::cout << "precision " << precision << "\n";
+
+
+
 	}
 
 
@@ -453,7 +476,13 @@ public:
 
 
 
-			std::cout << "caster trail________" << 
+			std::cout 
+				<< "roll centre trail________" <<
+				CalculateRollCentreHeight(lca1ref,lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 0)
+				<< "  " <<
+				CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 2)
+				<< "  score  "
+				<< "caster trail________" << 
 				CalculateCasterTrail(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, 0)
 				<<"  " << 
 				CalculateCasterTrail(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, 2)
@@ -774,27 +803,48 @@ public:
 			return -caster_trail;
 
 	}
+
+	float CalculateKingpinAngle(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, int position)
+	{
+
+	}
 };
 
 
-double optimisation_obj_res()
+double optimisation_obj_res(float *hardpoints, float wRadiusin, float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin)
 {
+
 	Suspension susp{
-		-2038.666, -411.709, -132.316,
-		-2241.147, -408.195, -126.205,
-		-2135, -600, -140,
-		-2040.563, -416.249, -275.203,
-		-2241.481, -417.314, -270.739,
-		-2153, -578, -315,
-		-2234.8, -411.45, -194.6,
-		-2225, -582, -220,
-		-2143.6, -620.5, -220.07,
-		-2143.6, -595.5, -219.34,  
-		210, 30, 30, 1,
-		10, 0.01
+
+		hardpoints[0], hardpoints[1],hardpoints[2],
+		hardpoints[3], hardpoints[4],hardpoints[5],
+		hardpoints[6], hardpoints[7],hardpoints[8],
+		hardpoints[9], hardpoints[10],hardpoints[11],
+		hardpoints[12], hardpoints[13],hardpoints[14],
+		hardpoints[15], hardpoints[16],hardpoints[17],
+		hardpoints[18], hardpoints[19],hardpoints[20],
+		hardpoints[21], hardpoints[22],hardpoints[23],
+		hardpoints[24], hardpoints[25],hardpoints[26],
+		hardpoints[27], hardpoints[28],hardpoints[29],
+		wRadiusin, wVertin, wSteerin, 
+		vertIncrin, steerIncrin, precisionin
+		
 	};
 
 	int i = susp.CalculateMovement();
 
 	return i;
+}
+
+void test_py(double *data, double *dataOut)
+{
+	std::cout << "test array\n";
+	for (int i = 0; i < 5; i++)
+	{
+		dataOut[i] = data[i] + 2;
+		std::cout << data[i] << "\n";
+	}
+
+
+	
 }
