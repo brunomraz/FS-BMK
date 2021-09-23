@@ -4,31 +4,24 @@
 #include <Eigen/Geometry>
 #include <iostream>
 
-void test_f(double* data1, double *dataOut)
+void test_f(float& anti)
 {
-	for (int i =0; i<5; i++)
-	{
-		dataOut[i] = data1[i] * 2;
-	}
+	anti = 5.0f;
 }
 
 
 int main()
 {
-	double data[] = {1.0, 2.0, 3.0, 4.0, 5.0};
-	double dataModify[5];
-	
-	for (int i = 0; i < 5; i++)
-	{
-		std::cout << dataModify[i] << "\n";
-	}
+	float params[5];
 
-	test_f(data, dataModify);
+	for (float param : params)
+		std::cout << param << "\n";
 
-	for (int i = 0; i < 5; i++)
-	{
-		std::cout << dataModify[i] << "\n";
-	}
+	test_f(params[4]);
+
+	for (float param : params)
+		std::cout << param << "\n";
+
 
 }
 

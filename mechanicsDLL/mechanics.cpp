@@ -47,6 +47,22 @@ private:
 	// precision- at what value has the iterator converged, in percentage- 0...1
 	float precision;
 
+	float wheelbase;
+	float cogHeight;
+	float frontDriveBias;
+	float rearDriveBias{ 1.0f - frontDriveBias };
+
+	float frontBrakeBias;
+	float rearBrakeBias{ 1.0f - frontBrakeBias };
+
+	// front or rear suspension 0 for front, 1 for rear
+	int suspPos;
+	// outboard or inboard drive 0 for outboard, 1 for inboard
+	int drivePos;
+	// outboard or inboard brakes 0 for outboard, 1 for inboard
+	int brakePos;
+
+
 	// derived values
 
 	Eigen::Vector3f lca12;
@@ -107,7 +123,10 @@ public:
 		float tr2xin, float tr2yin, float tr2zin,
 		float wcnxin, float wcnyin, float wcnzin,
 		float spnxin, float spnyin, float spnzin,
-		float wRadiusin, float wVertin, float wSteerin,
+		float wRadiusin,
+		float wheelbasein, float cogHeightin, float frontDriveBiasin,
+		float frontBrakeBiasin, int suspPosin, int drivePosin, int brakePosin,
+		float wVertin, float wSteerin,
 		int vertIncrin, int steerIncrin, float precisionin)
 	{
 		lca1ref << lca1xin, lca1yin, lca1zin;
@@ -125,35 +144,24 @@ public:
 		spnref << spnxin, spnyin, spnzin;
 
 		wRadius = wRadiusin;
+
+		wheelbase = wheelbasein;
+		cogHeight = cogHeightin;
+		frontDriveBias = frontDriveBiasin;
+		rearDriveBias = 1.0f - frontDriveBias;
+
+		frontBrakeBias = frontBrakeBiasin;
+		rearBrakeBias = 1.0f - frontBrakeBias;
+
+		suspPos = suspPosin;
+		drivePos = drivePosin;
+		brakePos = brakePosin;
+
 		wVert = wVertin;
 		wSteer = wSteerin;
 		vertIncr = vertIncrin;
 		steerIncr = steerIncrin;
 		precision = precisionin;
-
-		//std::cout << "lca1ref\n" << lca1ref << "\n";
-		//std::cout << "lca2ref\n" << lca2ref << "\n";
-		//std::cout << "lca3ref\n" << lca3ref << "\n";
-		//
-		//std::cout << "uca1ref\n" << uca1ref << "\n";
-		//std::cout << "uca2ref\n" << uca2ref << "\n";
-		//std::cout << "uca3ref\n" << uca3ref << "\n";
-		//
-		//std::cout << "tr1ref\n" << tr1ref << "\n";
-		//std::cout << "tr2ref\n" << tr2ref << "\n";
-		//
-		//std::cout << "spnref\n" << spnref << "\n";
-		//std::cout << "wcnref\n" << wcnref << "\n";
-
-		//std::cout << "wradius " << wRadius << "\n";
-		//std::cout << "wVert " << wVert << "\n";
-		//std::cout << "wSteer " << wSteer << "\n";
-		//std::cout << "vertIncr " << vertIncr << "\n";
-		//std::cout << "steerIncr " << steerIncr << "\n";
-		//std::cout << "precision " << precision << "\n";
-
-
-
 	}
 
 
@@ -163,10 +171,11 @@ private:
 	// place as inputs variables rLCA, rUCA, uca12, lca12, etc. so those can be only temporary
 	// values and not use up stack memory
 
-	void CalculateConstants(Eigen::Matrix3f& _rotLCA, Eigen::Matrix3f& _rotUCA, 
-		float& _rLCA, float& _rUCA, float& _rCA, 
-		Eigen::ArrayXf& _zLocLca, 
-		float& _rST, float& _t_param, float& _rTR, 
+	void CalculateConstants(
+		Eigen::Matrix3f& _rotLCA, Eigen::Matrix3f& _rotUCA,
+		float& _rLCA, float& _rUCA, float& _rCA,
+		Eigen::ArrayXf& _zLocLca,
+		float& _rST, float& _t_param, float& _rTR,
 		Eigen::Vector3f& _wcnlocTRk, Eigen::Vector3f& _spnlocTRk)
 	{
 
@@ -186,43 +195,43 @@ private:
 		_rLCA = lca1lca2.distance(lca3ref);
 
 		// create rotation matrix for LCA cs
-		_rotLCA << 
-			(lca1ref - lca2ref).normalized(), 
-			(lca12 - lca3ref).normalized(), 
+		_rotLCA <<
+			(lca1ref - lca2ref).normalized(),
+			(lca12 - lca3ref).normalized(),
 			((lca1ref - lca2ref).cross(lca12 - lca3ref)).normalized();
 
 		// calculate parameters for plane in LCA cs ax+by+cz+d=0
-		abcd << 
-			_rotLCA.row(2)(0), 
-			_rotLCA.row(2)(1), 
-			_rotLCA.row(2)(2), 
+		abcd <<
+			_rotLCA.row(2)(0),
+			_rotLCA.row(2)(1),
+			_rotLCA.row(2)(2),
 			-_rotLCA.row(2) * (_rotLCA.transpose() * Eigen::Vector3f{ -lca12(0),-lca12(1),lca3ref(2) - wVert - lca12(2) });
 		// calculates z value for upmost movement of wheel for intersection of plane and circle in LCA
 		zLocHi =
-			(-abcd(2) * abcd(3) + 
-				abcd(1) * sqrt(abcd(2) * abcd(2) * _rLCA * _rLCA + 
-					abcd(1) * abcd(1) * _rLCA * _rLCA - 
-					abcd(3) * abcd(3))) / 
+			(-abcd(2) * abcd(3) +
+				abcd(1) * sqrt(abcd(2) * abcd(2) * _rLCA * _rLCA +
+					abcd(1) * abcd(1) * _rLCA * _rLCA -
+					abcd(3) * abcd(3))) /
 			(abcd(1) * abcd(1) + abcd(2) * abcd(2));
 
 		// reuses previous parameters for LCA plane, only 4th parameter is changed
 		abcd(3) =
-			-_rotLCA.row(2) * 
+			-_rotLCA.row(2) *
 			_rotLCA.transpose() *
 			Eigen::Vector3f{ -lca12(0), -lca12(1), lca3ref(2) + wVert - lca12(2) };
 
 		// calculates z value for downmost movement of wheel for intersection of plane and circle in LCA
-		zLocLo = 
-			(-abcd(2) * abcd(3) + 
+		zLocLo =
+			(-abcd(2) * abcd(3) +
 				abcd(1) * sqrt(abcd(2) * abcd(2) * _rLCA * _rLCA +
-					abcd(1) * abcd(1) * _rLCA * _rLCA - 
-					abcd(3) * abcd(3))) / 
+					abcd(1) * abcd(1) * _rLCA * _rLCA -
+					abcd(3) * abcd(3))) /
 			(abcd(1) * abcd(1) + abcd(2) * abcd(2));
 
-
-		_zLocLca << 
-			Eigen::VectorXf::LinSpaced(vertIncr, zLocLo, zLocLo / vertIncr), 
-			0, 
+		// wheel travel from rebound to bump
+		_zLocLca <<
+			Eigen::VectorXf::LinSpaced(vertIncr, zLocLo, zLocLo / vertIncr),
+			0,
 			Eigen::VectorXf::LinSpaced(vertIncr, zLocHi / vertIncr, zLocHi);
 
 
@@ -235,7 +244,7 @@ private:
 		_rCA = (uca3ref - lca3ref).norm();
 
 		// create rotation matrix for UCA cs
-		_rotUCA << 
+		_rotUCA <<
 			(uca1ref - uca2ref).normalized(),
 			(uca12 - uca3ref).normalized(),
 			((uca1ref - uca2ref).cross(uca12 - uca3ref)).normalized();
@@ -273,7 +282,7 @@ private:
 
 public:
 
-	float CalculateMovement()
+	void CalculateMovement(float* outputParams)
 	{
 		Eigen::Matrix3f rotLCA;
 		Eigen::Matrix3f rotUCA;
@@ -303,6 +312,7 @@ public:
 		// global positions of LCA3 for whole wheel movement
 		lca3Glob = (lca3LocLCA * rotLCA.transpose()).array().rowwise() + lca12.array().transpose();
 
+
 		// global position of UCA3 for whole wheel movement
 		Eigen::MatrixXf uca3Glob(vertIncr * 2 + 1, 3);
 		Eigen::MatrixXf uca3LocUCA(vertIncr * 2 + 1, 3);
@@ -314,35 +324,35 @@ public:
 
 		// temporary values for calculating UCA3 in UCA cs, correspond to chunks of expression in word
 		Eigen::ArrayXf temp1UCA3 =
-			-rCA * rCA + rUCA * rUCA + 
+			-rCA * rCA + rUCA * rUCA +
 			lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() +
 			lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() +
 			lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array();
 
-		Eigen::ArrayXf temp2UCA3 = 
+		Eigen::ArrayXf temp2UCA3 =
 			2 * (lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() +
 				lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array());
 
-		Eigen::ArrayXf temp3UCA3 = 
-			-rCA * rCA * rCA * rCA + 2 * rCA * rCA * rUCA * rUCA + 
+		Eigen::ArrayXf temp3UCA3 =
+			-rCA * rCA * rCA * rCA + 2 * rCA * rCA * rUCA * rUCA +
 			2 * rCA * rCA * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() +
-			2 * rCA * rCA * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() + 
+			2 * rCA * rCA * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() +
 			2 * rCA * rCA * lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array();
 
-		Eigen::ArrayXf temp4UCA3 = 
-			-rUCA * rUCA * rUCA * rUCA - 
-			2 * rUCA * rUCA * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() + 
-			2 * rUCA * rUCA * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() + 
+		Eigen::ArrayXf temp4UCA3 =
+			-rUCA * rUCA * rUCA * rUCA -
+			2 * rUCA * rUCA * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() +
+			2 * rUCA * rUCA * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() +
 			2 * rUCA * rUCA * lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array();
 
-		Eigen::ArrayXf temp5UCA3 = 
-			-lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() - 
+		Eigen::ArrayXf temp5UCA3 =
+			-lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() -
 			2 * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() -
 			2 * lca3LocUCA.col(0).array() * lca3LocUCA.col(0).array() * lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array();
 
-		Eigen::ArrayXf temp6UCA3 = 
+		Eigen::ArrayXf temp6UCA3 =
 			-2 * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() * lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array() -
-			lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array()  -
+			lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() * lca3LocUCA.col(1).array() -
 			lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array() * lca3LocUCA.col(2).array();
 
 		Eigen::ArrayXf temp7UCA3 = (temp3UCA3 + temp4UCA3 + temp5UCA3 + temp6UCA3).sqrt();
@@ -398,31 +408,31 @@ public:
 				// calculate local position of TR2
 				float temp1TR2 =
 					rST * rST - rTR * rTR +
-					tr1locTR(0) * tr1locTR(0) + 
+					tr1locTR(0) * tr1locTR(0) +
 					tr1locTR(1) * tr1locTR(1) +
 					tr1locTR(2) * tr1locTR(2);
 
 				float temp2TR2 = 2 * (tr1locTR(0) * tr1locTR(0) + tr1locTR(1) * tr1locTR(1));
 
-				float temp3TR2 = 
-					-rST * rST * rST * rST + 2 * rTR * rTR * rST * rST + 
-					2 * rST * rST * tr1locTR(0) * tr1locTR(0) + 
-					2 * rST * rST * tr1locTR(1) * tr1locTR(1) - 
+				float temp3TR2 =
+					-rST * rST * rST * rST + 2 * rTR * rTR * rST * rST +
+					2 * rST * rST * tr1locTR(0) * tr1locTR(0) +
+					2 * rST * rST * tr1locTR(1) * tr1locTR(1) -
 					2 * rST * rST * tr1locTR(2) * tr1locTR(2);
 
-				float temp4TR2 = 
+				float temp4TR2 =
 					-rTR * rTR * rTR * rTR +
-					2 * rTR * rTR * tr1locTR(0) * tr1locTR(0) + 
-					2 * rTR * rTR * tr1locTR(1) * tr1locTR(1) + 
+					2 * rTR * rTR * tr1locTR(0) * tr1locTR(0) +
+					2 * rTR * rTR * tr1locTR(1) * tr1locTR(1) +
 					2 * rTR * rTR * tr1locTR(2) * tr1locTR(2);
 
-				float temp5TR2 = 
+				float temp5TR2 =
 					-tr1locTR(0) * tr1locTR(0) * tr1locTR(0) * tr1locTR(0) -
 					2 * tr1locTR(0) * tr1locTR(0) * tr1locTR(1) * tr1locTR(1) -
 					2 * tr1locTR(0) * tr1locTR(0) * tr1locTR(2) * tr1locTR(2);
 
-				float temp6TR2 = 
-					 - 2 * tr1locTR(1) * tr1locTR(1) * tr1locTR(2) * tr1locTR(2) -
+				float temp6TR2 =
+					-2 * tr1locTR(1) * tr1locTR(1) * tr1locTR(2) * tr1locTR(2) -
 					tr1locTR(1) * tr1locTR(1) * tr1locTR(1) * tr1locTR(1) -
 					tr1locTR(2) * tr1locTR(2) * tr1locTR(2) * tr1locTR(2);
 
@@ -464,8 +474,8 @@ public:
 
 			temp3cp.col(0) << -temp2cp.col(0).array() * temp2cp.col(2).array() * temp1cp;
 			temp3cp.col(1) << -temp2cp.col(1).array() * temp2cp.col(2).array() * temp1cp;
-			temp3cp.col(2) << 
-				temp2cp.col(1).array() * temp2cp.col(1).array() * temp1cp + 
+			temp3cp.col(2) <<
+				temp2cp.col(1).array() * temp2cp.col(1).array() * temp1cp +
 				temp2cp.col(0).array() * temp2cp.col(0).array() * temp1cp;
 
 			temp3cp.rowwise().normalize();
@@ -476,60 +486,78 @@ public:
 
 
 
-			std::cout 
-				<< "roll centre trail________" <<
-				CalculateRollCentreHeight(lca1ref,lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 0)
-				<< "  " <<
-				CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, 2)
-				<< "  score  "
-				<< "caster trail________" << 
-				CalculateCasterTrail(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, 0)
-				<<"  " << 
-				CalculateCasterTrail(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, 2)
-				<<"  score  "<< 
-				CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob) << '\n';
+			CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob, outputParams[0]);
+			CalculateCamber(cpGlob, wcnGlob, spnGlob, outputParams[1], 0);
+			CalculateCamber(cpGlob, wcnGlob, spnGlob, outputParams[2], 2);
+			CalculateToe(cpGlob, wcnGlob, spnGlob, outputParams[3], 0);
+			CalculateToe(cpGlob, wcnGlob, spnGlob, outputParams[4], 2);
+			CalculateCasterAngle(lca3Glob, uca3Glob, outputParams[5], 1);
+			CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, outputParams[6], 1);
+			CalculateCasterTrailAndScrubRadius(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, outputParams[7], outputParams[8], 1);
+			CalculateKingpinAngle(lca3Glob, uca3Glob, cpGlob, outputParams[9], 1);
+			CalculateAntiFeatures(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, wcnGlob, outputParams[10], outputParams[11], 1);
+			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[12], outputParams[13], 0);
+			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[14], outputParams[15], 2);
 
-			return CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob);
+			/* output params :
+			1  objective function
+			2  camber angle up
+			3 			down
+			4  toe angle up
+			5 		down
+			6  caster angle
+			7  roll centre height
+			8  caster trail
+			9  kingpin angle
+			10 scrub radius
+			11 half track change up
+			12 				down
+			13 wheelbase change up
+			14 				down
+			15 anti squat / anti dive
+			16 anti rise / anti lift
 
-			
-
+			*/
 		}
 
 		// steering is enabled
 		else
 		{
-			return 456;
 		}
 
 
 	}
 
-	float CalculateObjCamberScore(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn)
+	void CalculateObjCamberScore(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& camberScore)
 	{
-		float camberUp{ CalculateCamber(cp, wcn, spn, 2) };
-		float camberDown{ CalculateCamber(cp, wcn, spn, 0) };
+		float camberUp;
+		float camberDown;
+		CalculateCamber(cp, wcn, spn, camberUp, 2);
+		CalculateCamber(cp, wcn, spn, camberDown, 0);
 
-		float wantedCamberUp = -2.65318;
-		float wantedCamberDown = -0.978327;
+		std::cout << "camber up " << camberUp;
+		std::cout << "camber down " << camberDown;
 
-		float peakWidth = 100;
+		float wantedCamberUp = -0.978327f;
+		float wantedCamberDown = -2.65318f;
 
-		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2))*0.5f };
-		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) *0.5f};
+		float peakWidth = 100.0f;
 
-		float objectiveSum = 1 - camberUpObj - camberDownObj;
+		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2)) * 0.5f };
+		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) * 0.5f };
 
-		return objectiveSum;
+		camberScore = 1 - camberUpObj - camberDownObj;
+
 
 
 	}
 
-	float CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
+	void CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& camberAngle, int position)
 	{
-		
+
 		int L = position;
 		int R = cp.rows() - 1 - position;
-				
+
 
 		Eigen::Vector3f wheelAxis{
 			-wcn.row(L)(0) + cp.row(L)(0),
@@ -542,7 +570,7 @@ public:
 			-cp.row(R)(1) - cp.row(L)(1)
 		};
 		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
-		
+
 		float temp1_wcnpr =
 			spn.row(L)(1) * groundNormal(1)
 			+ spn.row(L)(2) * groundNormal(2)
@@ -550,7 +578,7 @@ public:
 			- wcn.row(L)(2) * groundNormal(2);
 
 		float temp2_wcnpr =
-			groundNormal(1) * groundNormal(1) + 
+			groundNormal(1) * groundNormal(1) +
 			groundNormal(2) * groundNormal(2);
 
 		Eigen::Vector3f wcnpr{
@@ -562,22 +590,22 @@ public:
 
 		float camber =
 			(wcnpr - (Eigen::Vector3f)wcn.row(L)).norm() /
-			((Eigen::Vector3f)spn.row(L) - 
+			((Eigen::Vector3f)spn.row(L) -
 				(Eigen::Vector3f)wcn.row(L)).norm();
 
 
-		
+
 		// tests if camber is negative, if it is it returns negative angle
 		if ((wcnpr - (Eigen::Vector3f)wcn.row(L))(2) > 0)
-			return -asin(camber) * 180 / 3.14159f;
+			camberAngle = -asin(camber) * 180 / 3.14159f;
 		// if camber is not negative, returns positive angle
 		else
-			return asin(camber) * 180 / 3.14159f;
+			camberAngle = asin(camber) * 180 / 3.14159f;
 
-		 
+
 	}
 
-	float CalculateToe(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, int position)
+	void CalculateToe(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& toeAngle, int position)
 	{
 		// positive toe angle for toe in and negative for toe out
 		Eigen::Vector3f wheelAxis = wcn.row(position) - spn.row(position);
@@ -599,24 +627,25 @@ public:
 		std::cout << refAxis.norm() << "\n";
 
 		float toe = acos(refAxis.norm() / wheelAxis.norm());
-		
+
 		if (wcn.row(position)(0) < spn.row(position)(0)) // toe out case
-			return -toe * 180 / 3.14159f;
+			toeAngle = -toe * 180 / 3.14159f;
 		else // toe in case
-			return toe * 180 / 3.14159f;
+			toeAngle = toe * 180 / 3.14159f;
 
 	}
 
-	float CalculateCaster(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, int position)
+	void CalculateCasterAngle(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, float& casterAngle, int position)
 	{
 		float caster =
 			atan2f(
-				(-lca3.row(position)(0) + uca3.row(position)(0))
+				(lca3.row(position)(0) - uca3.row(position)(0))
 				, (-uca3.row(position)(2) + lca3.row(position)(2)));
-		return caster * 180 / 3.14159f;
+
+		casterAngle = caster * 180 / 3.14159f;
 	}
 
-	float CalculateRollCentreHeight(Eigen::Vector3f& lca1L, Eigen::Vector3f& lca2L, Eigen::MatrixXf& lca3Lmat, Eigen::Vector3f& uca1L, Eigen::Vector3f& uca2L, Eigen::MatrixXf& uca3Lmat, Eigen::MatrixXf& cpLmat, int position)
+	void CalculateRollCentreHeight(Eigen::Vector3f& lca1L, Eigen::Vector3f& lca2L, Eigen::MatrixXf& lca3Lmat, Eigen::Vector3f& uca1L, Eigen::Vector3f& uca2L, Eigen::MatrixXf& uca3Lmat, Eigen::MatrixXf& cpLmat, float& rollCentreHeight, int position)
 	{
 
 		int L = position;                  // L means left
@@ -693,7 +722,7 @@ public:
 			bICL = -cpL(2) * (ICLy - cpL(1)) / (ICLz - cpL(2)) + cpL(1);
 		}
 
-		
+
 		// case if RIGHT LCA and UCA are parallel
 		if (abs(aLCAR - aUCAR) < slopePrecision)
 		{
@@ -714,15 +743,14 @@ public:
 		float RCz = (bICL - bICR) / (aICR - aICL);
 		float RCy = aICL * (bICL - bICR) / (aICR - aICL) + bICL;
 
-		float rc_height =
+		rollCentreHeight =
 			((cpR(1) - cpL(1)) * (cpL(2) - RCz) -
 				(cpL(1) - RCy) * (cpR(2) - cpL(2))) /
 			sqrt(pow((cpR(2) - cpL(2)), 2) + pow((cpR(1) - cpL(1)), 2));
 
-		return rc_height;
 	}
 
-	float CalculateCasterTrail(Eigen::MatrixXf& lca3Mat, Eigen::MatrixXf& uca3Mat, Eigen::MatrixXf& spnMat, Eigen::MatrixXf& wcnMat, Eigen::MatrixXf& cpMat, int position)
+	void CalculateCasterTrailAndScrubRadius(Eigen::MatrixXf& lca3Mat, Eigen::MatrixXf& uca3Mat, Eigen::MatrixXf& spnMat, Eigen::MatrixXf& wcnMat, Eigen::MatrixXf& cpMat, float& casterTrail, float& scrubRadius, int position)
 	{
 		int L = position;                  // L means left
 		int R = cpMat.rows() - 1 - position;  // R means right
@@ -796,22 +824,231 @@ public:
 
 		// positive caster trail
 		if ((l3u3intrs - spnpr).cross(l3u3intrs - wcnpr)(2) > 0)
-			return caster_trail;
+			casterTrail = caster_trail;
 
 		// negative caster trail
 		else
-			return -caster_trail;
+			casterTrail = -caster_trail;
+
+
+		// scrub radius
+		float scrubRadius_temp1 =
+			(wcn[0] - spn[0]) * (l3u3intrs[0] - cpL[0]) +
+			(wcn[1] - spn[1]) * (l3u3intrs[1] - cpL[1]) +
+			(wcn[2] - spn[2]) * (l3u3intrs[2] - cpL[2]);
+
+		float scrubRadius_temp2 =
+			pow((wcn[0] - spn[0]), 2) +
+			pow((wcn[1] - spn[1]), 2) +
+			pow((wcn[2] - spn[2]), 2);
+
+		scrubRadius = scrubRadius_temp1 / sqrtf(scrubRadius_temp2);
+
+
 
 	}
 
-	float CalculateKingpinAngle(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, int position)
+	void CalculateKingpinAngle(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, Eigen::MatrixXf& cpMat, float& kingpinAngle, int position)
 	{
+		int L = position;                  // L means left
+		int R = cpMat.rows() - 1 - position;  // R means right
 
+		Eigen::Vector3f cpL{ cpMat.row(L) };
+		Eigen::Vector3f cpR{ cpMat.row(R) };
+
+		Eigen::Vector3f grndNormal{
+			0,
+			-cpR(2) + cpL(2),
+			-cpR(1) - cpL(1)
+
+		};
+
+		Eigen::Vector3f l3u3pr{
+			0,
+			-uca3.row(L)(1) + lca3.row(L)(1),
+			-uca3.row(L)(2) + lca3.row(L)(2)
+		};
+
+		// if uca3 is closer to chassis centre then kingpin angle is positive
+		if (abs(uca3.row(L)(1)) < abs(lca3.row(L)(1)))
+			kingpinAngle = acos(grndNormal.dot(l3u3pr) / grndNormal.norm() / l3u3pr.norm()) * 180.0f / 3.14159f;
+		// otherwise negative kingpin angle
+		else
+			kingpinAngle = -acos(grndNormal.dot(l3u3pr) / grndNormal.norm() / l3u3pr.norm()) * 180.0f / 3.14159f;
 	}
+
+	void CalculateAntiFeatures(Eigen::Vector3f& lca1, Eigen::Vector3f& lca2, Eigen::MatrixXf& lca3Mat, Eigen::Vector3f& uca1, Eigen::Vector3f& uca2, Eigen::MatrixXf& uca3Mat, Eigen::MatrixXf& cpMat, Eigen::MatrixXf& wcnMat, float& antiDrive, float& antiBrakes, int position)
+	{
+		int L = position;
+
+		Eigen::Vector3f lca3{ lca3Mat.row(L) };
+		Eigen::Vector3f uca3{ uca3Mat.row(L) };
+		Eigen::Vector3f cp{ cpMat.row(position) };
+		Eigen::Vector3f wcn{ wcnMat.row(position) };
+
+		Eigen::Vector2f lcaIntrsPt;
+		float lcaIntrsDir;
+		Eigen::Vector2f ucaIntrsPt;
+		float ucaIntrsDir;
+
+		float tanThetaOutboard;
+		float tanThetaInboard;
+
+		auto CalculateIntersectionLine2D =
+			[]
+		(const Eigen::Vector3f& ca1, const Eigen::Vector3f& ca2,
+			const Eigen::Vector3f& ca3, const Eigen::Vector3f& cp,
+			Eigen::Vector2f& caIntrsPt, float& caIntrsDir) {
+				float lcaIntrsPt_temp1 =
+					ca1[0] * ca2[2] - ca1[0] * ca3[2] - ca1[2] * ca2[0] +
+					ca1[2] * ca3[0] + ca2[0] * ca3[2] - ca2[2] * ca3[0];
+
+				float lcaIntrsPt_temp2 =
+					ca1[0] * ca2[1] * ca3[2] - ca1[0] * ca2[2] * ca3[1] - ca1[1] * ca2[0] * ca3[2];
+
+				float lcaIntrsPt_temp3 =
+					ca1[1] * ca2[2] * ca3[0] + ca1[2] * ca2[0] * ca3[1] - ca1[2] * ca2[1] * ca3[0];
+
+				float lcaIntrsPt_temp4 =
+					ca1[1] * ca2[2] - ca1[1] * ca3[2] - ca1[2] * ca2[1] +
+					ca1[2] * ca3[1] + ca2[1] * ca3[2] - ca2[2] * ca3[1];
+
+				caIntrsPt = {
+					(cp[1] * lcaIntrsPt_temp1 + lcaIntrsPt_temp2 + lcaIntrsPt_temp3) / lcaIntrsPt_temp4,
+					0.0f
+				};
+
+				caIntrsDir =
+					((ca1[1] - ca2[1]) * (ca1[2] - ca3[2]) - (ca1[1] - ca3[1]) * (ca1[2] - ca2[2])) /
+					(-(ca1[0] - ca2[0]) * (ca1[1] - ca3[1]) + (ca1[0] - ca3[0]) * (ca1[1] - ca2[1]));
+		};
+
+		CalculateIntersectionLine2D(lca1, lca2, lca3, cp, lcaIntrsPt, lcaIntrsDir);
+		CalculateIntersectionLine2D(uca1, uca2, uca3, cp, ucaIntrsPt, ucaIntrsDir);
+
+
+		// projects 
+		//auto CalculateProjectionLine2D = [](const Eigen::Vector3f& ca1, const Eigen::Vector3f& ca2,
+		//	Eigen::Vector2f& caIntrsPt, float& caIntrsDir)
+		//{
+		//	caIntrsPt = { ca1[0] , ca1[2] };
+		//	caIntrsDir = (ca1[2] - ca2[2]) / (ca1[0] - ca2[0]);
+		//};
+
+		//CalculateProjectionLine2D(lca1, lca2, lcaIntrsPt, lcaIntrsDir);
+		//CalculateProjectionLine2D(uca1, uca2, ucaIntrsPt, ucaIntrsDir);
+
+		// if resulting lines are parallel
+		if (abs((lcaIntrsDir - ucaIntrsDir) / lcaIntrsDir) < precision)
+		{
+			tanThetaInboard = lcaIntrsDir;
+			tanThetaOutboard = lcaIntrsDir;
+		}
+		// if resulting lines are not parallel
+		else
+		{
+
+			Eigen::Vector2f ICPt = {
+				(lcaIntrsDir * lcaIntrsPt[0] - lcaIntrsPt[1] - ucaIntrsDir * ucaIntrsPt[0] + ucaIntrsPt[1]) /
+				(lcaIntrsDir - ucaIntrsDir),
+				(lcaIntrsDir * (lcaIntrsPt[0] * ucaIntrsDir - lcaIntrsPt[1] - ucaIntrsDir * ucaIntrsPt[0] + ucaIntrsPt[1]) +
+				lcaIntrsPt[1] * (lcaIntrsDir - ucaIntrsDir)) /
+				(lcaIntrsDir - ucaIntrsDir)
+			};
+			std::cout << "IC point coords \n" << ICPt << "\n";
+			std::cout << "IC x \n" << ICPt[0] << "\n";
+			std::cout << "IC z \n" << ICPt[1] << "\n";
+			std::cout << "wcn x \n" << wcn[0] << "\n";
+			std::cout << "wcn z \n" << wcn[2] << "\n";
+			std::cout << "cp x \n" << cp[0] << "\n";
+			std::cout << "cp z \n" << cp[2] << "\n";
+			// tan theta for outboard drive/brakes
+			tanThetaOutboard = (ICPt[1] - wcn[2]) / (ICPt[0] - wcn[0]);
+			tanThetaInboard = (ICPt[1] - cp[2]) / (ICPt[0] - cp[0]);
+		}
+
+		std::cout << "tanThetaOutboard " << tanThetaOutboard<<"\n";
+		std::cout << "tanThetaInboard " << tanThetaInboard <<"\n";
+		std::cout << "drive bias " << rearDriveBias <<"\n";
+		std::cout << "brake bias " << rearBrakeBias <<"\n";
+
+
+		// front suspension
+		if (suspPos == 0)
+		{
+			if (drivePos == 0)     // outboard drive
+			{
+				std::cout << "front outboard drive\n";
+				antiDrive = tanThetaOutboard * wheelbase / cogHeight * frontDriveBias * 100;
+
+			}
+			else                   // inboard drive
+			{
+				std::cout << "front inboard drive\n";
+				antiDrive = tanThetaInboard * wheelbase / cogHeight / frontDriveBias * 100;
+
+			}
+
+			if (brakePos == 0)       // outboard brakes
+			{
+				std::cout << "front outboard brakes\n";
+				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * frontBrakeBias * 100;
+
+			}
+			else                   // inboard brakes
+			{
+				std::cout << "front inboard brakes\n";
+				antiBrakes = tanThetaInboard * wheelbase / cogHeight / frontBrakeBias * 100;
+
+			}
+		}
+		// rear suspension
+		else
+		{
+			if (drivePos == 0)     // outboard drive
+			{
+				std::cout << "rear outboard drive\n";
+				antiDrive = -tanThetaOutboard * wheelbase / cogHeight * rearDriveBias * 100;
+
+			}
+			else                   // inboard drive
+			{
+				std::cout << "rear inboard drive\n";
+				antiDrive = -tanThetaInboard * wheelbase / cogHeight / rearDriveBias * 100;
+
+			}
+
+			if (brakePos == 0)     // outboard brakes
+			{
+				antiBrakes = -tanThetaOutboard * wheelbase / cogHeight * rearBrakeBias * 100;
+				std::cout << "rear outboard brakes\n";
+
+
+
+			}
+			else                   // inboard brakes
+			{
+				std::cout << "rear inboard brakes\n";
+				antiBrakes = -tanThetaInboard * wheelbase / cogHeight / rearBrakeBias * 100;
+
+			}
+		}
+	}
+
+	void CalculateHalfTrackAndWheelbaseChange(Eigen::MatrixXf& cpMat, float& halfTrackChange, float& wheelbaseChange, int position)
+	{
+		// if current wheelbase or half track is smaller than reference than negative sign, otherwise positive
+		halfTrackChange = cpMat.row(cpMat.rows() / 2)[1] - cpMat.row(position)[1];
+		wheelbaseChange = -cpMat.row(cpMat.rows() / 2)[0] + cpMat.row(position)[0];
+	}
+
 };
 
 
-double optimisation_obj_res(float *hardpoints, float wRadiusin, float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin)
+float optimisation_obj_res(float* hardpoints, float wRadiusin,
+	float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
+	int suspPos, int drivePos, int brakePos,
+	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float* outputParams)
 {
 
 	Suspension susp{
@@ -826,25 +1063,17 @@ double optimisation_obj_res(float *hardpoints, float wRadiusin, float wVertin, f
 		hardpoints[21], hardpoints[22],hardpoints[23],
 		hardpoints[24], hardpoints[25],hardpoints[26],
 		hardpoints[27], hardpoints[28],hardpoints[29],
-		wRadiusin, wVertin, wSteerin, 
+		wRadiusin,
+		wheelbase, cogHeight, frontDriveBias, frontBrakeBias,
+		suspPos, drivePos, brakePos,
+		wVertin, wSteerin,
 		vertIncrin, steerIncrin, precisionin
-		
 	};
 
-	int i = susp.CalculateMovement();
+	susp.CalculateMovement(outputParams);
 
-	return i;
-}
+	//outputParams[0] = 123.0f;
+	//outputParams[1] = 456.0f;
 
-void test_py(double *data, double *dataOut)
-{
-	std::cout << "test array\n";
-	for (int i = 0; i < 5; i++)
-	{
-		dataOut[i] = data[i] + 2;
-		std::cout << data[i] << "\n";
-	}
-
-
-	
+	return 1.0f;
 }
