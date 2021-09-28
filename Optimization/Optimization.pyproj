@@ -24,10 +24,12 @@
   <ItemGroup>
     <Compile Include="constraints.py" />
     <Compile Include="formulae.py" />
+    <Compile Include="module1.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="numeric_sol.py" />
     <Compile Include="optimisation.py" />
     <Compile Include="Optimization.py" />
-    <Compile Include="test.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

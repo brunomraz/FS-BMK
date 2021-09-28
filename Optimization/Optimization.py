@@ -9,34 +9,23 @@ print(path)
 mydll = c.cdll.LoadLibrary(path)
 mydll.optimisation_obj_res.restype = c.c_float
 
-mydll.optimisation_obj_res.argtypes = [c.POINTER(c.c_float), 
-									   c.c_float,
-									   c.c_float,
-									c.c_float,
-										c.c_float,
-										c.c_float,
-										c.c_int,
-										c.c_int,
-										c.c_int,
+mydll.optimisation_obj_res.argtypes = [
+	c.POINTER(c.c_float), 
+	c.c_float,
+	c.c_float,
+	c.c_float,
+	c.c_float,
+	c.c_float,
+	c.c_int,
+	c.c_int,
+	c.c_int,
+	c.c_float,
+	c.c_float,
+	c.c_int,
+	c.c_int,
+	c.c_float,
+	c.POINTER(c.c_float)]
 
-									   c.c_float,
-									   c.c_float,
-									   c.c_int,
-									   c.c_int,
-									   c.c_float,
-									   c.POINTER(c.c_float)]
-
-
-#hardpoints = [-2038.666, -411.709, -132.316 + 50, 
-#		-2241.147, -408.195, -126.205, 
-#		-2135, -600, -140, 
-#		-2040.563, -416.249, -275.203 + 75, 
-#		-2241.481, -417.314, -270.739, 
-#		-2153, -578, -315, 
-#		-2234.8, -411.45, -194.6, 
-#		-2225, -582, -220,
-#		-2143.6, -620.5, -220.07, 
-#		-2143.6, -595.5, -219.34]
 
 hardpoints = [-2038.666, -411.709, -132.316, 			# lca1 x y z
 		-2241.147, -408.195, -126.205, 					# lca2
