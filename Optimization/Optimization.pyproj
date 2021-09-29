@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>6c9fda81-b0ed-4e75-9a78-789c5a443fc8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Optimization.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -29,7 +30,6 @@
     </Compile>
     <Compile Include="numeric_sol.py" />
     <Compile Include="optimisation.py" />
-    <Compile Include="Optimization.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

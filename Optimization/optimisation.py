@@ -11,16 +11,10 @@ from constraints import hps_constraints_cobyla, hps_constraints_slsqp, hps_bound
 import datetime
 
 # TODO
-# opis multiprocessinga https://stackoverflow.com/questions/26063877/python-multiprocessing-module-join-processes-with-timeout
 # normalizirati constraintove
 # kompleksna funkcija cilja kako bi se filtrirali rezultati
 # ubaciti gotovo rj u optimizaciju kao inicijalno
 
-
-"""camber u gornjoj poziciji mora biti negativan, dok u donjoj je pozeljan pozitivan,
-ali nije nuzno"""
-
-"""multiprocessing modul nemoze koristit lambda funkcije jer ih nemoze picklat"""
 
 
 # used as input to minimization function inside optmiziation method

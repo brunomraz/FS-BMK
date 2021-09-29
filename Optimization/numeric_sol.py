@@ -12,22 +12,22 @@ import os
 # import time
 
 # output params :
-# 1  objective function
-# 2  camber angle up 
-# 3			down
-# 4  toe angle up
-# 5		    down
-# 6  caster angle
-# 7  roll centre height
-# 8  caster trail
-# 9  scrub radius
-# 10 kingpin angle 
-# 11 anti squat / anti dive   anti drive
-# 12 anti rise / anti lift    anti brake
-# 13 wheelbase change up 	
-# 14		down
-# 15 half track change up
-# 16		down	
+# 0  objective function
+# 1  camber angle up 
+# 2			down
+# 3  toe angle up
+# 4		    down
+# 5  caster angle
+# 6  roll centre height
+# 7  caster trail
+# 8  scrub radius
+# 9  kingpin angle 
+# 10 anti squat / anti dive   anti drive
+# 11 anti rise / anti lift    anti brake
+# 12 wheelbase change up 	
+# 13		down
+# 14 half track change up
+# 15		down	
 
 # wheel travel from rebound to bump, from downmost position w.r.t. chassis to upmost
 
@@ -75,19 +75,19 @@ class Suspension():
     # INPUT VALUES FOR OPTIMIZATION
 
     # boundaries
-    uca1x_lo, uca1x_up, uca1y_lo, uca1y_up, uca1z_lo, uca1z_up = np.array([546.963, 546.963, -500, -350, 200, 300])
-    uca2x_lo, uca2x_up, uca2y_lo, uca2y_up, uca2z_lo, uca2z_up = np.array([747.881, 747.881, -500, -350, 200, 300])
-    uca3x_lo, uca3x_up, uca3y_lo, uca3y_up, uca3z_lo, uca3z_up = np.array([620, 680, -620, -560, 270, 330])
+    lca1x_lo, lca1x_up, lca1y_lo, lca1y_up, lca1z_lo, lca1z_up = 545.066, 545.066, -500, -350, 50, 150
+    lca2x_lo, lca2x_up, lca2y_lo, lca2y_up, lca2z_lo, lca2z_up = 747.547, 747.547, -500, -350, 50, 150
+    lca3x_lo, lca3x_up, lca3y_lo, lca3y_up, lca3z_lo, lca3z_up = 620, 680, -630, -570, 80, 140
 
-    lca1x_lo, lca1x_up, lca1y_lo, lca1y_up, lca1z_lo, lca1z_up = np.array([545.066, 545.066, -500, -350, 50, 150])
-    lca2x_lo, lca2x_up, lca2y_lo, lca2y_up, lca2z_lo, lca2z_up = np.array([747.547, 747.547, -500, -350, 50, 150])
-    lca3x_lo, lca3x_up, lca3y_lo, lca3y_up, lca3z_lo, lca3z_up = np.array([620, 680, -630, -570, 80, 140])
+    uca1x_lo, uca1x_up, uca1y_lo, uca1y_up, uca1z_lo, uca1z_up = 546.963, 546.963, -500, -350, 200, 300
+    uca2x_lo, uca2x_up, uca2y_lo, uca2y_up, uca2z_lo, uca2z_up = 747.881, 747.881, -500, -350, 200, 300
+    uca3x_lo, uca3x_up, uca3y_lo, uca3y_up, uca3z_lo, uca3z_up = 620, 680, -620, -560, 270, 330
 
-    tr1x_lo, tr1x_up, tr1y_lo, tr1y_up, tr1z_lo, tr1z_up = np.array([690, 780, -500, -350, 150, 250])
-    tr2x_lo, tr2x_up, tr2y_lo, tr2y_up, tr2z_lo, tr2z_up = np.array([690, 780, -620, -560, 170, 230])
+    tr1x_lo, tr1x_up, tr1y_lo, tr1y_up, tr1z_lo, tr1z_up = 690, 780, -500, -350, 150, 250
+    tr2x_lo, tr2x_up, tr2y_lo, tr2y_up, tr2z_lo, tr2z_up = 690, 780, -620, -560, 170, 230
 
-    wcnx_lo, wcnx_up, wcny_lo, wcny_up, wcnz_lo, wcnz_up = np.array([650, 650, -620.5, -620.5, 200, 200])
-    spnx_lo, spnx_up, spny_lo, spny_up, spnz_lo, spnz_up = np.array([650, 650, -595.5, -595.5, 199.27, 199.27])
+    wcnx_lo, wcnx_up, wcny_lo, wcny_up, wcnz_lo, wcnz_up = 650, 650, -620.5, -620.5, 200, 200
+    spnx_lo, spnx_up, spny_lo, spny_up, spnz_lo, spnz_up = 650, 650, -595.5, -595.5, 199.27, 199.27
 
     # granice toe anglea u gornjoj i donjoj poziciji kotaca
     toe_uppos_uplim = 0.05
@@ -238,56 +238,6 @@ class Suspension():
             print(Suspension.outputParams_c[i])
 
 
-    def plotPoints(self):
-        ### PLOT points
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-
-        ax.scatter(self.tr2_travel_up.T[0], self.tr2_travel_up.T[1], self.tr2_travel_up.T[2])  # plots as points tierod2 travel from reference position upwards
-        ax.scatter(self.tr2_travel_down.T[0], self.tr2_travel_down.T[1], self.tr2_travel_down.T[2])  # plots as points tierod2 travel from reference position downwards
-
-        ax.scatter(self.lca_travel_up.T[0], self.lca_travel_up.T[1], self.lca_travel_up.T[2])  # plots as points LCA3 travel from reference position upwards
-        ax.scatter(self.lca_travel_down.T[0], self.lca_travel_down.T[1], self.lca_travel_down.T[2])  # plots as points LCA3 travel from reference position downwards
-
-        ax.scatter(self.uca_travel_up.T[0], self.uca_travel_up.T[1], self.uca_travel_up.T[2])  # plots as points UCA3 travel from reference position upwards
-        ax.scatter(self.uca_travel_down.T[0], self.uca_travel_down.T[1], self.uca_travel_down.T[2])  # plots as points UCA3 travel from reference position downwards
-
-        ax.scatter(self.wcn_travel_up.T[0], self.wcn_travel_up.T[1], self.wcn_travel_up.T[2])  # plots as points WCN travel from reference position upwards
-        ax.scatter(self.wcn_travel_down.T[0], self.wcn_travel_down.T[1], self.wcn_travel_down.T[2])  # plots as points WCN travel from reference position downwards
-
-        ax.scatter(self.spn_travel_up.T[0], self.spn_travel_up.T[1], self.spn_travel_up.T[2])  # plots as points Spindle travel from reference position upwards
-        ax.scatter(self.spn_travel_down.T[0], self.spn_travel_down.T[1], self.spn_travel_down.T[2])  # plots as points Spindle travel from reference position downwards
-
-        ax.scatter(self.cp_up.T[0], self.cp_up.T[1], self.cp_up.T[2])  # plots as points Spindle travel from reference position upwards
-        ax.scatter(self.cp_down.T[0], self.cp_down.T[1], self.cp_down.T[2])  # plots as points Spindle travel from reference position downwards
-
-
-        # plots as lines LCA, UCA and TR links in reference position
-        ax.plot([self.lca1[0], self.lca2[0], self.lca3[0]],
-                [self.lca1[1], self.lca2[1], self.lca3[1]],
-                [self.lca1[2], self.lca2[2], self.lca3[2]])
-        ax.plot([self.uca1[0], self.uca2[0], self.uca3[0]],
-                [self.uca1[1], self.uca2[1], self.uca3[1]],
-                [self.uca1[2], self.uca2[2], self.uca3[2]])
-        ax.plot([self.tr1[0], self.tr2[0]],
-                [self.tr1[1], self.tr2[1]],
-                [self.tr1[2], self.tr2[2]])
-        ax.plot([self.lca2[0]], [self.lca2[1]], [self.lca2[2]], "bo")
-
-        # plots as lines XYZ axes
-        # ax.plot((0, 0), (0, 0), (0, 100), '-b', label='z-axis')
-        # ax.plot((0, 0), (0, 100), (0, 0), '-g', label='y-axis')
-        # ax.plot((0, 100), (0, 0), (0, 0), '-r', label='x-axis')
-
-        # bounding box for equal scaling
-        # ax.scatter((0,2000,0,0),(0,0,-2000,0),(0,0,0,2000))
-
-        ax.legend()
-        plt.show()
-    #
-
-
-
 """objective function"""
 
 
@@ -298,62 +248,18 @@ def call_suspension_objective(hps):
     0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
     10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
 
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
+    s = Suspension(Suspension.uca1x_up, hps[0], hps[1],
+                   Suspension.uca2x_lo, hps[2], hps[3],
+                   hps[4], hps[5], hps[6],
+                   Suspension.lca1x_up, hps[7], hps[8],
+                   Suspension.lca2x_lo, hps[9], hps[10],
+                   hps[11], hps[12], hps[13],
+                   hps[14], hps[15], hps[16],
+                   hps[17], hps[18], hps[19],
+                   Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo,
+                   Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up)
     s.calculateMovement()
-    s.camber_score()
-    # s.plotPoints()
-    # print(f"s objective sum: {s.objectiveSum}")
-    return s.objectiveSum
-
-
-def call_suspension_check(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    # s.plotPoints()
-    return [f"camber up: {s.camberUp[-1].round(3)}° camber down: {s.camberDown[-1].round(3)}°",
-            s.camberUp[-1].round(3),
-            s.camberDown[-1].round(3),
-            np.concatenate([
-                s.uca1, s.uca2, s.uca3,
-                s.lca1, s.lca2, s.lca3,
-                s.tr1, s.tr2,
-                s.wcn, s.spn,
-                [s.camberUp[-1], s.camberDown[-1],
-                 s.toeUp[-1], s.toeDown[-1],
-                 s.ref_pos_roll_centre_height,
-                 s.caster_trail_ref_pos, s.caster_angle_ref_pos,
-                 s.kingpin_angle_ref_pos, s.scrub_radius_ref_pos,
-                 s.half_track_change_up, s.half_track_change_down,
-                 s.wheelbase_change_up, s.wheelbase_change_down,
-                 s.anti_drive_feature, s.anti_brake_feature]]).round(3)
-
-            ]
-
-
+    return s.outputParams_c[0]
 
 
 if __name__ == "__main__":
@@ -382,6 +288,8 @@ if __name__ == "__main__":
     print(suspension.hardpoints)
     suspension.calculateMovement()
     suspension.printResult()
+    print("second output parameter")
+    print(suspension.outputParams_c[1])
 
 
 

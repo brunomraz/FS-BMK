@@ -10,127 +10,140 @@ import formulae as f
 # ogranicavanje lca3, uca3 i tr2 da budu unutar felge po radijusu x,
 # ogranicavanje lca3, uca3 i tr2 da budu unutar felge po udaljenosti od kocnica x,
 
-# UCA1 constraint
+""" constraints must be written in the following form:
+e.g.
+lowerLimit <= x <= upperLimit
+-x + upperLimit >= 0 
+ x - lowerLimit >= 0
 
-def cons_up_uca1y(hps):
-    return -hps[0] + Suspension.uca1y_up  # - 250
-
-
-def cons_lo_uca1y(hps):
-    return hps[0] - Suspension.uca1y_lo  # + 350
-
-
-def cons_up_uca1z(hps):
-    return -hps[1] + Suspension.uca1z_up  # + 350
-
-
-def cons_lo_uca1z(hps):
-    return hps[1] - Suspension.uca1z_lo  # - 250
-
-
-# UCA2 constraint
-
-def cons_up_uca2y(hps):
-    return -hps[2] + Suspension.uca2y_up  # - 250
-
-
-def cons_lo_uca2y(hps):
-    return hps[2] - Suspension.uca2y_lo  # + 350
-
-
-def cons_up_uca2z(hps):
-    return -hps[3] + Suspension.uca2z_up  # + 350
-
-
-def cons_lo_uca2z(hps):
-    return hps[3] - Suspension.uca2z_lo  # - 250
-
-
-# UCA3 constraint
-
-def cons_up_uca3x(hps):
-    return -hps[4] + Suspension.uca3x_up  # + 680
-
-
-def cons_lo_uca3x(hps):
-    return hps[4] - Suspension.uca3x_lo  # - 620
-
-
-def cons_up_uca3y(hps):
-    return -hps[5] + Suspension.uca3y_up  # - 570
-
-
-def cons_lo_uca3y(hps):
-    return hps[5] - Suspension.uca3y_lo  # + 630
-
-
-def cons_up_uca3z(hps):
-    return -hps[6] + Suspension.uca3z_up  # + 330
-
-
-def cons_lo_uca3z(hps):
-    return hps[6] - Suspension.uca3z_lo  # - 270
+that is, equation must be in the form greater than zero.
+"""
 
 
 # LCA1 constraint
 
 def cons_up_lca1y(hps):
-    return -hps[7] + Suspension.lca1y_up  # - 250
+    return -hps[0] + Suspension.lca1y_up  # - 250
 
 
 def cons_lo_lca1y(hps):
-    return hps[7] - Suspension.lca1y_lo  # + 350
+    return hps[0] - Suspension.lca1y_lo  # + 350
 
 
 def cons_up_lca1z(hps):
-    return -hps[8] + Suspension.lca1z_up  # + 150
+    return -hps[1] + Suspension.lca1z_up  # + 150
 
 
 def cons_lo_lca1z(hps):
-    return hps[8] - Suspension.lca1z_lo  # - 50
+    return hps[1] - Suspension.lca1z_lo  # - 50
 
 
 # LCA2 constraint
 
 def cons_up_lca2y(hps):
-    return -hps[9] + Suspension.lca2y_up  # - 250
+    return -hps[2] + Suspension.lca2y_up  # - 250
 
 
 def cons_lo_lca2y(hps):
-    return hps[9] - Suspension.lca2y_lo  # + 350
+    return hps[2] - Suspension.lca2y_lo  # + 350
 
 
 def cons_up_lca2z(hps):
-    return -hps[10] + Suspension.lca2z_up  # + 150
+    return -hps[3] + Suspension.lca2z_up  # + 150
 
 
 def cons_lo_lca2z(hps):
-    return hps[10] - Suspension.lca2z_lo  # - 50
+    return hps[3] - Suspension.lca2z_lo  # - 50
 
 
 # LCA3 constraint
 def cons_up_lca3x(hps):
-    return -hps[11] + Suspension.lca3x_up  # + 680
+    return -hps[4] + Suspension.lca3x_up  # + 680
 
 
 def cons_lo_lca3x(hps):
-    return hps[11] - Suspension.lca3x_lo  # - 620
+    return hps[4] - Suspension.lca3x_lo  # - 620
 
 
 def cons_up_lca3y(hps):
-    return -hps[12] + Suspension.lca3y_up  # - 570
+    return -hps[5] + Suspension.lca3y_up  # - 570
 
 
 def cons_lo_lca3y(hps):
-    return hps[12] - Suspension.lca3y_lo  # + 630
+    return hps[5] - Suspension.lca3y_lo  # + 630
 
 
 def cons_up_lca3z(hps):
-    return -hps[13] + Suspension.lca3z_up  # + 130
+    return -hps[6] + Suspension.lca3z_up  # + 130
 
 
 def cons_lo_lca3z(hps):
-    return hps[13] - Suspension.lca3z_lo  # - 70
+    return hps[6] - Suspension.lca3z_lo  # - 70
+
+
+
+# UCA1 constraint
+
+def cons_up_uca1y(hps):
+    return -hps[7] + Suspension.uca1y_up  # - 250
+
+
+def cons_lo_uca1y(hps):
+    return hps[7] - Suspension.uca1y_lo  # + 350
+
+
+def cons_up_uca1z(hps):
+    return -hps[8] + Suspension.uca1z_up  # + 350
+
+
+def cons_lo_uca1z(hps):
+    return hps[8] - Suspension.uca1z_lo  # - 250
+
+
+# UCA2 constraint
+
+def cons_up_uca2y(hps):
+    return -hps[9] + Suspension.uca2y_up  # - 250
+
+
+def cons_lo_uca2y(hps):
+    return hps[9] - Suspension.uca2y_lo  # + 350
+
+
+def cons_up_uca2z(hps):
+    return -hps[10] + Suspension.uca2z_up  # + 350
+
+
+def cons_lo_uca2z(hps):
+    return hps[10] - Suspension.uca2z_lo  # - 250
+
+
+# UCA3 constraint
+
+def cons_up_uca3x(hps):
+    return -hps[11] + Suspension.uca3x_up  # + 680
+
+
+def cons_lo_uca3x(hps):
+    return hps[11] - Suspension.uca3x_lo  # - 620
+
+
+def cons_up_uca3y(hps):
+    return -hps[12] + Suspension.uca3y_up  # - 570
+
+
+def cons_lo_uca3y(hps):
+    return hps[12] - Suspension.uca3y_lo  # + 630
+
+
+def cons_up_uca3z(hps):
+    return -hps[13] + Suspension.uca3z_up  # + 330
+
+
+def cons_lo_uca3z(hps):
+    return hps[13] - Suspension.uca3z_lo  # - 270
+
+
 
 
 # TR1 constraint
@@ -183,280 +196,60 @@ def cons_lo_tr2z(hps):
     return hps[19] - Suspension.tr2z_lo  # - 170
 
 
-def toe_constraint_uppos_uplim(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return -s.toeUp[-1] + Suspension.toe_uppos_uplim
+def toe_constraint_uppos_uplim():
+    return -Suspension.outputParams_c[3] + Suspension.toe_uppos_uplim
 
 
-def toe_constraint_uppos_lolim(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return s.toeUp[-1] - Suspension.toe_uppos_lolim
+def toe_constraint_uppos_lolim():
+    return Suspension.outputParams_c[3] - Suspension.toe_uppos_lolim
 
 
-def toe_constraint_down_uplim(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return -s.toeDown[-1] + Suspension.toe_lopos_uplim
+def toe_constraint_down_uplim():
+    return -Suspension.outputParams_c[4] + Suspension.toe_lopos_uplim
 
 
-def toe_constraint_down_lolim(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return s.toeDown[-1] - Suspension.toe_lopos_lolim
+def toe_constraint_down_lolim():
+    return Suspension.outputParams_c[4] - Suspension.toe_lopos_lolim
 
 
-def camber_constraint_down_uplim(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return -s.camberDown[-1] + Suspension._wantedCamberDown_uplim
+def caster_angle_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[5] + Suspension._caster_angle_uplim
 
 
-def camber_constraint_down_lolim(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return s.camberDown[-1] - Suspension._wantedCamberDown_uplim
+def caster_angle_ref_pos_constraint_lolim():
+    return Suspension.outputParams_c[5] - Suspension._caster_angle_lolim
 
 
-def roll_centre_height_ref_pos_constraint_uplim(hps):
-    """calculates roll centre height in reference position"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.ref_pos_roll_centre_height + Suspension._roll_centre_height_uplim
+def roll_centre_height_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[6] + Suspension._roll_centre_height_uplim
 
 
-def roll_centre_height_ref_pos_constraint_lolim(hps):
-    """calculates roll centre height in reference position and compares with lower limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.ref_pos_roll_centre_height - Suspension._roll_centre_height_lolim
+def roll_centre_height_ref_pos_constraint_lolim():
+    return Suspension.outputParams_c[6] - Suspension._roll_centre_height_lolim
 
 
-def caster_trail_ref_pos_constraint_uplim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.caster_trail_ref_pos + Suspension._caster_trail_uplim
+def caster_trail_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[7] + Suspension._caster_trail_uplim
 
 
-def caster_trail_ref_pos_constraint_lolim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.caster_trail_ref_pos - Suspension._caster_trail_lolim
+def caster_trail_ref_pos_constraint_lolim():
+    return Suspension.outputParams_c[7] - Suspension._caster_trail_lolim
 
 
-def caster_angle_ref_pos_constraint_uplim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.caster_angle_ref_pos + Suspension._caster_angle_uplim
+def scrub_radius_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[8] + Suspension._scrub_radius_uplim
 
 
-def caster_angle_ref_pos_constraint_lolim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.caster_angle_ref_pos - Suspension._caster_angle_lolim
+def scrub_radius_ref_pos_constraint_lolim():
+    return Suspension.outputParams_c[8] - Suspension._scrub_radius_lolim
 
 
-def kingpin_angle_ref_pos_constraint_uplim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.kingpin_angle_ref_pos + Suspension._kingpin_angle_uplim
+def kingpin_angle_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[9] + Suspension._kingpin_angle_uplim
 
 
-def kingpin_angle_ref_pos_constraint_lolim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.kingpin_angle_ref_pos - Suspension._kingpin_angle_lolim
-
-
-def scrub_radius_ref_pos_constraint_uplim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.scrub_radius_ref_pos + Suspension._scrub_radius_uplim
-
-
-def scrub_radius_ref_pos_constraint_lolim(hps):
-    """calculates caster trail in ref pos and compares with upper limit"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.scrub_radius_ref_pos - Suspension._scrub_radius_lolim
+def kingpin_angle_ref_pos_constraint_lolim():
+    return Suspension.outputParams_c[9] - Suspension._kingpin_angle_lolim
 
 
 def uca3_in_wheel_constraint_uplim(hps):
@@ -600,250 +393,68 @@ def min_distance_between_wcn_and_tr2(hps):
                    Suspension.wcnz_lo) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) - Suspension._wcn_tr2_distance_uplim
 
 
-def calc_half_track_change_up_uplim(hps):
-    """odreduje gornju vrijednost half track changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-
-    return -s.half_track_change_up + Suspension._half_track_change_uppos_uplim
+def calc_half_track_change_up_uplim():
+    return -Suspension.outputParams_c[14] + Suspension._half_track_change_uppos_uplim
 
 
-def calc_half_track_change_up_lolim(hps):
-    """odreduje donju vrijednost half track changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-
-    return s.half_track_change_up - Suspension._half_track_change_uppos_lolim
+def calc_half_track_change_up_lolim():
+    return Suspension.outputParams_c[14] - Suspension._half_track_change_uppos_lolim
 
 
-def calc_half_track_change_down_uplim(hps):
-    """odreduje gornju vrijednost half track changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-
-    return -s.half_track_change_down + Suspension._half_track_change_downpos_uplim
+def calc_half_track_change_down_uplim():
+    return -Suspension.outputParams_c[15] + Suspension._half_track_change_downpos_uplim
 
 
-def calc_half_track_change_down_lolim(hps):
-    """odreduje gornju vrijednost half track changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return s.half_track_change_down - Suspension._half_track_change_downpos_lolim
+def calc_half_track_change_down_lolim():
+    return Suspension.outputParams_c[15] - Suspension._half_track_change_downpos_lolim
 
 
-def calc_wheelbase_change_up_uplim(hps):
-    """odreduje gornju vrijednost wheelbase changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-
-    return -s.wheelbase_change_up + Suspension._wheelbase_change_uppos_uplim
+def calc_wheelbase_change_up_uplim():
+    return -Suspension.outputParams_c[12]+ Suspension._wheelbase_change_uppos_uplim
 
 
-def calc_wheelbase_change_up_lolim(hps):
-    """odreduje donju vrijednost wheelbase changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-
-    return s.wheelbase_change_up - Suspension._wheelbase_change_uppos_lolim
+def calc_wheelbase_change_up_lolim():
+    return Suspension.outputParams_c[12] - Suspension._wheelbase_change_uppos_lolim
 
 
-def calc_wheelbase_change_down_uplim(hps):
-    """odreduje gornju vrijednost half track changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-
-    return -s.wheelbase_change_down + Suspension._wheelbase_change_downpos_uplim
+def calc_wheelbase_change_down_uplim():
+    return -Suspension.outputParams_c[13] + Suspension._wheelbase_change_downpos_uplim
 
 
-def calc_wheelbase_change_down_lolim(hps):
-    """odreduje gornju vrijednost half track changea u gornjoj poziciji kotaca"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    s.calculateMovement()
-    return s.wheelbase_change_down - Suspension._wheelbase_change_downpos_lolim
+def calc_wheelbase_change_down_lolim():
+    return Suspension.outputParams_c[13] - Suspension._wheelbase_change_downpos_lolim
 
-def calc_anti_lift_uplim(hps):
+def calc_anti_lift_uplim():
     """odreduje gornju vrijednost anti lift znacajke karakteristicnu za drive front susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.anti_drive_feature + Suspension.wanted_anti_lift_uplim
+    return -Suspension.outputParams_c[10] + Suspension.wanted_anti_lift_uplim
 
-def calc_anti_lift_lolim(hps):
+def calc_anti_lift_lolim():
     """odreduje donju vrijednost anti lift znacajke karakteristicnu za drive front susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.anti_drive_feature - Suspension.wanted_anti_lift_lolim
+    return Suspension.outputParams_c[10] - Suspension.wanted_anti_lift_lolim
 
-def calc_anti_dive_uplim(hps):
+def calc_anti_dive_uplim():
     """odreduje gornju vrijednost anti dive znacajke karakteristicnu za brake front susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.anti_brake_feature + Suspension.wanted_anti_dive_uplim
+    return -Suspension.outputParams_c[11] + Suspension.wanted_anti_dive_uplim
 
-def calc_anti_dive_lolim(hps):
+def calc_anti_dive_lolim():
     """odreduje donju vrijednost anti dive znacajke karakteristicnu za brake front susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.anti_brake_feature - Suspension.wanted_anti_dive_lolim
+    return Suspension.outputParams_c[11] - Suspension.wanted_anti_dive_lolim
 
-def calc_anti_squat_uplim(hps):
+def calc_anti_squat_uplim():
     """odreduje gornju vrijednost anti squat znacajke karakteristicnu za drive rear susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.anti_drive_feature + Suspension.wanted_anti_squat_uplim
+    return -Suspension.outputParams_c[10] + Suspension.wanted_anti_squat_uplim
 
-def calc_anti_squat_lolim(hps):
+def calc_anti_squat_lolim():
     """odreduje donju vrijednost anti squat znacajke karakteristicnu za drive rear susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.anti_drive_feature - Suspension.wanted_anti_squat_lolim
+    return Suspension.outputParams_c[10] - Suspension.wanted_anti_squat_lolim
 
-def calc_anti_rise_uplim(hps):
+def calc_anti_rise_uplim():
     """odreduje gornju vrijednost anti rise znacajke karakteristicnu za brake rear susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return -s.anti_brake_feature + Suspension.wanted_anti_rise_uplim
+    return -Suspension.outputParams_c[11] + Suspension.wanted_anti_rise_uplim
 
-def calc_anti_rise_lolim(hps):
+def calc_anti_rise_lolim():
     """odreduje donju vrijednost anti rise znacajke karakteristicnu za brake rear susp"""
-    s = Suspension(uca1=np.array([Suspension.uca1x_up, hps[0], hps[1]]),
-                   uca2=np.array([Suspension.uca2x_lo, hps[2], hps[3]]),
-                   uca3=np.array([hps[4], hps[5], hps[6]]),
-                   lca1=np.array([Suspension.lca1x_up, hps[7], hps[8]]),
-                   lca2=np.array([Suspension.lca2x_lo, hps[9], hps[10]]),
-                   lca3=np.array([hps[11], hps[12], hps[13]]),
-                   tr1=np.array([hps[14], hps[15], hps[16]]),
-                   tr2=np.array([hps[17], hps[18], hps[19]]),
-                   wcn=np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                   spn=np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]))
-    return s.anti_brake_feature - Suspension.wanted_anti_rise_lolim
+    return Suspension.outputParams_c[11] - Suspension.wanted_anti_rise_lolim
 
 
 
