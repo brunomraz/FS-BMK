@@ -32,9 +32,6 @@ import os
 # wheel travel from rebound to bump, from downmost position w.r.t. chassis to upmost
 
 
-
-
-
 class Suspension():
     """creates quarter suspension defined by XYZ cs where X points front, Y to the right side and Z down"""
     path = os.path.join(r"C:\dev\FS-BMK\bin\x64\Debug\mechanicsDLL.dll")
@@ -182,53 +179,30 @@ class Suspension():
     _upWeightFactor = 0.5
     _downWeightFactor = 0.5
 
+        
+    def __init__(self, hps):  # hps is a list of hardpoints in order lca1, lca2, lca3, uca1, uca2, uca3, tr1, tr2, wcn, spn
+        Suspension.hardpoints = hps
 
-    
-    def __init__(self, 
-                 lca1x, lca1y, lca1z, 
-                 lca2x, lca2y, lca2z, 
-                 lca3x, lca3y, lca3z,
-                 uca1x, uca1y, uca1z, 
-                 uca2x, uca2y, uca2z, 
-                 uca3x, uca3y, uca3z, 
-                 tr1x, tr1y, tr1z,
-                 tr2x, tr2y, tr2z,
-                 wcnx, wcny, wcnz,
-                 spnx, spny, spnz):
-        Suspension.hardpoints.append(lca1x), Suspension.hardpoints.append(lca1y), Suspension.hardpoints.append(lca1z), 
-        Suspension.hardpoints.append(lca2x), Suspension.hardpoints.append(lca2y), Suspension.hardpoints.append(lca2z), 
-        Suspension.hardpoints.append(lca3x), Suspension.hardpoints.append(lca3y), Suspension.hardpoints.append(lca3z), 
-        Suspension.hardpoints.append(uca1x), Suspension.hardpoints.append(uca1y), Suspension.hardpoints.append(uca1z), 
-        Suspension.hardpoints.append(uca2x), Suspension.hardpoints.append(uca2y), Suspension.hardpoints.append(uca2z), 
-        Suspension.hardpoints.append(uca3x), Suspension.hardpoints.append(uca3y), Suspension.hardpoints.append(uca3z), 
-        Suspension.hardpoints.append(tr1x), Suspension.hardpoints.append(tr1y), Suspension.hardpoints.append(tr1z), 
-        Suspension.hardpoints.append(tr2x), Suspension.hardpoints.append(tr2y), Suspension.hardpoints.append(tr2z), 
-        Suspension.hardpoints.append(wcnx), Suspension.hardpoints.append(wcny), Suspension.hardpoints.append(wcnz), 
-        Suspension.hardpoints.append(spnx), Suspension.hardpoints.append(spny), Suspension.hardpoints.append(spnz)
-        print("done init")
 
-    @classmethod
-    def calculateMovement(cls):
-
+    def calculateMovement(self):
         hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
-
         Suspension.mydll.optimisation_obj_res(
-	hardpoints_c_arr,
-	Suspension.wRadiusin,
-	Suspension.wheelbase,
-	Suspension.cogHeight,
-	Suspension.frontDriveBias,
-	Suspension.frontBrakeBias,
-	Suspension.suspPos,
-	Suspension.drivePos,
-	Suspension.brakePos,
-	Suspension.wVertin ,
-	Suspension.wSteerin ,
-	Suspension.vertIncrin,
-	Suspension.steerIncrin ,
-	Suspension.precisionin,
-	Suspension.outputParams_c
-    )
+	            hardpoints_c_arr,
+	            Suspension.wRadiusin,
+	            Suspension.wheelbase,
+	            Suspension.cogHeight,
+	            Suspension.frontDriveBias,
+	            Suspension.frontBrakeBias,
+	            Suspension.suspPos,
+	            Suspension.drivePos,
+	            Suspension.brakePos,
+	            Suspension.wVertin ,
+	            Suspension.wSteerin ,
+	            Suspension.vertIncrin,
+	            Suspension.steerIncrin ,
+	            Suspension.precisionin,
+	            Suspension.outputParams_c
+                )
 
 
     def printResult(self):
@@ -238,9 +212,6 @@ class Suspension():
             print(Suspension.outputParams_c[i])
 
 
-"""objective function"""
-
-
 def call_suspension_objective(hps):
     """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
     wcn, spn uca1x, uca2x, lca1x, lca2x
@@ -248,34 +219,72 @@ def call_suspension_objective(hps):
     0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
     10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
 
-    s = Suspension(Suspension.uca1x_up, hps[0], hps[1],
-                   Suspension.uca2x_lo, hps[2], hps[3],
-                   hps[4], hps[5], hps[6],
-                   Suspension.lca1x_up, hps[7], hps[8],
-                   Suspension.lca2x_lo, hps[9], hps[10],
-                   hps[11], hps[12], hps[13],
-                   hps[14], hps[15], hps[16],
-                   hps[17], hps[18], hps[19],
-                   Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo,
-                   Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up)
+    s = Suspension([
+        Suspension.lca1x_up, hps[0], hps[1],
+        Suspension.lca2x_lo, hps[2], hps[3],
+        hps[4], hps[5], hps[6],
+        Suspension.uca1x_up, hps[7], hps[8],
+        Suspension.uca2x_lo, hps[9], hps[10],
+        hps[11], hps[12], hps[13],
+        hps[14], hps[15], hps[16],
+        hps[17], hps[18], hps[19],
+        Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo,
+        Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up])
     s.calculateMovement()
     return s.outputParams_c[0]
 
 
 if __name__ == "__main__":
-    # suspension1 = Suspension(uca1=np.array([600, -300, 300]),
-    #                          uca2=np.array([700, -300, 300]),
-    #                          uca3=np.array([650, -600, 300]),
-    #                          lca1=np.array([600, -300, 100]),
-    #                          lca2=np.array([700, -300, 100]),
-    #                          lca3=np.array([650, -600, 100]),
-    #                          tr1=np.array([700, -300, 200]),
-    #                          tr2=np.array([700, -600, 200]),
-    #                          wcn=np.array([650, -600, 200]),
-    #                          spn=np.array([650, -550, 200]))
-    # print(suspension1)
+    print("suspension PARALLEL")
+    suspension1 = Suspension([
+        100, -500, 100,
+        -100, -500, 100,
+        0, -700, 100,
+        100, -500, -100,
+        -100, -500, -100,
+        0, -700, -100,
+        -100, -500, 0,
+        -100, -700, 0,
+        0, -700, 0,
+        0, -650, 0
 
-    suspension = Suspension(-2038.666, -411.709, -132.316, 			# lca1 x y z
+        ])            
+    suspension1.calculateMovement()
+    print("suspension output parameters___________")
+    for i in range(16):
+        print(Suspension.outputParams_c[i])
+    print("suspension output parameters___________")
+    print("suspension PARALLEL done")
+
+    from random import uniform as runif
+
+    def random_initial_susp():
+        hps_bounds_slsqp = [
+            runif(Suspension.lca1y_lo, Suspension.lca1y_up), runif(Suspension.lca1z_lo, Suspension.lca1z_up),
+            runif(Suspension.lca2y_lo, Suspension.lca2y_up), runif(Suspension.lca2z_lo, Suspension.lca2z_up),
+            runif(Suspension.lca3x_lo, Suspension.lca3x_up), runif(Suspension.lca3y_lo, Suspension.lca3y_up), runif(Suspension.lca3z_lo, Suspension.lca3z_up),
+            runif(Suspension.uca1y_lo, Suspension.uca1y_up), runif(Suspension.uca1z_lo, Suspension.uca1z_up),
+            runif(Suspension.uca2y_lo, Suspension.uca2y_up), runif(Suspension.uca2z_lo, Suspension.uca2z_up),
+            runif(Suspension.uca3x_lo, Suspension.uca3x_up), runif(Suspension.uca3y_lo, Suspension.uca3y_up), runif(Suspension.uca3z_lo, Suspension.uca3z_up),
+            runif(Suspension.tr1x_lo, Suspension.tr1x_up), runif(Suspension.tr1y_lo, Suspension.tr1y_up), runif(Suspension.tr1z_lo, Suspension.tr1z_up),
+            runif(Suspension.tr2x_lo, Suspension.tr2x_up), runif(Suspension.tr2y_lo, Suspension.tr2y_up), runif(Suspension.tr2z_lo, Suspension.tr2z_up)
+        ]
+
+        return hps_bounds_slsqp
+
+    print("objective")
+    print(call_suspension_objective(random_initial_susp()))
+    print("suspension output parameters___________")
+    print(Suspension.outputParams_c[1])
+    print(Suspension.outputParams_c[2])
+    print(Suspension.outputParams_c[3])
+    print(Suspension.outputParams_c[4])
+    print("suspension output parameters___________")
+
+    print("finished objective func")
+
+    suspension = Suspension([
+        -2038.666, -411.709, -132.316, 			# lca1 x y z
 		-2241.147, -408.195, -126.205, 					# lca2
 		-2135, -600, -140, 								# lca3
 		-2040.563, -416.249, -275.203, 					# uca1
@@ -284,13 +293,26 @@ if __name__ == "__main__":
 		-2234.8, -411.45, -194.6, 						# tr1
 		-2225, -582, -220,								# tr2
 		-2143.6, -620.5, -220.07, 						# wcn
-		-2143.6, -595.5, -219.34)
-    print(suspension.hardpoints)
+		-2143.6, -595.5, -219.34])
+
+    print("suspension output parameters___________")
+    print(Suspension.outputParams_c[1])
+    print(Suspension.outputParams_c[2])
+    print(Suspension.outputParams_c[3])
+    print(Suspension.outputParams_c[4])
+    print("suspension output parameters___________")
+
+    print("done creating class")
     suspension.calculateMovement()
+    print("done calculating movement")
+
+    print("suspension output parameters___________")
+    print(Suspension.outputParams_c[1])
+    print(Suspension.outputParams_c[2])
+    print(Suspension.outputParams_c[3])
+    print(Suspension.outputParams_c[4])
+    print("suspension output parameters___________")
+
     suspension.printResult()
-    print("second output parameter")
-    print(suspension.outputParams_c[1])
 
-
-
-    input("zavrsio program, pritisni bilokoju tpiku")
+    input("numeric_sol program finished, press any key")

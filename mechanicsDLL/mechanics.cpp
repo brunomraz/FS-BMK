@@ -259,7 +259,8 @@ private:
 
 		_rTR = (tr2ref - tr1ref).norm();
 
-		_t_param = (_tr2prref(0) - lca3ref(0)) / (uca3ref(0) - lca3ref(0));
+		_t_param = (_tr2prref(2) - lca3ref(2)) / (uca3ref(2) - lca3ref(2));
+
 
 
 		Eigen::Matrix3f _rotTRk; // TR rotation matrix defined by TR2ref
@@ -275,9 +276,6 @@ private:
 
 		_wcnlocTRk << _rotTRk.transpose() * (wcnref - _tr2prref);
 		_spnlocTRk << _rotTRk.transpose() * (spnref - _tr2prref);
-
-		std::cout << "spnlocTRk" << std::endl;
-		std::cout << _spnlocTRk << std::endl;
 	}
 
 public:
@@ -301,6 +299,8 @@ public:
 
 		Suspension::CalculateConstants(rotLCA, rotUCA, rLCA, rUCA, rCA, zLCA3LocLCA, rST, t_param, rTR, wcnlocTRk, spnlocTRk);
 
+
+
 		Eigen::MatrixXf lca3LocLCA(vertIncr * 2 + 1, 3);
 		Eigen::MatrixXf lca3Glob(vertIncr * 2 + 1, 3);
 
@@ -309,8 +309,11 @@ public:
 		lca3LocLCA.col(1) << -(rLCA * rLCA - zLCA3LocLCA * zLCA3LocLCA).sqrt();
 		lca3LocLCA.col(2) << zLCA3LocLCA;
 
+
+
 		// global positions of LCA3 for whole wheel movement
 		lca3Glob = (lca3LocLCA * rotLCA.transpose()).array().rowwise() + lca12.array().transpose();
+
 
 
 		// global position of UCA3 for whole wheel movement
@@ -372,13 +375,13 @@ public:
 		if (steerIncr != 0 || wSteer != 0)
 		{
 
-			std::cout << "no steer movement" << std::endl;
 			// calculating TR2 position
 			Eigen::MatrixXf tr2Glob(vertIncr * 2 + 1, 3);
 			Eigen::MatrixXf wcnGlob(vertIncr * 2 + 1, 3);
 			Eigen::MatrixXf spnGlob(vertIncr * 2 + 1, 3);
 
 			tr2prGlob = (uca3Glob - lca3Glob) * t_param + lca3Glob;
+
 
 			for (int i = 0; i < vertIncr * 2 + 1; i++)
 			{
@@ -445,6 +448,8 @@ public:
 
 				tr2Glob.row(i) << (rotTR * tr2locTR).transpose() + tr2prGlob.row(i);
 
+
+
 				// calculating WCN and SPN 
 				Eigen::Matrix3f _rotTRk; // TR rotation matrix defined by TR2ref
 
@@ -469,9 +474,6 @@ public:
 
 			temp2cp << spnGlob - wcnGlob;
 
-			std::cout << "temp2cp  " << std::endl;
-			std::cout << temp2cp << std::endl;
-
 			temp3cp.col(0) << -temp2cp.col(0).array() * temp2cp.col(2).array() * temp1cp;
 			temp3cp.col(1) << -temp2cp.col(1).array() * temp2cp.col(2).array() * temp1cp;
 			temp3cp.col(2) <<
@@ -484,6 +486,9 @@ public:
 
 			cpGlob << -temp3cp * wRadius + wcnGlob;
 
+			std::cout << "wcnGlob\n" << wcnGlob << "\n";
+			std::cout << "spnGlob\n" << spnGlob << "\n";
+			std::cout << "cpGlob\n" << cpGlob << "\n";
 
 
 			CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob, outputParams[0]);
@@ -498,6 +503,8 @@ public:
 			CalculateAntiFeatures(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, wcnGlob, outputParams[10], outputParams[11], 1);
 			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[12], outputParams[13], 0);
 			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[14], outputParams[15], 2);
+			std::cout << "camber 0\n" << outputParams[1] << "\n";
+			std::cout << "camber 2\n" << outputParams[2] << "\n";
 
 			/* output params :
 			1  objective function
@@ -518,12 +525,16 @@ public:
 			16 anti rise / anti lift
 
 			*/
+
+			std::cout <<"CP global \n" << cpGlob << "\n";
+
 		}
 
 		// steering is enabled
 		else
 		{
 		}
+
 
 
 	}
@@ -534,22 +545,13 @@ public:
 		float camberDown;
 		CalculateCamber(cp, wcn, spn, camberUp, 2);
 		CalculateCamber(cp, wcn, spn, camberDown, 0);
-
-		std::cout << "camber up " << camberUp;
-		std::cout << "camber down " << camberDown;
-
 		float wantedCamberUp = -0.978327f;
 		float wantedCamberDown = -2.65318f;
-
 		float peakWidth = 100.0f;
-
 		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2)) * 0.5f };
 		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) * 0.5f };
 
 		camberScore = 1 - camberUpObj - camberDownObj;
-
-
-
 	}
 
 	void CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& camberAngle, int position)
@@ -587,13 +589,10 @@ public:
 			wcn.row(L)(2) + groundNormal(2) * temp1_wcnpr / temp2_wcnpr
 		};
 
-
 		float camber =
 			(wcnpr - (Eigen::Vector3f)wcn.row(L)).norm() /
 			((Eigen::Vector3f)spn.row(L) -
 				(Eigen::Vector3f)wcn.row(L)).norm();
-
-
 
 		// tests if camber is negative, if it is it returns negative angle
 		if ((wcnpr - (Eigen::Vector3f)wcn.row(L))(2) > 0)
@@ -601,8 +600,6 @@ public:
 		// if camber is not negative, returns positive angle
 		else
 			camberAngle = asin(camber) * 180 / 3.14159f;
-
-
 	}
 
 	void CalculateToe(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& toeAngle, int position)
@@ -614,17 +611,6 @@ public:
 			wcn.row(position)(1) - spn.row(position)(1),
 			wcn.row(position)(2) - spn.row(position)(2)
 		};
-
-		std::cout << "wheel axis coords_________ ";
-		std::cout << wheelAxis << "\n";
-		std::cout << "wheel axis norm_________ ";
-		std::cout << wheelAxis.norm() << "\n";
-
-
-		std::cout << "ref axis coords_________ ";
-		std::cout << refAxis << "\n";
-		std::cout << "ref axis norm_________ ";
-		std::cout << refAxis.norm() << "\n";
 
 		float toe = acos(refAxis.norm() / wheelAxis.norm());
 
@@ -955,51 +941,31 @@ public:
 				lcaIntrsPt[1] * (lcaIntrsDir - ucaIntrsDir)) /
 				(lcaIntrsDir - ucaIntrsDir)
 			};
-			std::cout << "IC point coords \n" << ICPt << "\n";
-			std::cout << "IC x \n" << ICPt[0] << "\n";
-			std::cout << "IC z \n" << ICPt[1] << "\n";
-			std::cout << "wcn x \n" << wcn[0] << "\n";
-			std::cout << "wcn z \n" << wcn[2] << "\n";
-			std::cout << "cp x \n" << cp[0] << "\n";
-			std::cout << "cp z \n" << cp[2] << "\n";
+
 			// tan theta for outboard drive/brakes
 			tanThetaOutboard = (ICPt[1] - wcn[2]) / (ICPt[0] - wcn[0]);
 			tanThetaInboard = (ICPt[1] - cp[2]) / (ICPt[0] - cp[0]);
 		}
-
-		std::cout << "tanThetaOutboard " << tanThetaOutboard<<"\n";
-		std::cout << "tanThetaInboard " << tanThetaInboard <<"\n";
-		std::cout << "drive bias " << rearDriveBias <<"\n";
-		std::cout << "brake bias " << rearBrakeBias <<"\n";
-
 
 		// front suspension
 		if (suspPos == 0)
 		{
 			if (drivePos == 0)     // outboard drive
 			{
-				std::cout << "front outboard drive\n";
 				antiDrive = tanThetaOutboard * wheelbase / cogHeight * frontDriveBias * 100;
-
 			}
 			else                   // inboard drive
 			{
-				std::cout << "front inboard drive\n";
 				antiDrive = tanThetaInboard * wheelbase / cogHeight / frontDriveBias * 100;
-
 			}
 
 			if (brakePos == 0)       // outboard brakes
 			{
-				std::cout << "front outboard brakes\n";
 				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * frontBrakeBias * 100;
-
 			}
 			else                   // inboard brakes
 			{
-				std::cout << "front inboard brakes\n";
 				antiBrakes = tanThetaInboard * wheelbase / cogHeight / frontBrakeBias * 100;
-
 			}
 		}
 		// rear suspension
@@ -1007,30 +973,20 @@ public:
 		{
 			if (drivePos == 0)     // outboard drive
 			{
-				std::cout << "rear outboard drive\n";
 				antiDrive = -tanThetaOutboard * wheelbase / cogHeight * rearDriveBias * 100;
-
 			}
 			else                   // inboard drive
 			{
-				std::cout << "rear inboard drive\n";
 				antiDrive = -tanThetaInboard * wheelbase / cogHeight / rearDriveBias * 100;
-
 			}
 
 			if (brakePos == 0)     // outboard brakes
 			{
 				antiBrakes = -tanThetaOutboard * wheelbase / cogHeight * rearBrakeBias * 100;
-				std::cout << "rear outboard brakes\n";
-
-
-
 			}
 			else                   // inboard brakes
 			{
-				std::cout << "rear inboard brakes\n";
 				antiBrakes = -tanThetaInboard * wheelbase / cogHeight / rearBrakeBias * 100;
-
 			}
 		}
 	}

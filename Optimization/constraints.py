@@ -467,8 +467,8 @@ slsqp_cobyla_common_constraints = [
 
     # uca3
     {'type': 'ineq', 'fun': uca3_in_wheel_constraint_uplim},  # restricts uca3 inside wheel shell upper bound, zamijena za cons_up_uca3z
-    # {'type': 'ineq', 'fun': uca3_in_wheel_constraint_lolim},  # restricts uca3 inside wheel shell lower bound
-    {'type': 'ineq', 'fun': min_distance_between_wcn_and_uca3},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i uca3, umjesto cons_lo_uca3y
+    #{'type': 'ineq', 'fun': uca3_in_wheel_constraint_lolim},  # restricts uca3 inside wheel shell lower bound
+    #{'type': 'ineq', 'fun': min_distance_between_wcn_and_uca3},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i uca3, umjesto cons_lo_uca3y
 
     # lca1
 
@@ -476,14 +476,14 @@ slsqp_cobyla_common_constraints = [
 
     # lca3
     {'type': 'ineq', 'fun': lca3_in_wheel_constraint_uplim},  # restricts lca3 inside wheel shell upper bound, zamijena za cons_lo_lca3z
-    # {'type': 'ineq', 'fun': lca3_in_wheel_constraint_lolim},  # restricts lca3 inside wheel shell lower bound
-    {'type': 'ineq', 'fun': min_distance_between_wcn_and_lca3},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i lca3, umjesto cons_lo_lca3y
+    #{'type': 'ineq', 'fun': lca3_in_wheel_constraint_lolim},  # restricts lca3 inside wheel shell lower bound
+    #{'type': 'ineq', 'fun': min_distance_between_wcn_and_lca3},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i lca3, umjesto cons_lo_lca3y
     # tr1
 
     # tr2
     {'type': 'ineq', 'fun': tr2_in_wheel_constraint_uplim},  # restricts tr2 inside wheel shell upper bound, zamijena za cons_up_tr2x
     # {'type': 'ineq', 'fun': tr2_in_wheel_constraint_lolim},  # restricts tr2 inside wheel shell lower bound
-    {'type': 'ineq', 'fun': min_distance_between_wcn_and_tr2},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i tr2, umjesto cons_lo_tr2y
+    #{'type': 'ineq', 'fun': min_distance_between_wcn_and_tr2},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i tr2, umjesto cons_lo_tr2y
     ## CONSTRAINTOVI IZVEDENIH ZNACAJKI
     {'type': 'ineq', 'fun': toe_constraint_uppos_uplim},  # toe upper pos upper bound
     {'type': 'ineq', 'fun': toe_constraint_uppos_lolim},  # toe upper pos lower bound
@@ -537,8 +537,8 @@ hps_coordinate_components_constraints = [
     {'type': 'ineq', 'fun': cons_up_uca3x},  # uca3 x upper bound
     {'type': 'ineq', 'fun': cons_lo_uca3x},  # uca3 x lower bound
     {'type': 'ineq', 'fun': cons_up_uca3y},  # uca3 y upper bound
-    # {'type': 'ineq', 'fun': cons_lo_uca3y},  # uca3 y lower bound
-    # {'type': 'ineq', 'fun': cons_up_uca3z},  # uca3 z upper bound
+    {'type': 'ineq', 'fun': cons_lo_uca3y},  # uca3 y lower bound
+    #{'type': 'ineq', 'fun': cons_up_uca3z},  # uca3 z upper bound
     {'type': 'ineq', 'fun': cons_lo_uca3z},  # uca3 z lower bound #######
     # lca1
     {'type': 'ineq', 'fun': cons_up_lca1y},  # lca1 y upper bound
@@ -554,9 +554,9 @@ hps_coordinate_components_constraints = [
     {'type': 'ineq', 'fun': cons_up_lca3x},  # lca3 x upper bound
     {'type': 'ineq', 'fun': cons_lo_lca3x},  # lca3 x lower bound
     {'type': 'ineq', 'fun': cons_up_lca3y},  # lca3 y upper bound
-    # {'type': 'ineq', 'fun': cons_lo_lca3y},  # lca3 y lower bound
+    {'type': 'ineq', 'fun': cons_lo_lca3y},  # lca3 y lower bound
     {'type': 'ineq', 'fun': cons_up_lca3z},  # lca3 z upper bound
-    # {'type': 'ineq', 'fun': cons_lo_lca3z},  # lca3 z lower bound ######
+    #{'type': 'ineq', 'fun': cons_lo_lca3z},  # lca3 z lower bound ######
     # tr1
     {'type': 'ineq', 'fun': cons_up_tr1x},  # tr1 x upper bound
     {'type': 'ineq', 'fun': cons_lo_tr1x},  # tr1 x lower bound
@@ -565,10 +565,10 @@ hps_coordinate_components_constraints = [
     {'type': 'ineq', 'fun': cons_up_tr1z},  # tr1 z upper bound
     {'type': 'ineq', 'fun': cons_lo_tr1z},  # tr1 z lower bound ######
     # tr2
-    # {'type': 'ineq', 'fun': cons_up_tr2x},  # tr2 x upper bound
+    {'type': 'ineq', 'fun': cons_up_tr2x},  # tr2 x upper bound
     {'type': 'ineq', 'fun': cons_lo_tr2x},  # tr2 x lower bound
     {'type': 'ineq', 'fun': cons_up_tr2y},  # tr2 y upper bound
-    # {'type': 'ineq', 'fun': cons_lo_tr2y},  # tr2 y lower bound
+    {'type': 'ineq', 'fun': cons_lo_tr2y},  # tr2 y lower bound
     {'type': 'ineq', 'fun': cons_up_tr2z},  # tr2 z upper bound
     {'type': 'ineq', 'fun': cons_lo_tr2z},  # tr2 z lower bound
 ]
@@ -577,13 +577,4 @@ hps_constraints_cobyla = slsqp_cobyla_common_constraints[:] + hps_coordinate_com
 
 hps_constraints_slsqp = slsqp_cobyla_common_constraints[:]
 
-hps_bounds_slsqp = np.array([
-    [Suspension.uca1y_lo, Suspension.uca1y_up], [Suspension.uca1z_lo, Suspension.uca1z_up],
-    [Suspension.uca2y_lo, Suspension.uca2y_up], [Suspension.uca2z_lo, Suspension.uca2z_up],
-    [Suspension.uca3x_lo, Suspension.uca3x_up], [Suspension.uca3y_lo, Suspension.uca3y_up], [Suspension.uca3z_lo, Suspension.uca3z_up],
-    [Suspension.lca1y_lo, Suspension.lca1y_up], [Suspension.lca1z_lo, Suspension.lca1z_up],
-    [Suspension.lca2y_lo, Suspension.lca2y_up], [Suspension.lca2z_lo, Suspension.lca2z_up],
-    [Suspension.lca3x_lo, Suspension.lca3x_up], [Suspension.lca3y_lo, Suspension.lca3y_up], [Suspension.lca3z_lo, Suspension.lca3z_up],
-    [Suspension.tr1x_lo, Suspension.tr1x_up], [Suspension.tr1y_lo, Suspension.tr1y_up], [Suspension.tr1z_lo, Suspension.tr1z_up],
-    [Suspension.tr2x_lo, Suspension.tr2x_up], [Suspension.tr2y_lo, Suspension.tr2y_up], [Suspension.tr2z_lo, Suspension.tr2z_up]
-])
+

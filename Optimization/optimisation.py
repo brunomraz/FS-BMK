@@ -2,13 +2,14 @@ import numpy as np
 from scipy.optimize import minimize
 import time
 from numpy.random import uniform as rand
-from numeric_sol import call_suspension_objective, call_suspension_check, Suspension
+from numeric_sol import call_suspension_objective, Suspension
 import numeric_sol as ns
 import pandas as pd
 import os
 import multiprocessing as mp
 from constraints import hps_constraints_cobyla, hps_constraints_slsqp, hps_bounds_slsqp
 import datetime
+from random import uniform as runif
 
 # TODO
 # normalizirati constraintove
@@ -18,9 +19,19 @@ import datetime
 
 
 # used as input to minimization function inside optmiziation method
-def random_initial_susp(row_num=1):
-    return np.random.uniform(hps_bounds_slsqp[:, 0], hps_bounds_slsqp[:, 1],
-                             size=(row_num, hps_bounds_slsqp.shape[0])).tolist()
+def random_initial_susp():
+    hps_bounds_slsqp = [
+        runif(Suspension.lca1y_lo, Suspension.lca1y_up), runif(Suspension.lca1z_lo, Suspension.lca1z_up),
+        runif(Suspension.lca2y_lo, Suspension.lca2y_up), runif(Suspension.lca2z_lo, Suspension.lca2z_up),
+        runif(Suspension.lca3x_lo, Suspension.lca3x_up), runif(Suspension.lca3y_lo, Suspension.lca3y_up), runif(Suspension.lca3z_lo, Suspension.lca3z_up),
+        runif(Suspension.uca1y_lo, Suspension.uca1y_up), runif(Suspension.uca1z_lo, Suspension.uca1z_up),
+        runif(Suspension.uca2y_lo, Suspension.uca2y_up), runif(Suspension.uca2z_lo, Suspension.uca2z_up),
+        runif(Suspension.uca3x_lo, Suspension.uca3x_up), runif(Suspension.uca3y_lo, Suspension.uca3y_up), runif(Suspension.uca3z_lo, Suspension.uca3z_up),
+        runif(Suspension.tr1x_lo, Suspension.tr1x_up), runif(Suspension.tr1y_lo, Suspension.tr1y_up), runif(Suspension.tr1z_lo, Suspension.tr1z_up),
+        runif(Suspension.tr2x_lo, Suspension.tr2x_up), runif(Suspension.tr2y_lo, Suspension.tr2y_up), runif(Suspension.tr2z_lo, Suspension.tr2z_up)
+    ]
+
+    return hps_bounds_slsqp
 
 
 def optim_process_cobyla(initial_hps, shared_list):
