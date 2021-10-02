@@ -256,6 +256,9 @@ if __name__ == "__main__":
     print("suspension output parameters___________")
     print("suspension PARALLEL done")
 
+    if Suspension.outputParams_c[7] == 0:
+        print(f"Suspension.outputParams_c[7] = {Suspension.outputParams_c[7]}")
+
     from random import uniform as runif
 
     def random_initial_susp():
@@ -274,14 +277,12 @@ if __name__ == "__main__":
 
     print("objective")
     print(call_suspension_objective(random_initial_susp()))
+    print("suspension RANDOM output parameters___________")
+    for i in range(16):
+        print(Suspension.outputParams_c[i])
     print("suspension output parameters___________")
-    print(Suspension.outputParams_c[1])
-    print(Suspension.outputParams_c[2])
-    print(Suspension.outputParams_c[3])
-    print(Suspension.outputParams_c[4])
-    print("suspension output parameters___________")
+    print("suspension RANDOM done")
 
-    print("finished objective func")
 
     suspension = Suspension([
         -2038.666, -411.709, -132.316, 			# lca1 x y z
@@ -295,24 +296,17 @@ if __name__ == "__main__":
 		-2143.6, -620.5, -220.07, 						# wcn
 		-2143.6, -595.5, -219.34])
 
-    print("suspension output parameters___________")
-    print(Suspension.outputParams_c[1])
-    print(Suspension.outputParams_c[2])
-    print(Suspension.outputParams_c[3])
-    print(Suspension.outputParams_c[4])
-    print("suspension output parameters___________")
+
 
     print("done creating class")
     suspension.calculateMovement()
     print("done calculating movement")
 
+    print("suspension normal output parameters___________")
+    for i in range(16):
+        print(Suspension.outputParams_c[i])
     print("suspension output parameters___________")
-    print(Suspension.outputParams_c[1])
-    print(Suspension.outputParams_c[2])
-    print(Suspension.outputParams_c[3])
-    print(Suspension.outputParams_c[4])
-    print("suspension output parameters___________")
+    print("suspension normal done")
 
-    suspension.printResult()
 
     input("numeric_sol program finished, press any key")

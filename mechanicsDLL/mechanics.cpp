@@ -486,10 +486,6 @@ public:
 
 			cpGlob << -temp3cp * wRadius + wcnGlob;
 
-			std::cout << "wcnGlob\n" << wcnGlob << "\n";
-			std::cout << "spnGlob\n" << spnGlob << "\n";
-			std::cout << "cpGlob\n" << cpGlob << "\n";
-
 
 			CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob, outputParams[0]);
 			CalculateCamber(cpGlob, wcnGlob, spnGlob, outputParams[1], 0);
@@ -503,8 +499,6 @@ public:
 			CalculateAntiFeatures(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, wcnGlob, outputParams[10], outputParams[11], 1);
 			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[12], outputParams[13], 0);
 			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[14], outputParams[15], 2);
-			std::cout << "camber 0\n" << outputParams[1] << "\n";
-			std::cout << "camber 2\n" << outputParams[2] << "\n";
 
 			/* output params :
 			1  objective function
@@ -526,7 +520,6 @@ public:
 
 			*/
 
-			std::cout <<"CP global \n" << cpGlob << "\n";
 
 		}
 
@@ -652,39 +645,37 @@ public:
 		Eigen::Vector3f uca3R{ uca3Lmat.row(R)(0),-uca3Lmat.row(R)(1),uca3Lmat.row(R)(2) };
 		Eigen::Vector3f cpR{ cpLmat.row(R)(0),-cpLmat.row(R)(1),cpLmat.row(R)(2) };
 
+		float aLCAL;
+		float aUCAL;
+		float aLCAR;
+		float aUCAR;
 
-		Eigen::Vector3f lca12Lpr{
-			cpL(0) / 2 + cpR(0) / 2,
-			lca1L(1) - (lca1L(1) - lca2L(1)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1L(0)) / (lca1L(0) - lca2L(0)),
-			lca1L(2) - (lca1L(2) - lca2L(2)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1L(0)) / (lca1L(0) - lca2L(0)) };
+		float bLCAL;
+		float bUCAL;
+		float bLCAR;
+		float bUCAR;
 
-		Eigen::Vector3f uca12Lpr{
-			cpL(0) / 2 + cpR(0) / 2,
-			uca1L(1) - (uca1L(1) - uca2L(1)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1L(0)) / (uca1L(0) - uca2L(0)),
-			uca1L(2) - (uca1L(2) - uca2L(2)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1L(0)) / (uca1L(0) - uca2L(0)) };
+		// LCA and UCA plane intersection with plane parallel to YZ plane with x coord CPR/2+CPL/2
+		// lambda function that defines first point of intersection line
+		auto intersectionLineCalc = [cpL, cpR](float& aCa, float& bCa, const Eigen::Vector3f& ca1, const Eigen::Vector3f& ca2, const Eigen::Vector3f& ca3)
+		{
+			// plane coefficients Ax + By + Cz + D = 0, plane defined by control arm
+			float A = (-ca1[1] + ca2[1]) * (-ca1[2] + ca3[2]) - (-ca1[1] + ca3[1]) * (-ca1[2] + ca2[2]);
+			float B = -(-ca1[0] + ca2[0]) * (-ca1[2] + ca3[2]) + (-ca1[0] + ca3[0]) * (-ca1[2] + ca2[2]);
+			float C = (-ca1[0] + ca2[0]) * (-ca1[1] + ca3[1]) - (-ca1[0] + ca3[0]) * (-ca1[1] + ca2[1]);
+			float D = -ca1[0] * A - ca1[1] * B - ca1[2] * C;
 
-		Eigen::Vector3f lca12Rpr{
-			cpL(0) / 2 + cpR(0) / 2,
-			lca1R(1) - (lca1R(1) - lca2R(1)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1R(0)) / (lca1R(0) - lca2R(0)),
-			lca1R(2) - (lca1R(2) - lca2R(2)) * (-cpL(0) / 2 - cpR(0) / 2 + lca1R(0)) / (lca1R(0) - lca2R(0)) };
+			// intersection plane defined  as x + D2 = 0
+			float D2 = -(cpL[0] + cpR[0]) / 2;
 
-		Eigen::Vector3f uca12Rpr{
-			cpL(0) / 2 + cpR(0) / 2,
-			uca1R(1) - (uca1R(1) - uca2R(1)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1R(0)) / (uca1R(0) - uca2R(0)),
-			uca1R(2) - (uca1R(2) - uca2R(2)) * (-cpL(0) / 2 - cpR(0) / 2 + uca1R(0)) / (uca1R(0) - uca2R(0)) };
-
-		float aLCAL = (lca3L(1) - lca12Lpr(1)) / (lca3L(2) - lca12Lpr(2));
-		float bLCAL = -aLCAL * lca12Lpr(2) + lca12Lpr(1);
-
-		float aUCAL = (uca3L(1) - uca12Lpr(1)) / (uca3L(2) - uca12Lpr(2));
-		float bUCAL = -aUCAL * uca12Lpr(2) + uca12Lpr(1);
-
-		float aLCAR = (lca3R(1) - lca12Rpr(1)) / (lca3R(2) - lca12Rpr(2));
-		float bLCAR = -aLCAR * lca12Rpr(2) + lca12Rpr(1);
-
-		float aUCAR = (uca3R(1) - uca12Rpr(1)) / (uca3R(2) - uca12Rpr(2));
-		float bUCAR = -aUCAR * uca12Rpr(2) + uca12Rpr(1);
-
+			aCa = -B / C;
+			bCa = (A * D2 - D) / C;
+		};
+		
+		intersectionLineCalc(aLCAL, bLCAL, lca1L, lca2L, lca3L);
+		intersectionLineCalc(aUCAL, bUCAL, uca1L, uca2L, uca3L);
+		intersectionLineCalc(aLCAR, bLCAR, lca1R, lca2R, lca3R);
+		intersectionLineCalc(aUCAR, bUCAR, uca1R, uca2R, uca3R);
 
 		float aICL;
 		float aICR;
@@ -695,17 +686,16 @@ public:
 		if (abs(aLCAL - aUCAL) < slopePrecision)
 		{
 			aICL = aLCAL;
-			bICL = cpL(1) - aLCAL * cpL(2);
+			bICL = cpL(2) - aLCAL * cpL(1);
 		}
 		// case if LEFT LCA and UCA are NOT parallel
 		else
 		{
-			float ICLy = (aLCAL * bUCAL - aUCAL * bLCAL) / (aLCAL - aUCAL);
-			float ICLz = (-bLCAL + bUCAL) / (aLCAL - aUCAL);
+			float ICLz = (aLCAL * bUCAL - aUCAL * bLCAL) / (aLCAL - aUCAL);
+			float ICLy = (-bLCAL + bUCAL) / (aLCAL - aUCAL);
 
-
-			aICL = (ICLy - cpL(1)) / (ICLz - cpL(2));
-			bICL = -cpL(2) * (ICLy - cpL(1)) / (ICLz - cpL(2)) + cpL(1);
+			aICL = (ICLz - cpL(2)) / (ICLy - cpL(1));
+			bICL = -cpL(1) * aICL + cpL(2);
 		}
 
 
@@ -713,26 +703,33 @@ public:
 		if (abs(aLCAR - aUCAR) < slopePrecision)
 		{
 			aICR = aLCAR;
-			bICR = cpR(1) - aLCAR * cpR(2);
+			bICR = cpR(2) - aLCAR * cpR(1);
 		}
 		// case if RIGHT LCA and UCA are NOT parallel
 		else
 		{
-			float ICRy = (aLCAR * bUCAR - aUCAR * bLCAR) / (aLCAR - aUCAR);
-			float ICRz = (-bLCAR + bUCAR) / (aLCAR - aUCAR);
+			float ICRz = (aLCAR * bUCAR - aUCAR * bLCAR) / (aLCAR - aUCAR);
+			float ICRy = (-bLCAR + bUCAR) / (aLCAR - aUCAR);
 
-
-			aICR = (ICRy - cpR(1)) / (ICRz - cpR(2));
-			bICR = -cpR(2) * (ICRy - cpR(1)) / (ICRz - cpR(2)) + cpR(1);
+			aICR = (ICRz - cpR(2)) / (ICRy - cpR(1));
+			bICR = -cpR(1) * aICR + cpR(2);
+		}
+		
+		if (abs((aICR - aICL)) < precision)
+		{
+			rollCentreHeight = 0;
 		}
 
-		float RCz = (bICL - bICR) / (aICR - aICL);
-		float RCy = aICL * (bICL - bICR) / (aICR - aICL) + bICL;
+		else
+		{
+			float RCy = (bICL - bICR) / (aICR - aICL);
+			float RCz = aICL * RCy + bICL;
 
-		rollCentreHeight =
-			((cpR(1) - cpL(1)) * (cpL(2) - RCz) -
-				(cpL(1) - RCy) * (cpR(2) - cpL(2))) /
-			sqrt(pow((cpR(2) - cpL(2)), 2) + pow((cpR(1) - cpL(1)), 2));
+			rollCentreHeight =
+				((cpR(1) - cpL(1)) * (cpL(2) - RCz) -
+					(cpL(1) - RCy) * (cpR(2) - cpL(2))) /
+				sqrt(pow((cpR(2) - cpL(2)), 2) + pow((cpR(1) - cpL(1)), 2));
+		}
 
 	}
 
@@ -747,8 +744,6 @@ public:
 		Eigen::Vector3f spn{ spnMat.row(L) };
 		Eigen::Vector3f lca3L{ lca3Mat.row(L) };
 		Eigen::Vector3f uca3L{ uca3Mat.row(L) };
-
-
 
 		Eigen::Vector3f grndNormal{
 			0,
@@ -911,18 +906,6 @@ public:
 
 		CalculateIntersectionLine2D(lca1, lca2, lca3, cp, lcaIntrsPt, lcaIntrsDir);
 		CalculateIntersectionLine2D(uca1, uca2, uca3, cp, ucaIntrsPt, ucaIntrsDir);
-
-
-		// projects 
-		//auto CalculateProjectionLine2D = [](const Eigen::Vector3f& ca1, const Eigen::Vector3f& ca2,
-		//	Eigen::Vector2f& caIntrsPt, float& caIntrsDir)
-		//{
-		//	caIntrsPt = { ca1[0] , ca1[2] };
-		//	caIntrsDir = (ca1[2] - ca2[2]) / (ca1[0] - ca2[0]);
-		//};
-
-		//CalculateProjectionLine2D(lca1, lca2, lcaIntrsPt, lcaIntrsDir);
-		//CalculateProjectionLine2D(uca1, uca2, ucaIntrsPt, ucaIntrsDir);
 
 		// if resulting lines are parallel
 		if (abs((lcaIntrsDir - ucaIntrsDir) / lcaIntrsDir) < precision)
