@@ -2,12 +2,12 @@ import numpy as np
 from scipy.optimize import minimize
 import time
 from numpy.random import uniform as rand
-from numeric_sol import call_S_objective, Suspension
+from numeric_sol import call_suspension_objective, Suspension
 import numeric_sol as ns
 import pandas as pd
 import os
 import multiprocessing as mp
-from constraints import hps_constraints_cobyla, hps_constraints_slsqp, hps_bounds_slsqp
+from constraints import hps_constraints_cobyla, hps_constraints_slsqp#, hps_bounds_slsqp
 import datetime
 from random import uniform as runif
 
@@ -38,7 +38,7 @@ def random_initial_susp():
 def optim_process_cobyla(initial_hps, shared_list):
     # global hps_constraints
     start_time = time.time()
-    sol = minimize(call_Suspension_objective, initial_hps,
+    sol = minimize(call_suspension_objective, initial_hps,
                    constraints=hps_constraints_cobyla,
                    method='COBYLA', options={"maxiter": 2000})
     # print("obavljena optimizacija")
@@ -47,7 +47,7 @@ def optim_process_cobyla(initial_hps, shared_list):
     if sol.success == True:
         print("gotovo uspjesno")
         # APPENDA  rjesenje jedne iteracije u mp.Manager.list()
-        shared_list.append(np.append(call_S_check(sol.x)[3], ("COBYLA", end_time - start_time)))
+        #shared_list.append(np.append(call_S_check(sol.x)[3], ("COBYLA", end_time - start_time)))
 
     else:
         print("nisu constraintovi pogodeni")
@@ -56,7 +56,7 @@ def optim_process_cobyla(initial_hps, shared_list):
 def optim_process_slsqp(initial_hps, shared_list):
     # global hps_constraints
     start_time = time.time()
-    sol = minimize(call_Suspension_objective, initial_hps,
+    sol = minimize(call_suspension_objective, initial_hps,
                    constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp,
                    method='SLSQP', options={"maxiter": 200})
     # print("obavljena optimizacija")
@@ -65,7 +65,7 @@ def optim_process_slsqp(initial_hps, shared_list):
     if sol.success == True:
         print("gotovo uspjesno")
         # APPENDA  rjesenje jedne iteracije u mp.Manager.list()
-        shared_list.append(np.append(call_S_check(sol.x)[3], ("SLSQP", end_time - start_time)))
+        #shared_list.append(np.append(call_S_check(sol.x)[3], ("SLSQP", end_time - start_time)))
 
     else:
         print("nisu constraintovi pogodeni")
@@ -89,14 +89,22 @@ column_names = ["UCA1 X", "UCA1 Y", "UCA1 Z", "UCA2 X", "UCA2 Y", "UCA2 Z",
                 "Method", "Execution time(s)"
                 ]
 
-test_initial_hardpoints = [-416.249, 255.133,
-                           -417.314, 250.669,
-                           659.4, -578, 294.93,
-                           -411.709, 112.246,
-                           -408.195, 106.135,
-                           641.4, -600, 119.93,
-                           741.2, -411.45, 174.53,
-                           731.4, -582, 199.93]
+test_initial_hardpoints =[
+    -411.709, -132.316, 			# lca1 x y z
+	-408.195, -126.205, 					# lca2
+	-2135, -600, -140, 								# lca3
+	-416.249, -275.203, 					# uca1
+	-417.314, -270.739, 					# uca2
+	-2153, -578, -315, 								# uca3
+	-2234.8, -411.45, -194.6, 						# tr1
+	-2225, -582, -220,								# tr2
+]
+
+test_hps = [ -406.70241222,  -125.28024281,  -378.86606791,   -93.95976881,
+       -2153.23706113,  -620.6565911 ,  -165.90714882,  -442.2011551 ,
+        -322.01104566,  -353.46967717,  -267.41468415, -2140.86780456,
+        -595.04537695,  -343.49183508, -2231.15803313,  -453.21632971,
+        -188.09879557, -2201.74463637,  -554.01927207,  -257.10647785]
 
 # uca1 = np.array([546.963, -416.249, 255.133]),
 # uca2 = np.array([747.881, -417.314, 250.669]),
@@ -109,22 +117,26 @@ test_initial_hardpoints = [-416.249, 255.133,
 # wcn = np.array([650, -620.5, 200]),
 # spn = np.array([650, -595.5, 199.27]))
 
-# start_time=time.time()
-# # cobyla
-# sol = minimize(call_Suspension_objective, test_initial_hardpoints, constraints=hps_constraints_cobyla, method='COBYLA',options={"maxiter":2000,"disp":True})
-# # slsqp
-# # sol = minimize(call_Suspension_objective, test_initial_hardpoints, constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, method='SLSQP', options={"maxiter": 200,"disp":True})
-# print(sol)
-# time.sleep(0.1)
-# if sol.success==False:
-#     print("nije constrint")
-#
-# if sol.success==True:
-#     print("uspjelo constrint")
-# print(f"trajalo je {time.time()-start_time-0.1}")
 
 
-if __name__ == "__main__":
+print(f"call obj: {call_suspension_objective(test_hps)}")
+
+start_time=time.time()
+ # cobyla
+sol = minimize(call_suspension_objective, random_initial_susp(), constraints=hps_constraints_cobyla, method='COBYLA',options={"maxiter":2000,"disp":True})
+ # slsqp
+#sol = minimize(call_suspension_objective, random_initial_susp(), constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, method='SLSQP', options={"maxiter":200,"disp":True})
+print(sol)
+time.sleep(0.1)
+if sol.success==False:
+    print("nije constrint")
+
+if sol.success==True:
+    print("uspjelo constrint")
+print(f"trajalo je {time.time()-start_time-0.1}")
+
+
+if __name__ == "1__main__":
     started_on = datetime.datetime.now()
     print(started_on)
     start_time = time.time()

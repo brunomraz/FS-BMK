@@ -508,8 +508,6 @@ public:
 			CalculateSignedPointToPlaneDistance(outputParams[20], wcnref, spnref, uca3ref);
 			CalculateSignedPointToPlaneDistance(outputParams[21], wcnref, spnref, tr2ref);
 
-			std::cout << "cpGlob[0] \n" << cpGlob.row(0) << "\n";
-			std::cout << "cpGlob[2] \n" << cpGlob.row(2) << "\n";
 
 			/* output params :
 			0  objective function
@@ -984,7 +982,6 @@ public:
 		float D = -linePt1[0] * A - linePt1[1] * B - linePt1[2] * C;
 
 		distance = (A * Pt[0] + B * Pt[1] + C * Pt[2] + D) / sqrtf(A * A + B * B + C * C);
-		std::cout << "distance to wcn " << distance << "\n";
 	}
 
 };
