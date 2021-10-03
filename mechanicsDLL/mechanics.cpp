@@ -499,25 +499,41 @@ public:
 			CalculateAntiFeatures(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, wcnGlob, outputParams[10], outputParams[11], 1);
 			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[12], outputParams[13], 0);
 			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[14], outputParams[15], 2);
+			// for constraints inside wheel
+			CalculateDistancePointToLine(outputParams[16], spnref, wcnref, lca3ref);
+			CalculateDistancePointToLine(outputParams[17], spnref, wcnref, uca3ref);
+			CalculateDistancePointToLine(outputParams[18], spnref, wcnref, tr2ref);
+
+			CalculateSignedPointToPlaneDistance(outputParams[19], wcnref, spnref, lca3ref);
+			CalculateSignedPointToPlaneDistance(outputParams[20], wcnref, spnref, uca3ref);
+			CalculateSignedPointToPlaneDistance(outputParams[21], wcnref, spnref, tr2ref);
+
+			std::cout << "cpGlob[0] \n" << cpGlob.row(0) << "\n";
+			std::cout << "cpGlob[2] \n" << cpGlob.row(2) << "\n";
 
 			/* output params :
-			1  objective function
-			2  camber angle up
-			3 			down
-			4  toe angle up
-			5 		down
-			6  caster angle
-			7  roll centre height
-			8  caster trail
+			0  objective function
+			1  camber angle down
+			2 			    up
+			3  toe angle down
+			4 		     up
+			5  caster angle
+			6  roll centre height
+			7  caster trail
+			8  scrub radius
 			9  kingpin angle
-			10 scrub radius
-			11 half track change up
-			12 				down
-			13 wheelbase change up
-			14 				down
-			15 anti squat / anti dive
-			16 anti rise / anti lift
-
+			10 anti squat / anti dive drive
+			11 anti rise / anti lift  brake
+			12 half track change down
+			13 wheelbase change down
+			14 half track change up
+			15 wheelbase change up
+		    16 distance lca3 to wcn-spn line
+			17 distance uca3 to wcn-spn line
+			18 distance tr2 to wcn-spn line
+			19 distance lca3 to plane with wcn-spn normal through wcn point
+			20 distance uca3 to plane with wcn-spn normal through wcn point
+			21 distance tr2 to plane with wcn-spn normal through wcn point 
 			*/
 
 
@@ -867,110 +883,82 @@ public:
 		Eigen::Vector3f cp{ cpMat.row(position) };
 		Eigen::Vector3f wcn{ wcnMat.row(position) };
 
-		Eigen::Vector2f lcaIntrsPt;
-		float lcaIntrsDir;
-		Eigen::Vector2f ucaIntrsPt;
-		float ucaIntrsDir;
+		float aLCA;
+		float aUCA;
+
+		float bLCA;
+		float bUCA;
+
+		// LCA and UCA plane intersection with plane parallel to YZ plane with x coord CPR/2+CPL/2
+		// lambda function that defines first point of intersection line
+		auto intersectionLineCalc = [cp](float& aCa, float& bCa, const Eigen::Vector3f& ca1, const Eigen::Vector3f& ca2, const Eigen::Vector3f& ca3)
+		{
+			// plane coefficients Ax + By + Cz + D = 0, plane defined by control arm
+			float A = (-ca1[1] + ca2[1]) * (-ca1[2] + ca3[2]) - (-ca1[1] + ca3[1]) * (-ca1[2] + ca2[2]);
+			float B = -(-ca1[0] + ca2[0]) * (-ca1[2] + ca3[2]) + (-ca1[0] + ca3[0]) * (-ca1[2] + ca2[2]);
+			float C = (-ca1[0] + ca2[0]) * (-ca1[1] + ca3[1]) - (-ca1[0] + ca3[0]) * (-ca1[1] + ca2[1]);
+			float D = -ca1[0] * A - ca1[1] * B - ca1[2] * C;
+
+			// intersection plane defined  as x + D2 = 0
+			float D2 = -cp[1];
+
+			aCa = -A / C;
+			bCa = (B * D2 - D) / C;
+		};
+
+		intersectionLineCalc(aLCA, bLCA, lca1, lca2, lca3);
+		intersectionLineCalc(aUCA, bUCA, uca1, uca2, uca3);
 
 		float tanThetaOutboard;
 		float tanThetaInboard;
 
-		auto CalculateIntersectionLine2D =
-			[]
-		(const Eigen::Vector3f& ca1, const Eigen::Vector3f& ca2,
-			const Eigen::Vector3f& ca3, const Eigen::Vector3f& cp,
-			Eigen::Vector2f& caIntrsPt, float& caIntrsDir) {
-				float lcaIntrsPt_temp1 =
-					ca1[0] * ca2[2] - ca1[0] * ca3[2] - ca1[2] * ca2[0] +
-					ca1[2] * ca3[0] + ca2[0] * ca3[2] - ca2[2] * ca3[0];
-
-				float lcaIntrsPt_temp2 =
-					ca1[0] * ca2[1] * ca3[2] - ca1[0] * ca2[2] * ca3[1] - ca1[1] * ca2[0] * ca3[2];
-
-				float lcaIntrsPt_temp3 =
-					ca1[1] * ca2[2] * ca3[0] + ca1[2] * ca2[0] * ca3[1] - ca1[2] * ca2[1] * ca3[0];
-
-				float lcaIntrsPt_temp4 =
-					ca1[1] * ca2[2] - ca1[1] * ca3[2] - ca1[2] * ca2[1] +
-					ca1[2] * ca3[1] + ca2[1] * ca3[2] - ca2[2] * ca3[1];
-
-				caIntrsPt = {
-					(cp[1] * lcaIntrsPt_temp1 + lcaIntrsPt_temp2 + lcaIntrsPt_temp3) / lcaIntrsPt_temp4,
-					0.0f
-				};
-
-				caIntrsDir =
-					((ca1[1] - ca2[1]) * (ca1[2] - ca3[2]) - (ca1[1] - ca3[1]) * (ca1[2] - ca2[2])) /
-					(-(ca1[0] - ca2[0]) * (ca1[1] - ca3[1]) + (ca1[0] - ca3[0]) * (ca1[1] - ca2[1]));
-		};
-
-		CalculateIntersectionLine2D(lca1, lca2, lca3, cp, lcaIntrsPt, lcaIntrsDir);
-		CalculateIntersectionLine2D(uca1, uca2, uca3, cp, ucaIntrsPt, ucaIntrsDir);
-
 		// if resulting lines are parallel
-		if (abs((lcaIntrsDir - ucaIntrsDir) / lcaIntrsDir) < precision)
+		if (abs(aLCA - aUCA) < precision)
 		{
-			tanThetaInboard = lcaIntrsDir;
-			tanThetaOutboard = lcaIntrsDir;
+			tanThetaInboard = aLCA;
+			tanThetaOutboard = aLCA;
 		}
 		// if resulting lines are not parallel
 		else
 		{
+			float ICPtx = (bLCA - bUCA) / (aUCA - aLCA);
+			float ICPtz = aLCA * ICPtx + bLCA;
 
-			Eigen::Vector2f ICPt = {
-				(lcaIntrsDir * lcaIntrsPt[0] - lcaIntrsPt[1] - ucaIntrsDir * ucaIntrsPt[0] + ucaIntrsPt[1]) /
-				(lcaIntrsDir - ucaIntrsDir),
-				(lcaIntrsDir * (lcaIntrsPt[0] * ucaIntrsDir - lcaIntrsPt[1] - ucaIntrsDir * ucaIntrsPt[0] + ucaIntrsPt[1]) +
-				lcaIntrsPt[1] * (lcaIntrsDir - ucaIntrsDir)) /
-				(lcaIntrsDir - ucaIntrsDir)
-			};
-
-			// tan theta for outboard drive/brakes
-			tanThetaOutboard = (ICPt[1] - wcn[2]) / (ICPt[0] - wcn[0]);
-			tanThetaInboard = (ICPt[1] - cp[2]) / (ICPt[0] - cp[0]);
+			tanThetaOutboard = (ICPtz - wcn[2]) / (ICPtx - wcn[0]);
+			tanThetaInboard = (ICPtz - cp[2]) / (ICPtx - cp[0]);
 		}
 
 		// front suspension
 		if (suspPos == 0)
 		{
 			if (drivePos == 0)     // outboard drive
-			{
 				antiDrive = tanThetaOutboard * wheelbase / cogHeight * frontDriveBias * 100;
-			}
+			
 			else                   // inboard drive
-			{
 				antiDrive = tanThetaInboard * wheelbase / cogHeight / frontDriveBias * 100;
-			}
+			
 
 			if (brakePos == 0)       // outboard brakes
-			{
 				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * frontBrakeBias * 100;
-			}
+			
 			else                   // inboard brakes
-			{
-				antiBrakes = tanThetaInboard * wheelbase / cogHeight / frontBrakeBias * 100;
-			}
+				antiBrakes = tanThetaInboard * wheelbase / cogHeight / frontBrakeBias * 100;	
 		}
 		// rear suspension
 		else
 		{
 			if (drivePos == 0)     // outboard drive
-			{
 				antiDrive = -tanThetaOutboard * wheelbase / cogHeight * rearDriveBias * 100;
-			}
+			
 			else                   // inboard drive
-			{
 				antiDrive = -tanThetaInboard * wheelbase / cogHeight / rearDriveBias * 100;
-			}
-
+			
 			if (brakePos == 0)     // outboard brakes
-			{
 				antiBrakes = -tanThetaOutboard * wheelbase / cogHeight * rearBrakeBias * 100;
-			}
+			
 			else                   // inboard brakes
-			{
 				antiBrakes = -tanThetaInboard * wheelbase / cogHeight / rearBrakeBias * 100;
-			}
+			
 		}
 	}
 
@@ -979,6 +967,24 @@ public:
 		// if current wheelbase or half track is smaller than reference than negative sign, otherwise positive
 		halfTrackChange = cpMat.row(cpMat.rows() / 2)[1] - cpMat.row(position)[1];
 		wheelbaseChange = -cpMat.row(cpMat.rows() / 2)[0] + cpMat.row(position)[0];
+	}
+
+	void CalculateDistancePointToLine(float& distance, const Eigen::Vector3f& linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
+	{
+		distance = (Pt - linePt1).cross(Pt - linePt2).norm() / (linePt2 - linePt1).norm();
+	}
+
+	void CalculateSignedPointToPlaneDistance(float& distance, const Eigen::Vector3f linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
+	{
+		/*Calculates distance from point to plane and gives a sign (+ or -) for distance, positive when distanced in direction of plane normal and  negative otherwise, linePt1 is the head of normal vector and linePt2 tail*/
+
+		float A = linePt1[0] - linePt2[0];
+		float B = linePt1[1] - linePt2[1];
+		float C = linePt1[2] - linePt2[2];
+		float D = -linePt1[0] * A - linePt1[1] * B - linePt1[2] * C;
+
+		distance = (A * Pt[0] + B * Pt[1] + C * Pt[2] + D) / sqrtf(A * A + B * B + C * C);
+		std::cout << "distance to wcn " << distance << "\n";
 	}
 
 };
@@ -1010,9 +1016,6 @@ float optimisation_obj_res(float* hardpoints, float wRadiusin,
 	};
 
 	susp.CalculateMovement(outputParams);
-
-	//outputParams[0] = 123.0f;
-	//outputParams[1] = 456.0f;
 
 	return 1.0f;
 }

@@ -196,280 +196,223 @@ def cons_lo_tr2z(hps):
     return hps[19] - Suspension.tr2z_lo  # - 170
 
 
-def toe_constraint_uppos_uplim():
-    return -Suspension.outputParams_c[3] + Suspension.toe_uppos_uplim
-
-
-def toe_constraint_uppos_lolim():
-    return Suspension.outputParams_c[3] - Suspension.toe_uppos_lolim
+def toe_constraint_down_lolim():
+    return Suspension.outputParams_c[4] - Suspension.toe_lopos_lolim
 
 
 def toe_constraint_down_uplim():
     return -Suspension.outputParams_c[4] + Suspension.toe_lopos_uplim
 
 
-def toe_constraint_down_lolim():
-    return Suspension.outputParams_c[4] - Suspension.toe_lopos_lolim
+def toe_constraint_uppos_lolim():
+    return Suspension.outputParams_c[3] - Suspension.toe_uppos_lolim
 
 
-def caster_angle_ref_pos_constraint_uplim():
-    return -Suspension.outputParams_c[5] + Suspension._caster_angle_uplim
+def toe_constraint_uppos_uplim():
+    return -Suspension.outputParams_c[3] + Suspension.toe_uppos_uplim
 
 
 def caster_angle_ref_pos_constraint_lolim():
     return Suspension.outputParams_c[5] - Suspension._caster_angle_lolim
 
 
-def roll_centre_height_ref_pos_constraint_uplim():
-    return -Suspension.outputParams_c[6] + Suspension._roll_centre_height_uplim
+def caster_angle_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[5] + Suspension._caster_angle_uplim
 
 
 def roll_centre_height_ref_pos_constraint_lolim():
     return Suspension.outputParams_c[6] - Suspension._roll_centre_height_lolim
 
 
-def caster_trail_ref_pos_constraint_uplim():
-    return -Suspension.outputParams_c[7] + Suspension._caster_trail_uplim
+def roll_centre_height_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[6] + Suspension._roll_centre_height_uplim
 
 
 def caster_trail_ref_pos_constraint_lolim():
     return Suspension.outputParams_c[7] - Suspension._caster_trail_lolim
 
 
-def scrub_radius_ref_pos_constraint_uplim():
-    return -Suspension.outputParams_c[8] + Suspension._scrub_radius_uplim
+def caster_trail_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[7] + Suspension._caster_trail_uplim
 
 
 def scrub_radius_ref_pos_constraint_lolim():
     return Suspension.outputParams_c[8] - Suspension._scrub_radius_lolim
 
 
-def kingpin_angle_ref_pos_constraint_uplim():
-    return -Suspension.outputParams_c[9] + Suspension._kingpin_angle_uplim
+def scrub_radius_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[8] + Suspension._scrub_radius_uplim
 
 
 def kingpin_angle_ref_pos_constraint_lolim():
     return Suspension.outputParams_c[9] - Suspension._kingpin_angle_lolim
 
 
-def uca3_in_wheel_constraint_uplim(hps):
-    """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
-    probada felgu
-    zamijena za ogranicenje po z_uplim"""
-    distance = f.perpen_unit_vectors(np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                                     np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]),
-                                     np.array([hps[4], hps[5], hps[6]]))[4]
-    return -distance + Suspension._inside_wheel_free_radius_uca3_uplim
+def kingpin_angle_ref_pos_constraint_uplim():
+    return -Suspension.outputParams_c[9] + Suspension._kingpin_angle_uplim
 
 
-def uca3_in_wheel_constraint_lolim(hps):
+def lca3_in_wheel_constraint_lolim():
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu"""
-    distance = f.perpen_unit_vectors(np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                                     np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]),
-                                     np.array([hps[4], hps[5], hps[6]]))[4]
-    return distance - Suspension._inside_wheel_free_radius_uca3_lolim
+    return Suspension.outputParams_c[16] - Suspension._inside_wheel_free_radius_lca3_lolim
 
 
-def lca3_in_wheel_constraint_uplim(hps):
+def lca3_in_wheel_constraint_uplim():
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu
     zamijena za ogranicenje po z_lolim"""
-    distance = f.perpen_unit_vectors(np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                                     np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]),
-                                     np.array([hps[11], hps[12], hps[13]]))[4]
-    return -distance + Suspension._inside_wheel_free_radius_lca3_uplim
+    return -Suspension.outputParams_c[16] + Suspension._inside_wheel_free_radius_lca3_uplim
 
 
-def lca3_in_wheel_constraint_lolim(hps):
+def uca3_in_wheel_constraint_lolim():
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu"""
-    distance = f.perpen_unit_vectors(np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                                     np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]),
-                                     np.array([hps[11], hps[12], hps[13]]))[4]
-    return distance - Suspension._inside_wheel_free_radius_lca3_lolim
+    return Suspension.outputParams_c[17] - Suspension._inside_wheel_free_radius_uca3_lolim
 
 
-def tr2_in_wheel_constraint_uplim(hps):
+def uca3_in_wheel_constraint_uplim():
+    """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
+    probada felgu
+    zamijena za ogranicenje po z_uplim"""
+    return -Suspension.outputParams_c[17] + Suspension._inside_wheel_free_radius_uca3_uplim
+
+
+def tr2_in_wheel_constraint_lolim():
+    """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
+    probada felgu"""
+    return Suspension.outputParams_c[18] - Suspension._inside_wheel_free_radius_tr2_lolim
+
+
+def tr2_in_wheel_constraint_uplim():
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu
     zamijena za ogranicenje po x_uplim ako je iza wcn
     zamijena za ogranicenje po x_lolim ako je ispred wcn"""
-    distance = f.perpen_unit_vectors(np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                                     np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]),
-                                     np.array([hps[17], hps[18], hps[19]]))[4]
-    return -distance + Suspension._inside_wheel_free_radius_tr2_uplim
+    return -Suspension.outputParams_c[18] + Suspension._inside_wheel_free_radius_tr2_uplim
 
 
-def tr2_in_wheel_constraint_lolim(hps):
-    """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
-    probada felgu"""
-    distance = f.perpen_unit_vectors(np.array([Suspension.wcnx_lo, Suspension.wcny_up, Suspension.wcnz_lo]),
-                                     np.array([Suspension.spnx_up, Suspension.spny_up, Suspension.spnz_up]),
-                                     np.array([hps[17], hps[18], hps[19]]))[4]
-    return distance - Suspension._inside_wheel_free_radius_tr2_lolim
-
-
-def min_distance_between_wcn_and_uca3(hps):
-    """ogranicenje za minimalnu udaljenost koja mora biti izmedu uca3 i ravnine koju
-    definira tocka wcn i pravac wcn,spn
-    moze sluziti umjesto cons_lo_uca3y ogranicenja
-    ako je uca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
-    vraca negativnu vrijednost razmaka izmedu ravnine i uca3
-    slijedi iz sympy koda:
-    import sympy as sp
-    from sympy import Point3D, sqrt
-
-    uca3x, uca3y, uca3z = sp.symbols("uca3x, uca3y, uca3z")
-    wcnx, wcny, wcnz = sp.symbols("wcnx, wcny, wcnz")
-    spnx, spny, spnz = sp.symbols("spnx, spny, spnz")
-
-    spn_wcn=Point3D(-wcnx+spnx,-wcny+spny,-wcnz+spnz)
-    plane_wcn=sp.Plane(Point3D(wcnx,wcny,wcnz),normal_vector=(spn_wcn[0],spn_wcn[1],spn_wcn[2]))
-    uca3_point=Point3D(uca3x,uca3y,uca3z)
-    distance=plane_wcn.distance(uca3_point)
-
-    print(distance)#.evalf())
-    """
-
-    return (Suspension.spnx_up - Suspension.wcnx_lo) * (hps[4] - Suspension.wcnx_lo) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) + (Suspension.spny_up - Suspension.wcny_up) * (hps[5] - Suspension.wcny_up) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) + (Suspension.spnz_up -
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Suspension.wcnz_lo) * (
-                   hps[6] - Suspension.wcnz_lo) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) - Suspension._wcn_uca3_distance_uplim
-
-
-def min_distance_between_wcn_and_lca3(hps):
+def distance_between_wcn_and_lca3_lolim():
     """ogranicenje za minimalnu udaljenost koja mora biti izmedu lca3 i ravnine koju
     definira tocka wcn i pravac wcn,spn
     moze sluziti umjesto cons_lo_lca3y ogranicenja
     ako je lca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
-    slijedi iz sympy koda:
-    import sympy as sp
-    from sympy import Point3D, sqrt
-
-    lca3x, lca3y, lca3z = sp.symbols("lca3x, lca3y, lca3z")
-    wcnx, wcny, wcnz = sp.symbols("wcnx, wcny, wcnz")
-    spnx, spny, spnz = sp.symbols("spnx, spny, spnz")
-
-
-    spn_wcn=Point3D(-wcnx+spnx,-wcny+spny,-wcnz+spnz)
-    plane_wcn=sp.Plane(Point3D(wcnx,wcny,wcnz),normal_vector=(spn_wcn[0],spn_wcn[1],spn_wcn[2]))
-    uca3_point=Point3D(uca3x,uca3y,uca3z)
-    distance=plane_wcn.distance(uca3_point)
-
-    print(distance)#.evalf())
     """
-    return (Suspension.spnx_up - Suspension.wcnx_lo) * (hps[11] - Suspension.wcnx_lo) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) + (Suspension.spny_up - Suspension.wcny_up) * (hps[12] - Suspension.wcny_up) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) + (Suspension.spnz_up -
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Suspension.wcnz_lo) * (
-                   hps[13] -
-                   Suspension.wcnz_lo) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) - Suspension._wcn_lca3_distance_uplim
+    return Suspension.outputParams_c[19] - Suspension._wcn_lca3_distance_lolim
 
 
-def min_distance_between_wcn_and_tr2(hps):
+def distance_between_wcn_and_lca3_uplim():
+    """ogranicenje za minimalnu udaljenost koja mora biti izmedu lca3 i ravnine koju
+    definira tocka wcn i pravac wcn,spn
+    moze sluziti umjesto cons_lo_lca3y ogranicenja
+    ako je lca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
+    vraca negativnu vrijednost razmaka izmedu ravnine i uca3
+    """
+    return -Suspension.outputParams_c[19] + Suspension._wcn_lca3_distance_uplim
+
+
+def distance_between_wcn_and_uca3_lolim():
+    """ogranicenje za minimalnu udaljenost koja mora biti izmedu uca3 i ravnine koju
+    definira tocka wcn i pravac wcn,spn
+    moze sluziti umjesto cons_lo_uca3y ogranicenja
+    ako je uca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
+    vraca negativnu vrijednost razmaka izmedu ravnine i uca3
+    """
+    return Suspension.outputParams_c[20] - Suspension._wcn_uca3_distance_lolim
+
+
+def distance_between_wcn_and_uca3_uplim():
+    """ogranicenje za minimalnu udaljenost koja mora biti izmedu uca3 i ravnine koju
+    definira tocka wcn i pravac wcn,spn
+    moze sluziti umjesto cons_lo_uca3y ogranicenja
+    ako je uca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
+    vraca negativnu vrijednost razmaka izmedu ravnine i uca3
+    """
+    return -Suspension.outputParams_c[20] + Suspension._wcn_uca3_distance_uplim
+
+
+def distance_between_wcn_and_tr2_lolim():
     """ogranicenje za minimalnu udaljenost koja mora biti izmedu lca3 i ravnine koju
     definira tocka wcn i pravac wcn,spn
     moze sluziti umjesto cons_lo_tr2y ogranicenja
     ako je lca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
-    slijedi iz sympy koda:
-    import sympy as sp
-    from sympy import Point3D, sqrt
 
-    lca3x, lca3y, lca3z = sp.symbols("lca3x, lca3y, lca3z")
-    wcnx, wcny, wcnz = sp.symbols("wcnx, wcny, wcnz")
-    spnx, spny, spnz = sp.symbols("spnx, spny, spnz")
-
-
-    spn_wcn=Point3D(-wcnx+spnx,-wcny+spny,-wcnz+spnz)
-    plane_wcn=sp.Plane(Point3D(wcnx,wcny,wcnz),normal_vector=(spn_wcn[0],spn_wcn[1],spn_wcn[2]))
-    uca3_point=Point3D(uca3x,uca3y,uca3z)
-    distance=plane_wcn.distance(uca3_point)
-
-    print(distance)#.evalf())
     """
-    return (Suspension.spnx_up - Suspension.wcnx_lo) * (hps[17] - Suspension.wcnx_lo) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) + (Suspension.spny_up - Suspension.wcny_up) * (hps[18] - Suspension.wcny_up) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) + (Suspension.spnz_up -
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Suspension.wcnz_lo) * (
-                   hps[19] -
-                   Suspension.wcnz_lo) / np.sqrt((Suspension.spnx_up - Suspension.wcnx_lo) ** 2 + (Suspension.spny_up - Suspension.wcny_up) ** 2 + (Suspension.spnz_up - Suspension.wcnz_lo) ** 2) - Suspension._wcn_tr2_distance_uplim
+    return Suspension.outputParams_c[21] - Suspension._wcn_tr2_distance_lolim
 
 
-def calc_half_track_change_up_uplim():
-    return -Suspension.outputParams_c[14] + Suspension._half_track_change_uppos_uplim
+def distance_between_wcn_and_tr2_uplim():
+    """ogranicenje za minimalnu udaljenost koja mora biti izmedu lca3 i ravnine koju
+    definira tocka wcn i pravac wcn,spn
+    moze sluziti umjesto cons_lo_tr2y ogranicenja
+    ako je lca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
+    vraca negativnu vrijednost razmaka izmedu ravnine i uca3
 
+    """
+    return -Suspension.outputParams_c[21] + Suspension._wcn_tr2_distance_uplim
+    
 
-def calc_half_track_change_up_lolim():
-    return Suspension.outputParams_c[14] - Suspension._half_track_change_uppos_lolim
+def calc_half_track_change_down_lolim():
+    return Suspension.outputParams_c[15] - Suspension._half_track_change_downpos_lolim
 
 
 def calc_half_track_change_down_uplim():
     return -Suspension.outputParams_c[15] + Suspension._half_track_change_downpos_uplim
 
 
-def calc_half_track_change_down_lolim():
-    return Suspension.outputParams_c[15] - Suspension._half_track_change_downpos_lolim
+def calc_half_track_change_up_lolim():
+    return Suspension.outputParams_c[14] - Suspension._half_track_change_uppos_lolim
 
 
-def calc_wheelbase_change_up_uplim():
-    return -Suspension.outputParams_c[12]+ Suspension._wheelbase_change_uppos_uplim
+def calc_half_track_change_up_uplim():
+    return -Suspension.outputParams_c[14] + Suspension._half_track_change_uppos_uplim
 
 
-def calc_wheelbase_change_up_lolim():
-    return Suspension.outputParams_c[12] - Suspension._wheelbase_change_uppos_lolim
+def calc_wheelbase_change_down_lolim():
+    return Suspension.outputParams_c[13] - Suspension._wheelbase_change_downpos_lolim
 
 
 def calc_wheelbase_change_down_uplim():
     return -Suspension.outputParams_c[13] + Suspension._wheelbase_change_downpos_uplim
 
 
-def calc_wheelbase_change_down_lolim():
-    return Suspension.outputParams_c[13] - Suspension._wheelbase_change_downpos_lolim
+def calc_wheelbase_change_up_lolim():
+    return Suspension.outputParams_c[12] - Suspension._wheelbase_change_uppos_lolim
 
-def calc_anti_lift_uplim():
-    """odreduje gornju vrijednost anti lift znacajke karakteristicnu za drive front susp"""
-    return -Suspension.outputParams_c[10] + Suspension.wanted_anti_lift_uplim
 
-def calc_anti_lift_lolim():
+def calc_wheelbase_change_up_uplim():
+    return -Suspension.outputParams_c[12]+ Suspension._wheelbase_change_uppos_uplim
+
+
+def calc_anti_drive_lolim():
     """odreduje donju vrijednost anti lift znacajke karakteristicnu za drive front susp"""
-    return Suspension.outputParams_c[10] - Suspension.wanted_anti_lift_lolim
+    return Suspension.outputParams_c[10] - Suspension.wanted_anti_drive_lolim
 
-def calc_anti_dive_uplim():
-    """odreduje gornju vrijednost anti dive znacajke karakteristicnu za brake front susp"""
-    return -Suspension.outputParams_c[11] + Suspension.wanted_anti_dive_uplim
 
-def calc_anti_dive_lolim():
+def calc_anti_drive_uplim():
+    """odreduje gornju vrijednost anti lift znacajke karakteristicnu za drive front susp"""
+    return -Suspension.outputParams_c[10] + Suspension.wanted_anti_drive_uplim
+
+
+def calc_anti_brake_lolim():
     """odreduje donju vrijednost anti dive znacajke karakteristicnu za brake front susp"""
-    return Suspension.outputParams_c[11] - Suspension.wanted_anti_dive_lolim
+    return Suspension.outputParams_c[11] - Suspension.wanted_anti_brake_lolim
 
-def calc_anti_squat_uplim():
-    """odreduje gornju vrijednost anti squat znacajke karakteristicnu za drive rear susp"""
-    return -Suspension.outputParams_c[10] + Suspension.wanted_anti_squat_uplim
 
-def calc_anti_squat_lolim():
-    """odreduje donju vrijednost anti squat znacajke karakteristicnu za drive rear susp"""
-    return Suspension.outputParams_c[10] - Suspension.wanted_anti_squat_lolim
+def calc_anti_brake_uplim():
+    """odreduje gornju vrijednost anti dive znacajke karakteristicnu za brake front susp"""
+    return -Suspension.outputParams_c[11] + Suspension.wanted_anti_brake_uplim
 
-def calc_anti_rise_uplim():
-    """odreduje gornju vrijednost anti rise znacajke karakteristicnu za brake rear susp"""
-    return -Suspension.outputParams_c[11] + Suspension.wanted_anti_rise_uplim
 
-def calc_anti_rise_lolim():
-    """odreduje donju vrijednost anti rise znacajke karakteristicnu za brake rear susp"""
-    return Suspension.outputParams_c[11] - Suspension.wanted_anti_rise_lolim
+
 
 
 
 # za metode: SLSQP, COBYLA
 slsqp_cobyla_common_constraints = [
     ## CONSTRAINTOVI POZICIJA HARDPOINTA
-    # uca1
-
-    # uca2
-
-    # uca3
-    {'type': 'ineq', 'fun': uca3_in_wheel_constraint_uplim},  # restricts uca3 inside wheel shell upper bound, zamijena za cons_up_uca3z
-    #{'type': 'ineq', 'fun': uca3_in_wheel_constraint_lolim},  # restricts uca3 inside wheel shell lower bound
-    #{'type': 'ineq', 'fun': min_distance_between_wcn_and_uca3},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i uca3, umjesto cons_lo_uca3y
-
     # lca1
 
     # lca2
@@ -477,13 +420,28 @@ slsqp_cobyla_common_constraints = [
     # lca3
     {'type': 'ineq', 'fun': lca3_in_wheel_constraint_uplim},  # restricts lca3 inside wheel shell upper bound, zamijena za cons_lo_lca3z
     #{'type': 'ineq', 'fun': lca3_in_wheel_constraint_lolim},  # restricts lca3 inside wheel shell lower bound
-    #{'type': 'ineq', 'fun': min_distance_between_wcn_and_lca3},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i lca3, umjesto cons_lo_lca3y
+    {'type': 'ineq', 'fun': distance_between_wcn_and_lca3_uplim},  # zadaje gornju granicu  udaljenost izmedu wcn ravnine i lca3, umjesto cons_lo_lca3y
+    {'type': 'ineq', 'fun': distance_between_wcn_and_lca3_lolim},  # zadaje donju granicu  udaljenost izmedu wcn ravnine i lca3, umjesto cons_lo_lca3y
+
+    # uca1
+
+    # uca2
+
+    # uca3
+    {'type': 'ineq', 'fun': uca3_in_wheel_constraint_uplim},  # restricts uca3 inside wheel shell upper bound, zamijena za cons_up_uca3z
+    #{'type': 'ineq', 'fun': uca3_in_wheel_constraint_lolim},  # restricts uca3 inside wheel shell lower bound
+    {'type': 'ineq', 'fun': distance_between_wcn_and_uca3_uplim},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i uca3, umjesto cons_lo_uca3y
+    {'type': 'ineq', 'fun': distance_between_wcn_and_uca3_lolim},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i uca3, umjesto cons_lo_uca3y
+
+
     # tr1
 
     # tr2
     {'type': 'ineq', 'fun': tr2_in_wheel_constraint_uplim},  # restricts tr2 inside wheel shell upper bound, zamijena za cons_up_tr2x
     # {'type': 'ineq', 'fun': tr2_in_wheel_constraint_lolim},  # restricts tr2 inside wheel shell lower bound
-    #{'type': 'ineq', 'fun': min_distance_between_wcn_and_tr2},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i tr2, umjesto cons_lo_tr2y
+    {'type': 'ineq', 'fun': distance_between_wcn_and_tr2_uplim},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i tr2, umjesto cons_lo_tr2y
+    {'type': 'ineq', 'fun': distance_between_wcn_and_tr2_lolim},  # zadaje minimalnu potrebnu udaljenost izmedu wcn ravnine i tr2, umjesto cons_lo_tr2y
+
     ## CONSTRAINTOVI IZVEDENIH ZNACAJKI
     {'type': 'ineq', 'fun': toe_constraint_uppos_uplim},  # toe upper pos upper bound
     {'type': 'ineq', 'fun': toe_constraint_uppos_lolim},  # toe upper pos lower bound
@@ -509,20 +467,34 @@ slsqp_cobyla_common_constraints = [
     {'type': 'ineq', 'fun': calc_wheelbase_change_up_lolim},  # wheelbase change up pos lower bound
     {'type': 'ineq', 'fun': calc_wheelbase_change_down_uplim},  # wheelbase change down pos upper bound
     {'type': 'ineq', 'fun': calc_wheelbase_change_down_lolim},  # wheelbase change down pos lower bound
-    {'type': 'ineq', 'fun': calc_anti_lift_uplim},  # anti lift ref pos upper bound
-    {'type': 'ineq', 'fun': calc_anti_lift_lolim},  # anti lift ref pos lower bound
-    {'type': 'ineq', 'fun': calc_anti_dive_uplim},  # anti dive ref pos upper bound
-    {'type': 'ineq', 'fun': calc_anti_dive_lolim},  # anti dive ref pos lower bound
-    {'type': 'ineq', 'fun': calc_anti_squat_uplim},  # anti squat ref pos upper bound
-    {'type': 'ineq', 'fun': calc_anti_squat_lolim},  # anti squat ref pos lower bound
-    {'type': 'ineq', 'fun': calc_anti_rise_uplim},  # anti rise ref pos upper bound
-    {'type': 'ineq', 'fun': calc_anti_rise_lolim},  # anti rise ref pos lower bound
+    {'type': 'ineq', 'fun': calc_anti_drive_uplim},  # anti drive ref pos upper bound
+    {'type': 'ineq', 'fun': calc_anti_drive_lolim},  # anti drive ref pos lower bound
+    {'type': 'ineq', 'fun': calc_anti_brake_uplim},  # anti brake ref pos upper bound
+    {'type': 'ineq', 'fun': calc_anti_brake_lolim},  # anti brake ref pos lower bound
+
 
 ]
 
 # za metode: COBYLA
 hps_coordinate_components_constraints = [
     ## CONSTRAINTOVI POZICIJA HARDPOINTA
+        # lca1
+    {'type': 'ineq', 'fun': cons_up_lca1y},  # lca1 y upper bound
+    {'type': 'ineq', 'fun': cons_lo_lca1y},  # lca1 y lower bound
+    {'type': 'ineq', 'fun': cons_up_lca1z},  # lca1 z upper bound
+    {'type': 'ineq', 'fun': cons_lo_lca1z},  # lca1 z lower bound #######
+    # lca2
+    {'type': 'ineq', 'fun': cons_up_lca2y},  # lca2 y upper bound
+    {'type': 'ineq', 'fun': cons_lo_lca2y},  # lca2 y lower bound
+    {'type': 'ineq', 'fun': cons_up_lca2z},  # lca2 z upper bound
+    {'type': 'ineq', 'fun': cons_lo_lca2z},  # lca2 z lower bound ######
+    # lca3
+    {'type': 'ineq', 'fun': cons_up_lca3x},  # lca3 x upper bound
+    {'type': 'ineq', 'fun': cons_lo_lca3x},  # lca3 x lower bound
+   # {'type': 'ineq', 'fun': cons_up_lca3y},  # lca3 y upper bound
+  #  {'type': 'ineq', 'fun': cons_lo_lca3y},  # lca3 y lower bound
+    {'type': 'ineq', 'fun': cons_up_lca3z},  # lca3 z upper bound
+ #   {'type': 'ineq', 'fun': cons_lo_lca3z},  # lca3 z lower bound
     # uca1
     {'type': 'ineq', 'fun': cons_up_uca1y},  # uca1 y upper bound
     {'type': 'ineq', 'fun': cons_lo_uca1y},  # uca1 y lower bound
@@ -536,26 +508,11 @@ hps_coordinate_components_constraints = [
     # uca3
     {'type': 'ineq', 'fun': cons_up_uca3x},  # uca3 x upper bound
     {'type': 'ineq', 'fun': cons_lo_uca3x},  # uca3 x lower bound
-    {'type': 'ineq', 'fun': cons_up_uca3y},  # uca3 y upper bound
-    {'type': 'ineq', 'fun': cons_lo_uca3y},  # uca3 y lower bound
+   # {'type': 'ineq', 'fun': cons_up_uca3y},  # uca3 y upper bound
+  #  {'type': 'ineq', 'fun': cons_lo_uca3y},  # uca3 y lower bound
     #{'type': 'ineq', 'fun': cons_up_uca3z},  # uca3 z upper bound
     {'type': 'ineq', 'fun': cons_lo_uca3z},  # uca3 z lower bound #######
-    # lca1
-    {'type': 'ineq', 'fun': cons_up_lca1y},  # lca1 y upper bound
-    {'type': 'ineq', 'fun': cons_lo_lca1y},  # lca1 y lower bound
-    {'type': 'ineq', 'fun': cons_up_lca1z},  # lca1 z upper bound
-    {'type': 'ineq', 'fun': cons_lo_lca1z},  # lca1 z lower bound #######
-    # lca2
-    {'type': 'ineq', 'fun': cons_up_lca2y},  # lca2 y upper bound
-    {'type': 'ineq', 'fun': cons_lo_lca2y},  # lca2 y lower bound
-    {'type': 'ineq', 'fun': cons_up_lca2z},  # lca2 z upper bound
-    {'type': 'ineq', 'fun': cons_lo_lca2z},  # lca2 z lower bound ######
-    # lca3
-    {'type': 'ineq', 'fun': cons_up_lca3x},  # lca3 x upper bound
-    {'type': 'ineq', 'fun': cons_lo_lca3x},  # lca3 x lower bound
-    {'type': 'ineq', 'fun': cons_up_lca3y},  # lca3 y upper bound
-    {'type': 'ineq', 'fun': cons_lo_lca3y},  # lca3 y lower bound
-    {'type': 'ineq', 'fun': cons_up_lca3z},  # lca3 z upper bound
+
     #{'type': 'ineq', 'fun': cons_lo_lca3z},  # lca3 z lower bound ######
     # tr1
     {'type': 'ineq', 'fun': cons_up_tr1x},  # tr1 x upper bound
@@ -566,9 +523,9 @@ hps_coordinate_components_constraints = [
     {'type': 'ineq', 'fun': cons_lo_tr1z},  # tr1 z lower bound ######
     # tr2
     {'type': 'ineq', 'fun': cons_up_tr2x},  # tr2 x upper bound
-    {'type': 'ineq', 'fun': cons_lo_tr2x},  # tr2 x lower bound
-    {'type': 'ineq', 'fun': cons_up_tr2y},  # tr2 y upper bound
-    {'type': 'ineq', 'fun': cons_lo_tr2y},  # tr2 y lower bound
+    #{'type': 'ineq', 'fun': cons_lo_tr2x},  # tr2 x lower bound
+    #{'type': 'ineq', 'fun': cons_up_tr2y},  # tr2 y upper bound
+   # {'type': 'ineq', 'fun': cons_lo_tr2y},  # tr2 y lower bound
     {'type': 'ineq', 'fun': cons_up_tr2z},  # tr2 z upper bound
     {'type': 'ineq', 'fun': cons_lo_tr2z},  # tr2 z lower bound
 ]

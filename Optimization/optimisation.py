@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import minimize
 import time
 from numpy.random import uniform as rand
-from numeric_sol import call_suspension_objective, Suspension
+from numeric_sol import call_S_objective, Suspension
 import numeric_sol as ns
 import pandas as pd
 import os
@@ -11,6 +11,7 @@ from constraints import hps_constraints_cobyla, hps_constraints_slsqp, hps_bound
 import datetime
 from random import uniform as runif
 
+S = Suspension
 # TODO
 # normalizirati constraintove
 # kompleksna funkcija cilja kako bi se filtrirali rezultati
@@ -21,14 +22,14 @@ from random import uniform as runif
 # used as input to minimization function inside optmiziation method
 def random_initial_susp():
     hps_bounds_slsqp = [
-        runif(Suspension.lca1y_lo, Suspension.lca1y_up), runif(Suspension.lca1z_lo, Suspension.lca1z_up),
-        runif(Suspension.lca2y_lo, Suspension.lca2y_up), runif(Suspension.lca2z_lo, Suspension.lca2z_up),
-        runif(Suspension.lca3x_lo, Suspension.lca3x_up), runif(Suspension.lca3y_lo, Suspension.lca3y_up), runif(Suspension.lca3z_lo, Suspension.lca3z_up),
-        runif(Suspension.uca1y_lo, Suspension.uca1y_up), runif(Suspension.uca1z_lo, Suspension.uca1z_up),
-        runif(Suspension.uca2y_lo, Suspension.uca2y_up), runif(Suspension.uca2z_lo, Suspension.uca2z_up),
-        runif(Suspension.uca3x_lo, Suspension.uca3x_up), runif(Suspension.uca3y_lo, Suspension.uca3y_up), runif(Suspension.uca3z_lo, Suspension.uca3z_up),
-        runif(Suspension.tr1x_lo, Suspension.tr1x_up), runif(Suspension.tr1y_lo, Suspension.tr1y_up), runif(Suspension.tr1z_lo, Suspension.tr1z_up),
-        runif(Suspension.tr2x_lo, Suspension.tr2x_up), runif(Suspension.tr2y_lo, Suspension.tr2y_up), runif(Suspension.tr2z_lo, Suspension.tr2z_up)
+        runif(S.lca1y_lo, S.lca1y_up), runif(S.lca1z_lo, S.lca1z_up),
+        runif(S.lca2y_lo, S.lca2y_up), runif(S.lca2z_lo, S.lca2z_up),
+        runif(S.lca3x_lo, S.lca3x_up), runif(S.lca3y_lo, S.lca3y_up), runif(S.lca3z_lo, S.lca3z_up),
+        runif(S.uca1y_lo, S.uca1y_up), runif(S.uca1z_lo, S.uca1z_up),
+        runif(S.uca2y_lo, S.uca2y_up), runif(S.uca2z_lo, S.uca2z_up),
+        runif(S.uca3x_lo, S.uca3x_up), runif(S.uca3y_lo, S.uca3y_up), runif(S.uca3z_lo, S.uca3z_up),
+        runif(S.tr1x_lo, S.tr1x_up), runif(S.tr1y_lo, S.tr1y_up), runif(S.tr1z_lo, S.tr1z_up),
+        runif(S.tr2x_lo, S.tr2x_up), runif(S.tr2y_lo, S.tr2y_up), runif(S.tr2z_lo, S.tr2z_up)
     ]
 
     return hps_bounds_slsqp
@@ -37,7 +38,7 @@ def random_initial_susp():
 def optim_process_cobyla(initial_hps, shared_list):
     # global hps_constraints
     start_time = time.time()
-    sol = minimize(call_suspension_objective, initial_hps,
+    sol = minimize(call_Suspension_objective, initial_hps,
                    constraints=hps_constraints_cobyla,
                    method='COBYLA', options={"maxiter": 2000})
     # print("obavljena optimizacija")
@@ -46,7 +47,7 @@ def optim_process_cobyla(initial_hps, shared_list):
     if sol.success == True:
         print("gotovo uspjesno")
         # APPENDA  rjesenje jedne iteracije u mp.Manager.list()
-        shared_list.append(np.append(call_suspension_check(sol.x)[3], ("COBYLA", end_time - start_time)))
+        shared_list.append(np.append(call_S_check(sol.x)[3], ("COBYLA", end_time - start_time)))
 
     else:
         print("nisu constraintovi pogodeni")
@@ -55,7 +56,7 @@ def optim_process_cobyla(initial_hps, shared_list):
 def optim_process_slsqp(initial_hps, shared_list):
     # global hps_constraints
     start_time = time.time()
-    sol = minimize(call_suspension_objective, initial_hps,
+    sol = minimize(call_Suspension_objective, initial_hps,
                    constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp,
                    method='SLSQP', options={"maxiter": 200})
     # print("obavljena optimizacija")
@@ -64,7 +65,7 @@ def optim_process_slsqp(initial_hps, shared_list):
     if sol.success == True:
         print("gotovo uspjesno")
         # APPENDA  rjesenje jedne iteracije u mp.Manager.list()
-        shared_list.append(np.append(call_suspension_check(sol.x)[3], ("SQSQP", end_time - start_time)))
+        shared_list.append(np.append(call_S_check(sol.x)[3], ("SLSQP", end_time - start_time)))
 
     else:
         print("nisu constraintovi pogodeni")
@@ -110,9 +111,9 @@ test_initial_hardpoints = [-416.249, 255.133,
 
 # start_time=time.time()
 # # cobyla
-# sol = minimize(call_suspension_objective, test_initial_hardpoints, constraints=hps_constraints_cobyla, method='COBYLA',options={"maxiter":2000,"disp":True})
+# sol = minimize(call_Suspension_objective, test_initial_hardpoints, constraints=hps_constraints_cobyla, method='COBYLA',options={"maxiter":2000,"disp":True})
 # # slsqp
-# # sol = minimize(call_suspension_objective, test_initial_hardpoints, constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, method='SLSQP', options={"maxiter": 200,"disp":True})
+# # sol = minimize(call_Suspension_objective, test_initial_hardpoints, constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, method='SLSQP', options={"maxiter": 200,"disp":True})
 # print(sol)
 # time.sleep(0.1)
 # if sol.success==False:

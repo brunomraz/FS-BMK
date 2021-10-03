@@ -13,21 +13,27 @@ import os
 
 # output params :
 # 0  objective function
-# 1  camber angle up 
-# 2			down
+# 1  camber angle up
+# 2 			down
 # 3  toe angle up
-# 4		    down
+# 4 		down
 # 5  caster angle
 # 6  roll centre height
 # 7  caster trail
 # 8  scrub radius
-# 9  kingpin angle 
-# 10 anti squat / anti dive   anti drive
-# 11 anti rise / anti lift    anti brake
-# 12 wheelbase change up 	
-# 13		down
-# 14 half track change up
-# 15		down	
+# 9  kingpin angle
+# 10 anti squat / anti dive drive
+# 11 anti rise / anti lift  brake
+# 12 half track change up
+# 13 wheelbase change up
+# 14 half track change down
+# 15 wheelbase change down
+# 16 distance lca3 to wcn-spn line
+# 17 distance uca3 to wcn-spn line
+# 18 distance tr2 to wcn-spn line
+# 19 distance lca3 to plane with wcn-spn normal through wcn point
+# 20 distance uca3 to plane with wcn-spn normal through wcn point
+# 21 distance tr2 to plane with wcn-spn normal through wcn point    
 
 # wheel travel from rebound to bump, from downmost position w.r.t. chassis to upmost
 
@@ -67,108 +73,129 @@ class Suspension():
     # OUTPUT PARAMETERS
 
     outputParams =[]
-    outputParams_c = (c.c_float * 16)(*outputParams)
+    outputParams_c = (c.c_float * 22)(*outputParams)
+
+
+
 
     # INPUT VALUES FOR OPTIMIZATION
 
     # boundaries
-    lca1x_lo, lca1x_up, lca1y_lo, lca1y_up, lca1z_lo, lca1z_up = 545.066, 545.066, -500, -350, 50, 150
-    lca2x_lo, lca2x_up, lca2y_lo, lca2y_up, lca2z_lo, lca2z_up = 747.547, 747.547, -500, -350, 50, 150
-    lca3x_lo, lca3x_up, lca3y_lo, lca3y_up, lca3z_lo, lca3z_up = 620, 680, -630, -570, 80, 140
+    lca1x_lo, lca1x_up, lca1y_lo, lca1y_up, lca1z_lo, lca1z_up = -2040,-2040,-490,-335,-180,-80
+    lca2x_lo, lca2x_up, lca2y_lo, lca2y_up, lca2z_lo, lca2z_up = -2240,-2240,-490,-335,-180,-80
+    lca3x_lo, lca3x_up, lca3y_lo, lca3y_up, lca3z_lo, lca3z_up = -2160,-2100,-630,-570,-170,-110
 
-    uca1x_lo, uca1x_up, uca1y_lo, uca1y_up, uca1z_lo, uca1z_up = 546.963, 546.963, -500, -350, 200, 300
-    uca2x_lo, uca2x_up, uca2y_lo, uca2y_up, uca2z_lo, uca2z_up = 747.881, 747.881, -500, -350, 200, 300
-    uca3x_lo, uca3x_up, uca3y_lo, uca3y_up, uca3z_lo, uca3z_up = 620, 680, -620, -560, 270, 330
+    uca1x_lo, uca1x_up, uca1y_lo, uca1y_up, uca1z_lo, uca1z_up = -2040,-2040,-490,-335,-325,-225
+    uca2x_lo, uca2x_up, uca2y_lo, uca2y_up, uca2z_lo, uca2z_up = -2240,-2240,-490,-335,-325,-225
+    uca3x_lo, uca3x_up, uca3y_lo, uca3y_up, uca3z_lo, uca3z_up = -2180,-2120,-610,-550,-345,-285
 
-    tr1x_lo, tr1x_up, tr1y_lo, tr1y_up, tr1z_lo, tr1z_up = 690, 780, -500, -350, 150, 250
-    tr2x_lo, tr2x_up, tr2y_lo, tr2y_up, tr2z_lo, tr2z_up = 690, 780, -620, -560, 170, 230
+    tr1x_lo, tr1x_up, tr1y_lo, tr1y_up, tr1z_lo, tr1z_up = -2280,-2190,-485,-335,-245,-145
+    tr2x_lo, tr2x_up, tr2y_lo, tr2y_up, tr2z_lo, tr2z_up = -2270,-2180,-610,-550,-280,-160
 
-    wcnx_lo, wcnx_up, wcny_lo, wcny_up, wcnz_lo, wcnz_up = 650, 650, -620.5, -620.5, 200, 200
-    spnx_lo, spnx_up, spny_lo, spny_up, spnz_lo, spnz_up = 650, 650, -595.5, -595.5, 199.27, 199.27
+    wcnx_lo, wcnx_up, wcny_lo, wcny_up, wcnz_lo, wcnz_up = -2143.6, -2143.6, -620.5, -620.5, -220.07, -220.07
+    spnx_lo, spnx_up, spny_lo, spny_up, spnz_lo, spnz_up = -2143.6, -2143.6, -595.5, -595.5, -219.34, -219.34
 
     # granice toe anglea u gornjoj i donjoj poziciji kotaca
-    toe_uppos_uplim = 0.05
-    toe_uppos_lolim = 0
-    toe_lopos_uplim = 0
     toe_lopos_lolim = -0.08
+    toe_lopos_uplim = 0
+    toe_uppos_lolim = 0
+    toe_uppos_uplim = 0.05
+
+
 
     # odreduju za koju vrijednost cambera se dobiju najbolje ocjene
     # zapravo se koristi samo _wantedCamberUp_uplim za gornju poziciju kotaca jer se to optimizira
-    _wantedCamberUp_uplim = -3.82  # maximum wanted camber for wheel in top position
-    _wantedCamberUp_lolim = -3.72  # minimum wanted camber for wheel in top position
-    _wantedCamberDown_uplim = 0.25  # maximum wanted camber for wheel in top position
-    _wantedCamberDown_lolim = 0.15  # minimum wanted camber for wheel in top position
+    _wantedCamberDown_lolim = -3  # minimum wanted camber for wheel in top position
+    _wantedCamberDown_uplim = -2.65  # maximum wanted camber for wheel in top position
+    _wantedCamberUp_lolim = -1.15  # minimum wanted camber for wheel in top position
+    _wantedCamberUp_uplim = -1  # maximum wanted camber for wheel in top position
+
 
     # wanted roll centre height in ref pos
-    _roll_centre_height_uplim = 75
-    _roll_centre_height_lolim = 65
+    _roll_centre_height_lolim = 50
+    _roll_centre_height_uplim = 65
+
 
     # wanted caster trail in ref pos (in mm)
-    _caster_trail_uplim = 20
     _caster_trail_lolim = 10
+    _caster_trail_uplim = 20
+
 
     # wanted caster angle in ref pos (in degrees)
-    _caster_angle_uplim = 15
     _caster_angle_lolim = 4
+    _caster_angle_uplim = 15
+
 
     # wanted kingpin angle in ref pos (in degrees)
-    _kingpin_angle_uplim = 8
     _kingpin_angle_lolim = 3
+    _kingpin_angle_uplim = 8
+
 
     # wanted scrub radius in ref pos (in mm)
-    _scrub_radius_uplim = 8
     _scrub_radius_lolim = -8
+    _scrub_radius_uplim = 8
+
+    
+    # radijus koji definira slobodno mjesto unutar kotaca, tj sluzi za sprjecavanje kolizije lca3 sa felgom (mm)
+    _inside_wheel_free_radius_lca3_lolim = 60
+    _inside_wheel_free_radius_lca3_uplim = 100
+
 
     # radijus koji definira slobodno mjesto unutar kotaca, tj sluzi za sprjecavanje kolizije uca3 sa felgom (mm)
     # lca3,  i tr2
-    _inside_wheel_free_radius_uca3_uplim = 100
     _inside_wheel_free_radius_uca3_lolim = 60
+    _inside_wheel_free_radius_uca3_uplim = 100
 
-    # radijus koji definira slobodno mjesto unutar kotaca, tj sluzi za sprjecavanje kolizije lca3 sa felgom (mm)
-    _inside_wheel_free_radius_lca3_uplim = 100
-    _inside_wheel_free_radius_lca3_lolim = 60
 
     # radijus koji definira slobodno mjesto unutar kotaca, tj sluzi za sprjecavanje kolizije tr2 sa felgom (mm)
-    _inside_wheel_free_radius_tr2_uplim = 100
     _inside_wheel_free_radius_tr2_lolim = 60
+    _inside_wheel_free_radius_tr2_uplim = 100
 
-    # wanted minimum distance between plane defined by wcn and line wcn-spn and uca3 (mm)
-    _wcn_uca3_distance_uplim = 25
 
     # wanted minimum distance between plane defined by wcn and line wcn-spn and lca3 (mm)
-    _wcn_lca3_distance_uplim = 15
+    _wcn_lca3_distance_lolim = -100
+    _wcn_lca3_distance_uplim = -20
+
+
+    # wanted minimum distance between plane defined by wcn and line wcn-spn and uca3 (mm)
+    _wcn_uca3_distance_lolim = -100
+    _wcn_uca3_distance_uplim = -20
+
 
     # wanted minimum distance between plane defined by wcn and line wcn-spn and tr2 (mm)
-    _wcn_tr2_distance_uplim = 25
+    _wcn_tr2_distance_lolim = -100
+    _wcn_tr2_distance_uplim = -20
 
-    # half track change upper position
-    _half_track_change_uppos_uplim = 3
-    _half_track_change_uppos_lolim = 0
 
     # half track change lower position
-    _half_track_change_downpos_uplim = 0
     _half_track_change_downpos_lolim = -10
+    _half_track_change_downpos_uplim = 0
 
-    # wheelbase change upper position
-    _wheelbase_change_uppos_uplim = 1.5
-    _wheelbase_change_uppos_lolim = -1.5
+
+    # half track change upper position
+    _half_track_change_uppos_lolim = 0
+    _half_track_change_uppos_uplim = 3
+
 
     # wheelbase change lower position
-    _wheelbase_change_downpos_uplim = 1.5
     _wheelbase_change_downpos_lolim = -1.5
+    _wheelbase_change_downpos_uplim = 1.5
+
+
+    # wheelbase change upper position
+    _wheelbase_change_uppos_lolim = -1.5
+    _wheelbase_change_uppos_uplim = 1.5
+
 
     # wanted anti lift- front suspension drive in percent
-    wanted_anti_lift_uplim = 18
-    wanted_anti_lift_lolim = 10
+    wanted_anti_drive_lolim = 10
+    wanted_anti_drive_uplim = 18
+
     # wanted anti dive- front suspension brake in percent
-    wanted_anti_dive_uplim = 20
-    wanted_anti_dive_lolim = 0
-    # wanted anti squat- rear suspension drive in percent
-    wanted_anti_squat_uplim = 20
-    wanted_anti_squat_lolim = 0
-    # wanted anti rise- rear suspension brake in percent
-    wanted_anti_rise_uplim = 20
-    wanted_anti_rise_lolim = 0
+    wanted_anti_brake_lolim = 0
+    wanted_anti_brake_uplim = 20
+
+
 
     # odreduju koliko je siroko podrucje na kojem se dobivaju dobre ocjene, veca vrijednost znaci siljastiju funkciju
     _peakWidthUp = 100
@@ -207,7 +234,7 @@ class Suspension():
 
     def printResult(self):
         # OUTPUT PARAMETERS
-        for i in range (16):
+        for i in range (17):
             #print(hardpoints_c[i])
             print(Suspension.outputParams_c[i])
 
@@ -251,13 +278,10 @@ if __name__ == "__main__":
         ])            
     suspension1.calculateMovement()
     print("suspension output parameters___________")
-    for i in range(16):
+    for i in range(22):
         print(Suspension.outputParams_c[i])
     print("suspension output parameters___________")
     print("suspension PARALLEL done")
-
-    if Suspension.outputParams_c[7] == 0:
-        print(f"Suspension.outputParams_c[7] = {Suspension.outputParams_c[7]}")
 
     from random import uniform as runif
 
@@ -278,7 +302,7 @@ if __name__ == "__main__":
     print("objective")
     print(call_suspension_objective(random_initial_susp()))
     print("suspension RANDOM output parameters___________")
-    for i in range(16):
+    for i in range(22):
         print(Suspension.outputParams_c[i])
     print("suspension output parameters___________")
     print("suspension RANDOM done")
@@ -303,7 +327,7 @@ if __name__ == "__main__":
     print("done calculating movement")
 
     print("suspension normal output parameters___________")
-    for i in range(16):
+    for i in range(22):
         print(Suspension.outputParams_c[i])
     print("suspension output parameters___________")
     print("suspension normal done")
