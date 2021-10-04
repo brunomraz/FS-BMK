@@ -40,7 +40,9 @@ import os
 
 class Suspension():
     """creates quarter suspension defined by XYZ cs where X points front, Y to the right side and Z down"""
-    path = os.path.join(r"C:\dev\FS-BMK\bin\x64\Debug\mechanicsDLL.dll")
+    path = os.path.abspath("../bin/x64/Release/mechanicsDLL.dll")
+    #path = os.path.abspath("../bin/x64/Debug/mechanicsDLL.dll")
+
 
     mydll = c.cdll.LoadLibrary(path)
 

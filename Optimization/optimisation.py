@@ -1,3 +1,5 @@
+"""FORMULA STUDENT BASIC MOTION AND KINEMATICS OPTIMIZATOR"""
+
 import numpy as np
 from scipy.optimize import minimize
 import time
@@ -12,10 +14,7 @@ import datetime
 from random import uniform as runif
 
 S = Suspension
-# TODO
-# normalizirati constraintove
-# kompleksna funkcija cilja kako bi se filtrirali rezultati
-# ubaciti gotovo rj u optimizaciju kao inicijalno
+
 
 
 
