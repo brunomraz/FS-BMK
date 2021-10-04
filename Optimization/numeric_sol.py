@@ -13,10 +13,10 @@ import os
 
 # output params :
 # 0  objective function
-# 1  camber angle up
-# 2 			down
-# 3  toe angle up
-# 4 		down
+# 1  camber angle down
+# 2 			    up
+# 3  toe angle down
+# 4 		     up
 # 5  caster angle
 # 6  roll centre height
 # 7  caster trail
@@ -24,16 +24,16 @@ import os
 # 9  kingpin angle
 # 10 anti squat / anti dive drive
 # 11 anti rise / anti lift  brake
-# 12 half track change up
-# 13 wheelbase change up
-# 14 half track change down
-# 15 wheelbase change down
+# 12 half track change down
+# 13 wheelbase change down
+# 14 half track change up
+# 15 wheelbase change up
 # 16 distance lca3 to wcn-spn line
 # 17 distance uca3 to wcn-spn line
 # 18 distance tr2 to wcn-spn line
 # 19 distance lca3 to plane with wcn-spn normal through wcn point
 # 20 distance uca3 to plane with wcn-spn normal through wcn point
-# 21 distance tr2 to plane with wcn-spn normal through wcn point    
+# 21 distance tr2 to plane with wcn-spn normal through wcn point 
 
 # wheel travel from rebound to bump, from downmost position w.r.t. chassis to upmost
 
@@ -222,6 +222,10 @@ class Suspension():
         for i in range (17):
             #print(hardpoints_c[i])
             print(Suspension.outputParams_c[i])
+
+    @classmethod
+    def return_hps_and_parameters(cls):
+        return Suspension.hardpoints + Suspension.outputParams_c[0:16]
 
 
 def call_suspension_objective(hps):

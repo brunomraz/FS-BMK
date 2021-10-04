@@ -47,7 +47,7 @@ def optim_process_cobyla(initial_hps, shared_list):
     if sol.success == True:
         print("gotovo uspjesno")
         # APPENDA  rjesenje jedne iteracije u mp.Manager.list()
-        #shared_list.append(np.append(call_S_check(sol.x)[3], ("COBYLA", end_time - start_time)))
+        shared_list.append(Suspension.return_hps_and_parameters() + ["COBYLA", end_time - start_time])
 
     else:
         print("nisu constraintovi pogodeni")
@@ -72,22 +72,23 @@ def optim_process_slsqp(initial_hps, shared_list):
 
 
 # print(optim_process_cobyla(random_initial_susp()[0])[0])
-column_names = ["UCA1 X", "UCA1 Y", "UCA1 Z", "UCA2 X", "UCA2 Y", "UCA2 Z",
-                "UCA3 X", "UCA3 Y", "UCA3 Z", "LCA1 X", "LCA1 Y", "LCA1 Z",
-                "LCA2 X", "LCA2 Y", "LCA2 Z", "LCA3 X", "LCA3 Y", "LCA3 Z",
-                "TR1 X", "TR1 Y", "TR1 Z", "TR2 X", "TR2 Y", "TR2 Z",
-                "WCN X", "WCN Y", "WCN Z", "SPN X", "SPN Y", "SPN Z",
-                "Camber up (deg)", "Camber down (deg)",
-                "Toe up (deg)", "Toe down (deg)",
-                "Roll centre height (mm)",
-                "Caster trail (mm)", "Caster angle (deg)",
-                "Kingpin angle (deg)", "Scrub radius (mm)",
-                "Half track change up (mm)", "Half track change down (mm)",
-                "Wheelbase change up (mm)", "Wheelbase change down (mm)",
-                "Anti drive feature(%)", "Anti brake feature(%)",
-
-                "Method", "Execution time(s)"
-                ]
+column_names = [
+    "LCA1 X", "LCA1 Y", "LCA1 Z", "LCA2 X", "LCA2 Y", "LCA2 Z", "LCA3 X", "LCA3 Y", "LCA3 Z",
+    "UCA1 X", "UCA1 Y", "UCA1 Z", "UCA2 X", "UCA2 Y", "UCA2 Z", "UCA3 X", "UCA3 Y", "UCA3 Z",
+    "TR1 X", "TR1 Y", "TR1 Z", "TR2 X", "TR2 Y", "TR2 Z",
+    "WCN X", "WCN Y", "WCN Z", "SPN X", "SPN Y", "SPN Z",
+    "Objective function 0 is best",
+    "Camber down (deg)", "Camber up (deg)",
+    "Toe down (deg)", "Toe up (deg)", 
+    "Caster angle (deg)",
+    "Roll centre height (mm)",
+    "Caster trail (mm)", "Scrub radius (mm)",
+    "Kingpin angle (deg)", 
+    "Anti drive feature(%)", "Anti brake feature(%)",
+    "Half track change down (mm)",
+    "Wheelbase change down (mm)",
+    "Half track change up (mm)", "Wheelbase change up (mm)",
+    "Method", "Execution time(s)"]
 
 test_initial_hardpoints =[
     -411.709, -132.316, 			# lca1 x y z
@@ -100,50 +101,41 @@ test_initial_hardpoints =[
 	-2225, -582, -220,								# tr2
 ]
 
+# test_hps gives nan for objective function value
 test_hps = [ -406.70241222,  -125.28024281,  -378.86606791,   -93.95976881,
        -2153.23706113,  -620.6565911 ,  -165.90714882,  -442.2011551 ,
         -322.01104566,  -353.46967717,  -267.41468415, -2140.86780456,
         -595.04537695,  -343.49183508, -2231.15803313,  -453.21632971,
         -188.09879557, -2201.74463637,  -554.01927207,  -257.10647785]
 
-# uca1 = np.array([546.963, -416.249, 255.133]),
-# uca2 = np.array([747.881, -417.314, 250.669]),
-# uca3 = np.array([659.4, -578, 294.93]),
-# lca1 = np.array([545.066, -411.709, 112.246]),
-# lca2 = np.array([747.547, -408.195, 106.135]),
-# lca3 = np.array([641.4, -600, 119.93]),
-# tr1 = np.array([741.2, -411.45, 174.53]),
-# tr2 = np.array([731.4, -582, 199.93]),
-# wcn = np.array([650, -620.5, 200]),
-# spn = np.array([650, -595.5, 199.27]))
 
 
 
-print(f"call obj: {call_suspension_objective(test_hps)}")
+#print(f"call obj: {call_suspension_objective(test_hps)}")
+#
+#start_time=time.time()
+# # cobyla
+#sol = minimize(call_suspension_objective, random_initial_susp(), constraints=hps_constraints_cobyla, method='COBYLA',options=#{"maxiter":2000,"disp":True})
+# # slsqp
+##sol = minimize(call_suspension_objective, random_initial_susp(), constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, #method='SLSQP', options={"maxiter":200,"disp":True})
+#print(sol)
+#time.sleep(0.1)
+#if sol.success==False:
+#    print("nije constrint")
+#
+#if sol.success==True:
+#    print("uspjelo constrint")
+#print(f"trajalo je {time.time()-start_time-0.1}")
 
-start_time=time.time()
- # cobyla
-sol = minimize(call_suspension_objective, random_initial_susp(), constraints=hps_constraints_cobyla, method='COBYLA',options={"maxiter":2000,"disp":True})
- # slsqp
-#sol = minimize(call_suspension_objective, random_initial_susp(), constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, method='SLSQP', options={"maxiter":200,"disp":True})
-print(sol)
-time.sleep(0.1)
-if sol.success==False:
-    print("nije constrint")
 
-if sol.success==True:
-    print("uspjelo constrint")
-print(f"trajalo je {time.time()-start_time-0.1}")
-
-
-if __name__ == "1__main__":
+if __name__ == "__main__":
     started_on = datetime.datetime.now()
     print(started_on)
     start_time = time.time()
     # koliko dugo ce se vrtiti optimizacije
     running_time = 100
 
-    function_expiration_time = 80  # time during which an optimization cycle has to give a result otherwise is terminated
+    function_expiration_time = 5  # time during which an optimization cycle has to give a result otherwise is terminated
     # jedan proces se iskoristava za managera na sto treba paziti
     num_of_processes = 6
 
@@ -152,11 +144,11 @@ if __name__ == "1__main__":
     return_dict = manager.list()
     # randomizirani odabir metode optimizacije, sto ce se ubacivati u multiprocessing
     optim_process = [optim_process_cobyla, optim_process_slsqp]
-    randomizer = np.random.choice
+    # randomizer = np.random.choice
 
     processes = {}
     for i in range(num_of_processes):
-        p = mp.Process(target=randomizer(optim_process), args=(random_initial_susp()[0], return_dict))
+        p = mp.Process(target=optim_process_cobyla, args=(random_initial_susp(), return_dict))
         p.start()
         # dodaje pokrenuti proces u dict sa kljucem naziva process 1,2,... te value je lista koja ima vrijeme kad je zapocet
         # proces i sam proces
@@ -174,13 +166,13 @@ if __name__ == "1__main__":
                 processes[current_process][0].join()
                 # starts new fresh process
 
-                processes[current_process] = [mp.Process(target=randomizer(optim_process), args=(random_initial_susp()[0], return_dict)), time.time()]
+                processes[current_process] = [mp.Process(target=optim_process_cobyla, args=(random_initial_susp(), return_dict)), time.time()]
                 processes[current_process][0].start()
 
             elif processes[current_process][0].exitcode == 0:
                 # zapocinje novi proces nakon sto je treuntni dao rjesenje
                 processes[current_process][0].join()
-                processes[current_process] = [mp.Process(target=randomizer(optim_process), args=(random_initial_susp()[0], return_dict)), time.time()]
+                processes[current_process] = [mp.Process(target=optim_process_cobyla, args=(random_initial_susp(), return_dict)), time.time()]
                 processes[current_process][0].start()
 
         time.sleep(0.1)
