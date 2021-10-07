@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:FS_BMK_ui"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Label x:Name="lblTest" Content="Label" HorizontalAlignment="Left" Margin="277,205,0,0" VerticalAlignment="Top"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="267,321,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-1.444,1.529" Click="Button_Click"/>
-        <DataGrid HorizontalAlignment="Left" Height="100" Margin="508,141,0,0" VerticalAlignment="Top" Width="100"/>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+        <Label>Customer name:</Label>
+        <TextBox Text="{Binding Customer.Name, UpdateSourceTrigger=PropertyChanged}" Width="136"/>
+        <Button Command="{Binding UpdateCommand}">Update</Button>
 
-    </Grid>
+    </StackPanel>
 </Window>
