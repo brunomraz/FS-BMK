@@ -6,12 +6,47 @@
         xmlns:local="clr-namespace:FS_BMK_ui"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-        
-        
-        <Label>Customer name:</Label>
-        <TextBox Text="{Binding Customer.Name, UpdateSourceTrigger=PropertyChanged}" Width="136"/>
-        <Button Command="{Binding UpdateCommand}">Update</Button>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Optimisation suspension -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!-- Suspension optimisation hardpoint limits -->
+            <DataGrid Grid.Row="0" ItemsSource="{Binding Suspensions}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="X low" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="X high" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Y low" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Y high" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Z low" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Z high" Binding="{Binding Name}"/>
+                </DataGrid.Columns>
+                <DataGrid.RowHeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding DataContext.HardpointName, 
+                        RelativeSource={RelativeSource AncestorType=DataGridRow}}"></TextBlock>
+                    </DataTemplate>
+                </DataGrid.RowHeaderTemplate>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!-- Suspension optimisation hardpoint limits -->
+            <Label Grid.Row="0">Customer name:</Label>
+            <TextBox Grid.Row="1" Text="{Binding CurrentSuspension.Name, UpdateSourceTrigger=PropertyChanged}" Width="136"/>
+            <Button Grid.Column="2" Command="{Binding UpdateCommand}">Update</Button>
+        </Grid>
 
-    </StackPanel>
+
+    </Grid>
 </Window>
