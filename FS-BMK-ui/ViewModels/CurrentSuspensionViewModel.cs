@@ -1,5 +1,4 @@
-﻿
-namespace FS_BMK_ui.ViewModels
+﻿namespace FS_BMK_ui.ViewModels
 {
     using System;
     using FS_BMK_ui.Models;
@@ -7,12 +6,12 @@ namespace FS_BMK_ui.ViewModels
     using System.Windows.Input;
     using FS_BMK_ui.Commands;
 
-    internal class CustomerViewModel
+    internal class CurrentSuspensionViewModel
     {
         /// <summary>
         /// Initializes a new instance of the CustomerViewModel class
         /// </summary>
-        public CustomerViewModel()
+        public CurrentSuspensionViewModel()
         {
             _Customer = new Customer("David");
             UpdateCommand = new CustomerUpdateCommand(this);
@@ -29,11 +28,9 @@ namespace FS_BMK_ui.ViewModels
                 {
                     return false;
                 }
-
                 return !string.IsNullOrWhiteSpace(Customer.Name);
             }
         }
-
 
         private Customer _Customer;
         /// <summary>
@@ -56,12 +53,9 @@ namespace FS_BMK_ui.ViewModels
             private set;
         }
 
-
         public void SaveChanges()
         {
             Debug.Assert(false, String.Format($"{Customer.Name} was updated."));
         }
-
-
     }
 }

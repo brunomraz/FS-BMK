@@ -7,11 +7,6 @@
         /// <summary>
         /// Initializes a new instance of the Customer class;
         /// </summary>
-
-
-
-
-
         public Customer(string customerName)
         {
             Name = customerName;
@@ -19,8 +14,6 @@
 
 
         private string _Name;
-
-
 
         public string Name
         {
@@ -46,8 +39,5 @@
             }
         }
         #endregion
-
-
-
     }
 }

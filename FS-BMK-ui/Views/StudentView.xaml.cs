@@ -10,21 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FS_BMK_ui.ViewModels;
 
-namespace FS_BMK_ui
+namespace FS_BMK_ui.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for StudentView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class StudentView : UserControl
     {
-        public MainWindow()
+        public StudentView()
         {
             InitializeComponent();
-
-            DataContext = new CurrentSuspensionViewModel();
         }
     }
 }
