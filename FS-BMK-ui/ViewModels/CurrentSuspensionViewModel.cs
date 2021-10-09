@@ -11,20 +11,25 @@
     {
         private CurrentSuspension currentSuspension;
 
-
-        List<> suspensions = new List<CurrentSuspension> { 
-            new CurrentSuspension("LCA1","a"),
-            new CurrentSuspension("LCA2","b"),
+        private List<CurrentSuspension> _suspensions = new List<CurrentSuspension>
+        {
+            new CurrentSuspension("lca1", "10"),
+            new CurrentSuspension("lca2", "20")
         };
 
         public List<CurrentSuspension> Suspensions
         {
-            get
-            {
-                return suspensions;
-            }
-
+            get { return _suspensions; }
         }
+
+
+
+        public List<CurrentSuspension.Hardpoint> HardpointsMV
+        {
+            get { return currentSuspension.Hardpoints; }
+        }
+
+
 
 
         /// <summary>

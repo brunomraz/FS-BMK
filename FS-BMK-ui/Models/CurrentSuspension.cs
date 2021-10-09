@@ -7,25 +7,38 @@
     {
         private string _Name;
         private string _hardpointName;
+        public List<Hardpoint> Hardpoints = new List<Hardpoint> { 
+            new Hardpoint("LCA1", 100,120,-600,-550,100,120),
+            new Hardpoint("LCA2", 100,120,-600,-550,100,120),
+            new Hardpoint("LCA3", 100,120,-600,-550,100,120),
+            new Hardpoint("UCA1", 100,120,-600,-550,100,120),
+            new Hardpoint("UCA2", 100,120,-600,-550,100,120),
+            new Hardpoint("UCA3", 100,120,-600,-550,100,120),
+            new Hardpoint("TR1", 100,120,-600,-550,100,120),
+            new Hardpoint("TR2", 100,120,-600,-550,100,120),
+            new Hardpoint("WCN", 100,120,-600,-550,100,120),
+            new Hardpoint("SPN", 100,120,-600,-550,100,120),
 
-        public class Hardpoints
+        };
+
+        public class Hardpoint
         {
             private string _hardpointName;
-            private float _xValLow;
-            private float _yValLow;
-            private float _zValLow;
-            private float _xValHigh;
-            private float _yValHigh;
-            private float _zValHigh;
+            private int _xValLow;
+            private int _yValLow;
+            private int _zValLow;
+            private int _xValHigh;
+            private int _yValHigh;
+            private int _zValHigh;
 
 
 
-            public Hardpoints(string hardpointName, 
-                float xValLow, float xValHigh, 
-                float yValLow, float yValHigh, 
-                float zValLow, float zValHigh)
+            public Hardpoint(string hardpointName, 
+                int xValLow, int xValHigh, 
+                int yValLow, int yValHigh, 
+                int zValLow, int zValHigh)
             {
-                HardpointName = hardpointName;
+                HardpointNameClass = hardpointName;
                 XValLow = xValLow;
                 YValLow = yValLow;
                 ZValLow = zValLow;
@@ -35,40 +48,40 @@
             }
 
 
-            public string HardpointName
+            public string HardpointNameClass
             {
                 get { return _hardpointName; }
                 set { _hardpointName = value; }
             }
 
-            public float XValLow
+            public int XValLow
             { 
-                get { return XValLow; }
+                get { return _xValLow; }
                 set { _xValLow = value; }
             }
-            public float YValLow
+            public int YValLow
             {
-                get { return YValLow; }
+                get { return _yValLow; }
                 set { _yValLow = value; }
             }
-            public float ZValLow
+            public int ZValLow
             {
-                get { return ZValLow; }
+                get { return _zValLow; }
                 set { _zValLow = value; }
             }
-            public float XValHigh
+            public int XValHigh
             {
-                get { return XValHigh; }
+                get { return _xValHigh; }
                 set { _xValHigh = value; }
             }
-            public float YValHigh
+            public int YValHigh
             {
-                get { return YValHigh; }
+                get { return _yValHigh; }
                 set { _yValHigh = value; }
             }
-            public float ZValHigh
+            public int ZValHigh
             {
-                get { return ZValHigh; }
+                get { return _zValHigh; }
                 set { _zValHigh = value; }
             }
 
@@ -82,6 +95,7 @@
             HardpointName = hardpointName;
             Name = customerName;
         }
+
 
         public string HardpointName
         {
