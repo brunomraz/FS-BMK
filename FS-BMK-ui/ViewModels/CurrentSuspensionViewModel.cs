@@ -12,7 +12,7 @@
         private CurrentSuspension currentSuspension;
 
 
-        List<CurrentSuspension> suspensions = new List<CurrentSuspension> { 
+        List<> suspensions = new List<CurrentSuspension> { 
             new CurrentSuspension("LCA1","a"),
             new CurrentSuspension("LCA2","b"),
         };

@@ -75,6 +75,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\CustomerUpdateCommands.cs" />
+    <Compile Include="Models\Hardpoints.cs" />
     <Compile Include="Models\OptimizationSuspension.cs" />
     <Compile Include="ViewModels\CurrentSuspensionViewModel.cs" />
     <Compile Include="ViewModels\OptimizationSuspensionViewModel.cs" />

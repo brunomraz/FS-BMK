@@ -8,7 +8,7 @@
         private string _Name;
         private string _hardpointName;
 
-        private class Hardpoints
+        public class Hardpoints
         {
             private string _hardpointName;
             private float _xValLow;
