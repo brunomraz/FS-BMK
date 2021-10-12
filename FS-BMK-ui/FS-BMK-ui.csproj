@@ -76,15 +76,15 @@
     </Compile>
     <Compile Include="Commands\CustomerUpdateCommands.cs" />
     <Compile Include="Models\Hardpoints.cs" />
-    <Compile Include="Models\OptimizationSuspension.cs" />
-    <Compile Include="ViewModels\CurrentSuspensionViewModel.cs" />
+    <Compile Include="Models\CurrentSuspension.cs" />
     <Compile Include="ViewModels\OptimizationSuspensionViewModel.cs" />
+    <Compile Include="ViewModels\CurrentSuspensionViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\CurrentSuspension.cs" />
+    <Compile Include="Models\OptimizationSuspension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

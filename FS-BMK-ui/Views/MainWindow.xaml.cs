@@ -24,7 +24,7 @@ namespace FS_BMK_ui
         {
             InitializeComponent();
 
-            DataContext = new CurrentSuspensionViewModel();
+            DataContext = new OptimizationSuspensionViewModel();
         }
     }
 }

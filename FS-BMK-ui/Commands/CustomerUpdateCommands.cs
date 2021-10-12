@@ -7,12 +7,12 @@
     internal class CustomerUpdateCommand : ICommand
     {
 
-        public CustomerUpdateCommand(CurrentSuspensionViewModel viewModel)
+        public CustomerUpdateCommand(OptimizationSuspensionViewModel viewModel)
         {
             _ViewModel = viewModel;
         }
 
-        private CurrentSuspensionViewModel _ViewModel;
+        private OptimizationSuspensionViewModel _ViewModel;
 
         #region ICommand Members
 
