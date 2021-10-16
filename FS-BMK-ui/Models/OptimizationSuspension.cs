@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Windows;
 
     public class OptimizationSuspension : INotifyPropertyChanged
     {
@@ -68,12 +69,41 @@
             set { _wheelRadius = value; }
         }
 
-        public float Wheelbase { get { return _wheelbase; } set { _wheelbase = value; } }
-        public float CoGHeight { get { return _cogHeight; } set { _cogHeight = value; } }
-        public float FrontDriveBias { get { return _frontDriveBias; } set { _frontDriveBias = value; } }
-        public float FrontBrakeBias { get { return _frontBrakeBias; } set { _frontBrakeBias = value; } }
-        public float RearDriveBias { get { return _rearDriveBias; } set { _rearDriveBias = 1 - _frontDriveBias; } }
-        public float RearBrakeBias { get { return _rearBrakeBias; } set { _rearBrakeBias = 1 - _frontBrakeBias; } }
+        public float Wheelbase { 
+            get { return _wheelbase; } 
+            set { _wheelbase = value; }
+        }
+        public float CoGHeight {
+            get { return _cogHeight; }
+            set { _cogHeight = value; }
+        }
+        public float FrontDriveBias { 
+            get { return _frontDriveBias; } 
+            set {
+                _frontDriveBias = value;
+                OnPropertyChanged("RearDriveBias");
+            } 
+        }
+        public float FrontBrakeBias { 
+            get { return _frontBrakeBias; } 
+            set { 
+                _frontBrakeBias = value;
+                OnPropertyChanged("RearBrakeBias");
+
+            }
+        }
+        public float RearDriveBias { 
+            get { return _rearDriveBias = 1 - _frontDriveBias; } 
+            set { 
+                _rearDriveBias = value;
+            }
+        }
+        public float RearBrakeBias { 
+            get { return _rearBrakeBias = 1 - _frontBrakeBias; } 
+            set { 
+                _rearBrakeBias=value ; 
+            } 
+        }
         public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
 
         public List<Hardpoint> Hardpoints
