@@ -5,9 +5,8 @@
 
     public class OptimizationSuspension : INotifyPropertyChanged
     {
-        private string _Name;
-        private string _hardpointName;
-        public List<Hardpoint> Hardpoints = new List<Hardpoint> { 
+
+        private List<Hardpoint> _hardpoints = new List<Hardpoint> { 
             new Hardpoint("LCA1", 100,120,-600,-550,100,120),
             new Hardpoint("LCA2", 100,120,-600,-550,100,120),
             new Hardpoint("LCA3", 100,120,-600,-550,100,120),
@@ -20,6 +19,80 @@
             new Hardpoint("SPN", 100,120,-600,-550,100,120),
 
         };
+
+        private List<float> _suspensionFeatureLimits = new List<float>
+        {
+            -2.7f, -2.6f, -1f, -0.9f, // camber angle down low high lim, camber up low high lim
+            -0.08f, 0f, 0f, 0.05f,    // toe angle down pos low high lim, toe angle up pos low high lim
+            4f, 15f,                  // caster angle low high lim
+            50f, 65f,                 // roll centre height low lim high lim
+            10f, 25f,                 // caster trail low high lim
+            -15f, 8f,                 // scrub radius low high lim
+            3f, 8f,                   // kingpin angle low high lim
+            10f, 18f,                 // anti drive low high lim
+            0f, 20f,                  // anti brake low high lim
+            -10f, 0f,                 // half track change down pos low high lim
+            -1.5f, 1.5f,              // wheelbase change down pos low high lim
+            0f, 3f,                   // half track change up pos low high lim
+            -1.5f, 1.5f,              // wheelbase change up pos low high lim
+            60f, 100f,                // inside wheel free radius LCA3 low high lim
+            60f, 100f,                // inside wheel free radius UCA3 low high lim
+            60f, 100f,                // inside wheel free radius TR2 low high lim
+            -100f, -20f,              // distance from LCA3 to plane defined by WCN and line WCN-SPN
+            -100f, -20f,              // distance from UCA3 to plane defined by WCN and line WCN-SPN
+            -100f, -20f,              // distance from TR2 to plane defined by WCN and line WCN-SPN
+
+        };
+
+        private List<float> _suspensionSetupParameters = new List<float>
+        {
+            210f, 1530f, 300f,       // wheel radius, wheelbase, cog height
+            0f, 0.6f,            // front drive and brake biases
+            30f                 // vertical movement from reference position
+
+        };
+
+        private float _wheelRadius = 210f;
+        private float _wheelbase = 1530f;
+        private float _cogHeight = 300f;
+        private float _frontDriveBias = 0f;
+        private float _frontBrakeBias = 0.6f;
+        private float _rearDriveBias;
+        private float _rearBrakeBias;
+
+        private float _verticalMovement = 30f;
+
+        public float WheelRadius 
+        {
+            get { return _wheelRadius; } 
+            set { _wheelRadius = value; }
+        }
+
+        public float Wheelbase { get { return _wheelbase; } set { _wheelbase = value; } }
+        public float CoGHeight { get { return _cogHeight; } set { _cogHeight = value; } }
+        public float FrontDriveBias { get { return _frontDriveBias; } set { _frontDriveBias = value; } }
+        public float FrontBrakeBias { get { return _frontBrakeBias; } set { _frontBrakeBias = value; } }
+        public float RearDriveBias { get { return _rearDriveBias; } set { _rearDriveBias = 1 - _frontDriveBias; } }
+        public float RearBrakeBias { get { return _rearBrakeBias; } set { _rearBrakeBias = 1 - _frontBrakeBias; } }
+        public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
+
+        public List<Hardpoint> Hardpoints
+        {
+            get { return _hardpoints; }
+
+        }
+
+        public List<float> SuspensionFeatureLimits
+        {
+            get { return _suspensionFeatureLimits; }
+
+        }
+
+        public List<float> SuspensionSetupParameters
+        {
+            get { return _suspensionSetupParameters; }
+
+        }
 
         public class Hardpoint
         {
@@ -90,31 +163,34 @@
         /// <summary>
         /// Initializes a new instance of the OptimizationSuspension class;
         /// </summary>
-        public OptimizationSuspension(string hardpointName, string customerName)
+        public OptimizationSuspension()
         {
-            HardpointName = hardpointName;
-            Name = customerName;
+            _rearDriveBias = 1 - _frontDriveBias;
+            _rearBrakeBias = 1 - _frontBrakeBias;
         }
 
 
-        public string HardpointName
+        public bool CompareLowHighValues()
         {
-            get { return _hardpointName; }
-            set 
-            { 
-                _hardpointName = value; }
-            }
-
-        public string Name
-        {
-            get { return _Name; }
-            set
+            for (int i=0; i<Hardpoints.Count; i++)
             {
-                _Name = value;
-                OnPropertyChanged("Name");
+                if (Hardpoints[i].XValHigh < Hardpoints[i].XValLow || Hardpoints[i].YValHigh < Hardpoints[i].YValLow || Hardpoints[i].ZValHigh < Hardpoints[i].ZValLow)
+                    return false;
 
             }
+
+            for (int i = 0; i < SuspensionFeatureLimits.Count/2; i++)
+            {
+                if (SuspensionFeatureLimits[2*i] > SuspensionFeatureLimits[2*i+1])
+                    return false;
+
+            }
+
+            return true;
+
         }
+
+
 
         #region INotifyPropertyChanged Members
 

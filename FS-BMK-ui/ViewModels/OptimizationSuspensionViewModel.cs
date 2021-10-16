@@ -4,34 +4,15 @@
     using FS_BMK_ui.Models;
     using System.Diagnostics;
     using System.Windows.Input;
-    using FS_BMK_ui.Commands;
     using System.Collections.Generic;
+    using FS_BMK_ui.Commands;
+    using System.Windows;
 
     internal class OptimizationSuspensionViewModel
     {
 
         // private members
-        private OptimizationSuspension currentSuspension;
-
-        private List<OptimizationSuspension> _suspensions = new List<OptimizationSuspension>
-        {
-            new OptimizationSuspension("lca1", "10"),
-            new OptimizationSuspension("lca2", "20")
-        };
-
-        public List<OptimizationSuspension> Suspensions
-        {
-            get { return _suspensions; }
-        }
-
-
-
-        public List<OptimizationSuspension.Hardpoint> HardpointsMV
-        {
-            get { return currentSuspension.Hardpoints; }
-        }
-
-
+        private OptimizationSuspension optimizationSuspension;
 
 
         /// <summary>
@@ -39,48 +20,52 @@
         /// </summary>
         public OptimizationSuspensionViewModel()
         {
-            currentSuspension = new OptimizationSuspension("a","David");
-            UpdateCommand = new CustomerUpdateCommand(this);
+            optimizationSuspension = new OptimizationSuspension();
         }
 
-        /// <summary>
-        /// gets or sets a System.Boolean value indicating whether the OptimizationSuspension can be updated
-        /// </summary>
-        public bool CanUpdate
-        {
-            get
-            {
-                if (CurrentSuspension == null)
-                {
-                    return false;
-                }
-                return !string.IsNullOrWhiteSpace(CurrentSuspension.Name);
-            }
-        }
 
         /// <summary>
         /// Gets the customer instance
         /// </summary>
-        public OptimizationSuspension CurrentSuspension
+        public OptimizationSuspension OptimizationSuspension
         {
             get
             {
-                return currentSuspension;
+                return optimizationSuspension;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public ICommand UpdateCommand
+        private ICommand _OptimiseCommand;
+        public ICommand OptimiseCommand
         {
-            get;
-            private set;
+            get
+            {
+                if (_OptimiseCommand == null)
+                {
+                    _OptimiseCommand = new RelayCommand(OptimiseExecute, CanOptimiseExecute, false);
+                }
+                return _OptimiseCommand;
+            }
         }
 
-        public void SaveChanges()
+
+        private void OptimiseExecute(object parameter)
         {
-            Debug.Assert(false, String.Format($"{CurrentSuspension.Name} was updated."));
+            MessageBox.Show($"executed optimise button xval high {OptimizationSuspension.Hardpoints[0].XValHigh} " +
+                $"xval low {OptimizationSuspension.Hardpoints[0].XValLow}");
         }
+
+        private bool CanOptimiseExecute(object parameter)
+        {
+            if (OptimizationSuspension.CompareLowHighValues())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }

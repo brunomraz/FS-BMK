@@ -4,8 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FS_BMK_ui"
+        xmlns:vm="clr-namespace:FS_BMK_ui.ViewModels"
+        
         mc:Ignorable="d"
-        Title="MainWindow" Height="610" Width="1000">
+        Title="MainWindow" Height="910" Width="1000">
+
+    <Window.Resources>
+        <vm:OptimizationSuspensionViewModel x:Key="OptimizationSuspensionVM"/>
+
+    </Window.Resources>
+
     <Border BorderThickness=" 5">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -13,7 +21,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <!-- Optimisation suspension parameters-->
-            <ScrollViewer>
+            <ScrollViewer DataContext="{StaticResource OptimizationSuspensionVM}">
                 <Grid Grid.Column="0">
 
                     <Grid.RowDefinitions>
@@ -22,7 +30,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <!-- Suspension optimisation hardpoint limits -->
-                    <DataGrid Grid.Row="0" ItemsSource="{Binding HardpointsMV}" 
+                    <DataGrid Grid.Row="0" ItemsSource="{Binding OptimizationSuspension.Hardpoints}" 
                               AutoGenerateColumns="False"
                               CanUserAddRows="False"
                               CanUserReorderColumns="False"
@@ -40,7 +48,7 @@
                         </DataGrid.Columns>
                         <DataGrid.RowHeaderTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.HardpointNameClass, 
+                                <TextBlock Text="{Binding DataContext.HardpointNameClass, Mode=OneWay,
                         RelativeSource={RelativeSource AncestorType=DataGridRow}}"></TextBlock>
                             </DataTemplate>
                         </DataGrid.RowHeaderTemplate>
@@ -65,10 +73,10 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Camber down position"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Camber up position"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[0]}" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[1]}" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[2]}" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[3]}" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Toe angle down and up limits-->
                         <Grid>
@@ -84,10 +92,10 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Toe down position"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Toe up position"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[4]}"  Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[5]}"  Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[6]}"  Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[7]}"  Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Caster angle RC height Caster trail scrub radius limits-->
                         <Grid>
@@ -109,14 +117,14 @@
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Roll Centre height"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Caster trail"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="6" Text="Scrub radius"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="5" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="6" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="7" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[8]}"  Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[9]}"  Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[10]}"  Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[11]}"  Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[12]}"  Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[13]}"  Grid.Row="1" Grid.Column="5" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[14]}"  Grid.Row="1" Grid.Column="6" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[15]}"  Grid.Row="1" Grid.Column="7" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Kingpin angle anti dive and anti brake -->
                         <Grid>
@@ -137,12 +145,12 @@
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Kingpin angle"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Anti drive"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Anti brake"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="5" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[16]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[17]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[18]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[19]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[20]}" Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[21]}" Grid.Row="1" Grid.Column="5" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Half track change down  and up pos  -->
                         <Grid>
@@ -158,10 +166,10 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Half track change down position"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Half track change up position"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[22]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[23]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[26]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[27]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Wheelbase change down  and up pos  -->
                         <Grid>
@@ -177,10 +185,10 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="wheelbase change down position"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Wheelbase change up position"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[24]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[25]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[28]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[29]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- LCA3 and UCA3 inside wheel free radius  -->
                         <Grid>
@@ -196,10 +204,10 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="LCA3 inside wheel free radius"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="UCA3 inside wheel free radius"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[30]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[31]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[32]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[33]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- TR2 inside wheel free radius   -->
                         <Grid>
@@ -214,8 +222,8 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="TR2 inside wheel free radius"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[34]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[35]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- LCA3 distance to WCN, along WCN-SPN axis   -->
                         <Grid>
@@ -230,8 +238,8 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" Text="LCA3 distance to WCN, along WCN-SPN axis"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[36]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[37]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- UCA3 distance to WCN, along WCN-SPN axis   -->
                         <Grid>
@@ -246,8 +254,8 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" Text="UCA3 distance to WCN, along WCN-SPN axis"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[38]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[39]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- TR2 distance to WCN, along WCN-SPN axis   -->
                         <Grid>
@@ -262,8 +270,8 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" Text="TR2 distance to WCN, along WCN-SPN axis"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[40]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[41]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Wheel radius wheelbase and Cog height -->
                         <Grid>
@@ -282,9 +290,9 @@
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Wheel radius"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Wheelbase"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="CoG height"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.WheelRadius}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.Wheelbase}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.CoGHeight}" Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Front drive and brake bias -->
                         <Grid>
@@ -302,8 +310,8 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Front Drive Bias"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Front Brake Bias"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.FrontDriveBias}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.FrontBrakeBias}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Rear drive and brake bias -->
                         <Grid>
@@ -321,8 +329,8 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Rear Drive Bias"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Rear Brake Bias"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.RearDriveBias}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.RearBrakeBias}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Vertical movement from reference position and optimize button -->
                         <Grid>
@@ -339,8 +347,8 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="6" Grid.Row="0" Grid.Column="0" Text="Vertical movement from reference position"/>
-                            <TextBox Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <Button Grid.Row=" 0" Grid.Column=" 4" Content="Optimise"/>
+                            <TextBox Text="{Binding OptimizationSuspension.VerticalMovement}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <Button Grid.Row=" 0" Grid.Column=" 4" Command="{Binding OptimiseCommand}" Content="Optimise"/>
                         </Grid>
 
                     </StackPanel>
@@ -547,7 +555,7 @@
                 </StackPanel>
                 <!-- Suspension visualization -->
                 
-                <Button Grid.Row="2" Command="{Binding UpdateCommand}">Update</Button>
+                <Button Grid.Row="2"  >Update</Button>
             </Grid>
 
 

@@ -74,8 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\CustomerUpdateCommands.cs" />
-    <Compile Include="Models\Hardpoints.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Models\CurrentSuspension.cs" />
     <Compile Include="ViewModels\OptimizationSuspensionViewModel.cs" />
     <Compile Include="ViewModels\CurrentSuspensionViewModel.cs" />
