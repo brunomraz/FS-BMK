@@ -45,14 +45,6 @@
 
         };
 
-        private List<float> _suspensionSetupParameters = new List<float>
-        {
-            210f, 1530f, 300f,       // wheel radius, wheelbase, cog height
-            0f, 0.6f,            // front drive and brake biases
-            30f                 // vertical movement from reference position
-
-        };
-
         private float _wheelRadius = 210f;
         private float _wheelbase = 1530f;
         private float _cogHeight = 300f;
@@ -118,11 +110,11 @@
 
         }
 
-        public List<float> SuspensionSetupParameters
-        {
-            get { return _suspensionSetupParameters; }
+        //public List<float> SuspensionSetupParameters
+        //{
+        //    get { return _suspensionSetupParameters; }
 
-        }
+        //}
 
         public class Hardpoint
         {

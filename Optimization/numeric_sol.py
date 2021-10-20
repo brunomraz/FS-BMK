@@ -268,6 +268,14 @@ if __name__ == "__main__":
 
         ])            
     suspension1.calculateMovement()
+
+
+
+
+
+
+
+
     print("suspension output parameters___________")
     for i in range(22):
         print(Suspension.outputParams_c[i])

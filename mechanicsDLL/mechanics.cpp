@@ -67,6 +67,12 @@ private:
 
 	Eigen::Vector3f lca12;
 	Eigen::Vector3f uca12;
+	Eigen::MatrixXf lca3Glob;// (vertIncr * 2 + 1, 3);
+	Eigen::MatrixXf uca3Glob;// (vertIncr * 2 + 1, 3);
+	Eigen::MatrixXf tr2Glob;// (vertIncr * 2 + 1, 3);
+	Eigen::MatrixXf wcnGlob;// (vertIncr * 2 + 1, 3);
+	Eigen::MatrixXf spnGlob;// (vertIncr * 2 + 1, 3);
+	Eigen::MatrixXf cpGlob;// (vertIncr * 2 + 1, 3);
 
 
 	/* initializers */
@@ -108,8 +114,6 @@ public:
 		wcnref << hps[24], hps[25], hps[26];
 		spnref << hps[27], hps[28], hps[29];
 
-
-
 	}
 
 	Suspension(
@@ -127,7 +131,7 @@ public:
 		float wheelbasein, float cogHeightin, float frontDriveBiasin,
 		float frontBrakeBiasin, int suspPosin, int drivePosin, int brakePosin,
 		float wVertin, float wSteerin,
-		int vertIncrin, int steerIncrin, float precisionin)
+		int vertIncrin, int steerIncrin, float precisionin):lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3), tr2Glob(vertIncrin * 2 + 1, 3), wcnGlob(vertIncrin * 2 + 1, 3), spnGlob(vertIncrin * 2 + 1, 3), cpGlob(vertIncrin * 2 + 1, 3)
 	{
 		lca1ref << lca1xin, lca1yin, lca1zin;
 		lca2ref << lca2xin, lca2yin, lca2zin;
@@ -162,6 +166,7 @@ public:
 		vertIncr = vertIncrin;
 		steerIncr = steerIncrin;
 		precision = precisionin;
+
 	}
 
 
@@ -280,7 +285,7 @@ private:
 
 public:
 
-	void CalculateMovement(float* outputParams)
+	void CalculateMovement()
 	{
 		Eigen::Matrix3f rotLCA;
 		Eigen::Matrix3f rotUCA;
@@ -302,7 +307,6 @@ public:
 
 
 		Eigen::MatrixXf lca3LocLCA(vertIncr * 2 + 1, 3);
-		Eigen::MatrixXf lca3Glob(vertIncr * 2 + 1, 3);
 
 		// populating positions of local LCA3 in a matrix
 		lca3LocLCA.col(0) << Eigen::VectorXf::Zero(vertIncr * 2 + 1);
@@ -314,10 +318,9 @@ public:
 		// global positions of LCA3 for whole wheel movement
 		lca3Glob = (lca3LocLCA * rotLCA.transpose()).array().rowwise() + lca12.array().transpose();
 
-
+		std::cout <<"lca3glob\n" << lca3Glob << "\n";
 
 		// global position of UCA3 for whole wheel movement
-		Eigen::MatrixXf uca3Glob(vertIncr * 2 + 1, 3);
 		Eigen::MatrixXf uca3LocUCA(vertIncr * 2 + 1, 3);
 		Eigen::MatrixXf lca3LocUCA(vertIncr * 2 + 1, 3);
 
@@ -376,9 +379,6 @@ public:
 		{
 
 			// calculating TR2 position
-			Eigen::MatrixXf tr2Glob(vertIncr * 2 + 1, 3);
-			Eigen::MatrixXf wcnGlob(vertIncr * 2 + 1, 3);
-			Eigen::MatrixXf spnGlob(vertIncr * 2 + 1, 3);
 
 			tr2prGlob = (uca3Glob - lca3Glob) * t_param + lca3Glob;
 
@@ -482,31 +482,10 @@ public:
 
 			temp3cp.rowwise().normalize();
 
-			Eigen::MatrixXf cpGlob(vertIncr * 2 + 1, 3);
 
 			cpGlob << -temp3cp * wRadius + wcnGlob;
 
 
-			CalculateObjCamberScore(cpGlob, wcnGlob, spnGlob, outputParams[0]);
-			CalculateCamber(cpGlob, wcnGlob, spnGlob, outputParams[1], 0);
-			CalculateCamber(cpGlob, wcnGlob, spnGlob, outputParams[2], 2);
-			CalculateToe(cpGlob, wcnGlob, spnGlob, outputParams[3], 0);
-			CalculateToe(cpGlob, wcnGlob, spnGlob, outputParams[4], 2);
-			CalculateCasterAngle(lca3Glob, uca3Glob, outputParams[5], 1);
-			CalculateRollCentreHeight(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, outputParams[6], 1);
-			CalculateCasterTrailAndScrubRadius(lca3Glob, uca3Glob, spnGlob, wcnGlob, cpGlob, outputParams[7], outputParams[8], 1);
-			CalculateKingpinAngle(lca3Glob, uca3Glob, cpGlob, outputParams[9], 1);
-			CalculateAntiFeatures(lca1ref, lca2ref, lca3Glob, uca1ref, uca2ref, uca3Glob, cpGlob, wcnGlob, outputParams[10], outputParams[11], 1);
-			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[12], outputParams[13], 0);
-			CalculateHalfTrackAndWheelbaseChange(cpGlob, outputParams[14], outputParams[15], 2);
-			// for constraints inside wheel
-			CalculateDistancePointToLine(outputParams[16], spnref, wcnref, lca3ref);
-			CalculateDistancePointToLine(outputParams[17], spnref, wcnref, uca3ref);
-			CalculateDistancePointToLine(outputParams[18], spnref, wcnref, tr2ref);
-
-			CalculateSignedPointToPlaneDistance(outputParams[19], wcnref, spnref, lca3ref);
-			CalculateSignedPointToPlaneDistance(outputParams[20], wcnref, spnref, uca3ref);
-			CalculateSignedPointToPlaneDistance(outputParams[21], wcnref, spnref, tr2ref);
 
 
 			/* output params :
@@ -534,130 +513,147 @@ public:
 			21 distance tr2 to plane with wcn-spn normal through wcn point 
 			*/
 
-
 		}
 
 		// steering is enabled
 		else
 		{
 		}
-
-
-
 	}
 
-	void CalculateObjCamberScore(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& camberScore)
+	float GetObjCamberScore()
 	{
+		float camberScore;
 		float camberUp;
 		float camberDown;
-		CalculateCamber(cp, wcn, spn, camberUp, 2);
-		CalculateCamber(cp, wcn, spn, camberDown, 0);
+		camberUp=GetCamberAngle(2);
+		camberDown =GetCamberAngle(0);
 		float wantedCamberUp = -0.978327f;
 		float wantedCamberDown = -2.65318f;
 		float peakWidth = 100.0f;
 		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2)) * 0.5f };
 		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) * 0.5f };
-
+		
 		camberScore = 1 - camberUpObj - camberDownObj;
+		return camberScore;
 	}
 
-	void CalculateCamber(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& camberAngle, int position)
+	float GetCamberAngle(int position)
 	{
-
+		float camberAngle;
 		int L = position;
-		int R = cp.rows() - 1 - position;
+		int R = cpGlob.rows() - 1 - position;
 
 
 		Eigen::Vector3f wheelAxis{
-			-wcn.row(L)(0) + cp.row(L)(0),
-			-wcn.row(L)(1) + cp.row(L)(1),
-			-wcn.row(L)(2) + cp.row(L)(2)
+			-wcnGlob.row(L)(0) + cpGlob.row(L)(0),
+			-wcnGlob.row(L)(1) + cpGlob.row(L)(1),
+			-wcnGlob.row(L)(2) + cpGlob.row(L)(2)
 		};
 		Eigen::Vector3f groundNormal{
 			0,
-			-cp.row(R)(2) + cp.row(L)(2),
-			-cp.row(R)(1) - cp.row(L)(1)
+			-cpGlob.row(R)(2) + cpGlob.row(L)(2),
+			-cpGlob.row(R)(1) - cpGlob.row(L)(1)
 		};
 		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
 
 		float temp1_wcnpr =
-			spn.row(L)(1) * groundNormal(1)
-			+ spn.row(L)(2) * groundNormal(2)
-			- wcn.row(L)(1) * groundNormal(1)
-			- wcn.row(L)(2) * groundNormal(2);
+			spnGlob.row(L)(1) * groundNormal(1)
+			+ spnGlob.row(L)(2) * groundNormal(2)
+			- wcnGlob.row(L)(1) * groundNormal(1)
+			- wcnGlob.row(L)(2) * groundNormal(2);
 
 		float temp2_wcnpr =
 			groundNormal(1) * groundNormal(1) +
 			groundNormal(2) * groundNormal(2);
 
 		Eigen::Vector3f wcnpr{
-			wcn.row(L)(0),
-			wcn.row(L)(1) + groundNormal(1) * temp1_wcnpr / temp2_wcnpr,
-			wcn.row(L)(2) + groundNormal(2) * temp1_wcnpr / temp2_wcnpr
+			wcnGlob.row(L)(0),
+			wcnGlob.row(L)(1) + groundNormal(1) * temp1_wcnpr / temp2_wcnpr,
+			wcnGlob.row(L)(2) + groundNormal(2) * temp1_wcnpr / temp2_wcnpr
 		};
 
 		float camber =
-			(wcnpr - (Eigen::Vector3f)wcn.row(L)).norm() /
-			((Eigen::Vector3f)spn.row(L) -
-				(Eigen::Vector3f)wcn.row(L)).norm();
+			(wcnpr - (Eigen::Vector3f)wcnGlob.row(L)).norm() /
+			((Eigen::Vector3f)spnGlob.row(L) -
+				(Eigen::Vector3f)wcnGlob.row(L)).norm();
 
 		// tests if camber is negative, if it is it returns negative angle
-		if ((wcnpr - (Eigen::Vector3f)wcn.row(L))(2) > 0)
+		if ((wcnpr - (Eigen::Vector3f)wcnGlob.row(L))(2) > 0)
+		{ 
 			camberAngle = -asin(camber) * 180 / 3.14159f;
+			return camberAngle;
+		}
+			
 		// if camber is not negative, returns positive angle
 		else
+		{
 			camberAngle = asin(camber) * 180 / 3.14159f;
+			return camberAngle;
+
+		}
 	}
 
-	void CalculateToe(Eigen::MatrixXf& cp, Eigen::MatrixXf& wcn, Eigen::MatrixXf& spn, float& toeAngle, int position)
+	float GetToeAngle(int position)
 	{
+		float toeAngle;
 		// positive toe angle for toe in and negative for toe out
-		Eigen::Vector3f wheelAxis = wcn.row(position) - spn.row(position);
+		Eigen::Vector3f wheelAxis = wcnGlob.row(position) - spnGlob.row(position);
 		Eigen::Vector3f refAxis{
 			0,
-			wcn.row(position)(1) - spn.row(position)(1),
-			wcn.row(position)(2) - spn.row(position)(2)
+			wcnGlob.row(position)(1) - spnGlob.row(position)(1),
+			wcnGlob.row(position)(2) - spnGlob.row(position)(2)
 		};
 
 		float toe = acos(refAxis.norm() / wheelAxis.norm());
 
-		if (wcn.row(position)(0) < spn.row(position)(0)) // toe out case
+		if (wcnGlob.row(position)(0) < spnGlob.row(position)(0)) // toe out case
+		{
 			toeAngle = -toe * 180 / 3.14159f;
+			return toeAngle;
+		}
+			
 		else // toe in case
+		{
 			toeAngle = toe * 180 / 3.14159f;
+			return toeAngle;
+
+		}
 
 	}
 
-	void CalculateCasterAngle(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, float& casterAngle, int position)
+	float GetCasterAngle(int position)
 	{
+		float casterAngle;
 		float caster =
 			atan2f(
-				(lca3.row(position)(0) - uca3.row(position)(0))
-				, (-uca3.row(position)(2) + lca3.row(position)(2)));
+				(lca3Glob.row(position)(0) - uca3Glob.row(position)(0))
+				, (-uca3Glob.row(position)(2) + lca3Glob.row(position)(2)));
 
 		casterAngle = caster * 180 / 3.14159f;
+		return casterAngle;
 	}
 
-	void CalculateRollCentreHeight(Eigen::Vector3f& lca1L, Eigen::Vector3f& lca2L, Eigen::MatrixXf& lca3Lmat, Eigen::Vector3f& uca1L, Eigen::Vector3f& uca2L, Eigen::MatrixXf& uca3Lmat, Eigen::MatrixXf& cpLmat, float& rollCentreHeight, int position)
+	float GetRollCentreHeight(int position)
 	{
-
+		float rollCentreHeight;
 		int L = position;                  // L means left
-		int R = cpLmat.rows() - 1 - position;  // R means right
+		int R = cpGlob.rows() - 1 - position;  // R means right
 
 		float slopePrecision{ 0.001f }; // if difference between slopes is less than this value, than they are considered parallel
 
-		Eigen::Vector3f lca3L{ lca3Lmat.row(L) };
-		Eigen::Vector3f uca3L{ uca3Lmat.row(L) };
-		Eigen::Vector3f cpL{ cpLmat.row(L) };
+		Eigen::Vector3f lca3L{ lca3Glob.row(L) };
+		Eigen::Vector3f uca3L{ uca3Glob.row(L) };
+		Eigen::Vector3f cpL{ cpGlob.row(L) };
 
-		Eigen::Vector3f lca1R{ lca1L(0),-lca1L(1),lca1L(2) };
-		Eigen::Vector3f lca2R{ lca2L(0),-lca2L(1),lca2L(2) };
-		Eigen::Vector3f lca3R{ lca3Lmat.row(R)(0),-lca3Lmat.row(R)(1),lca3Lmat.row(R)(2) };
+		Eigen::Vector3f lca1R{ lca1ref(0),-lca1ref(1),lca1ref(2) };
+		Eigen::Vector3f lca2R{ lca2ref(0),-lca2ref(1),lca2ref(2) };
+		Eigen::Vector3f lca3R{ lca3Glob.row(R)(0),-lca3Glob.row(R)(1),lca3Glob.row(R)(2) };
 
-		Eigen::Vector3f uca1R{ uca1L(0),-uca1L(1),uca1L(2) };
-		Eigen::Vector3f uca2R{ uca2L(0),-uca2L(1),uca2L(2) };
-		Eigen::Vector3f uca3R{ uca3Lmat.row(R)(0),-uca3Lmat.row(R)(1),uca3Lmat.row(R)(2) };
-		Eigen::Vector3f cpR{ cpLmat.row(R)(0),-cpLmat.row(R)(1),cpLmat.row(R)(2) };
+		Eigen::Vector3f uca1R{ uca1ref(0),-uca1ref(1),uca1ref(2) };
+		Eigen::Vector3f uca2R{ uca2ref(0),-uca2ref(1),uca2ref(2) };
+		Eigen::Vector3f uca3R{ uca3Glob.row(R)(0),-uca3Glob.row(R)(1),uca3Glob.row(R)(2) };
+		Eigen::Vector3f cpR{ cpGlob.row(R)(0),-cpGlob.row(R)(1),cpGlob.row(R)(2) };
 
 		float aLCAL;
 		float aUCAL;
@@ -686,8 +682,8 @@ public:
 			bCa = (A * D2 - D) / C;
 		};
 		
-		intersectionLineCalc(aLCAL, bLCAL, lca1L, lca2L, lca3L);
-		intersectionLineCalc(aUCAL, bUCAL, uca1L, uca2L, uca3L);
+		intersectionLineCalc(aLCAL, bLCAL, lca1ref, lca2ref, lca3L);
+		intersectionLineCalc(aUCAL, bUCAL, uca1ref, uca2ref, uca3L);
 		intersectionLineCalc(aLCAR, bLCAR, lca1R, lca2R, lca3R);
 		intersectionLineCalc(aUCAR, bUCAR, uca1R, uca2R, uca3R);
 
@@ -732,6 +728,7 @@ public:
 		if (abs((aICR - aICL)) < precision)
 		{
 			rollCentreHeight = 0;
+			return rollCentreHeight;
 		}
 
 		else
@@ -743,21 +740,23 @@ public:
 				((cpR(1) - cpL(1)) * (cpL(2) - RCz) -
 					(cpL(1) - RCy) * (cpR(2) - cpL(2))) /
 				sqrt(pow((cpR(2) - cpL(2)), 2) + pow((cpR(1) - cpL(1)), 2));
+			return rollCentreHeight;
 		}
 
 	}
 
-	void CalculateCasterTrailAndScrubRadius(Eigen::MatrixXf& lca3Mat, Eigen::MatrixXf& uca3Mat, Eigen::MatrixXf& spnMat, Eigen::MatrixXf& wcnMat, Eigen::MatrixXf& cpMat, float& casterTrail, float& scrubRadius, int position)
+	float GetCasterTrail(int position)
 	{
+		float casterTrail;
 		int L = position;                  // L means left
-		int R = cpMat.rows() - 1 - position;  // R means right
+		int R = cpGlob.rows() - 1 - position;  // R means right
 
-		Eigen::Vector3f cpL{ cpMat.row(L) };
-		Eigen::Vector3f cpR{ cpMat.row(R) };
-		Eigen::Vector3f wcn{ wcnMat.row(L) };
-		Eigen::Vector3f spn{ spnMat.row(L) };
-		Eigen::Vector3f lca3L{ lca3Mat.row(L) };
-		Eigen::Vector3f uca3L{ uca3Mat.row(L) };
+		Eigen::Vector3f cpL{ cpGlob.row(L) };
+		Eigen::Vector3f cpR{ cpGlob.row(R) };
+		Eigen::Vector3f wcn{ wcnGlob.row(L) };
+		Eigen::Vector3f spn{ spnGlob.row(L) };
+		Eigen::Vector3f lca3L{ lca3Glob.row(L) };
+		Eigen::Vector3f uca3L{ uca3Glob.row(L) };
 
 		Eigen::Vector3f grndNormal{
 			0,
@@ -819,12 +818,87 @@ public:
 
 		// positive caster trail
 		if ((l3u3intrs - spnpr).cross(l3u3intrs - wcnpr)(2) > 0)
+		{
 			casterTrail = caster_trail;
+
+			return casterTrail;
+		}
 
 		// negative caster trail
 		else
+		{
 			casterTrail = -caster_trail;
+			return casterTrail;
 
+		}
+	}
+
+	float GetScrubRadius(int position)
+	{
+		float scrubRadius;
+		int L = position;                  // L means left
+		int R = cpGlob.rows() - 1 - position;  // R means right
+
+		Eigen::Vector3f cpL{ cpGlob.row(L) };
+		Eigen::Vector3f cpR{ cpGlob.row(R) };
+		Eigen::Vector3f wcn{ wcnGlob.row(L) };
+		Eigen::Vector3f spn{ spnGlob.row(L) };
+		Eigen::Vector3f lca3L{ lca3Glob.row(L) };
+		Eigen::Vector3f uca3L{ uca3Glob.row(L) };
+
+		Eigen::Vector3f grndNormal{
+			0,
+			-cpR(2) + cpL(2),
+			-cpR(1) - cpL(1)
+		};
+
+		float wcnpr_temp1 =
+			grndNormal(0) * cpL(0) - grndNormal(0) * wcn(0) +
+			grndNormal(1) * cpL(1) - grndNormal(1) * wcn(1) +
+			grndNormal(2) * cpL(2) - grndNormal(2) * wcn(2);
+
+		float wcnpr_temp2 =
+			grndNormal(0) * grndNormal(0) +
+			grndNormal(1) * grndNormal(1) +
+			grndNormal(2) * grndNormal(2);
+
+		Eigen::Vector3f wcnpr{
+			grndNormal(0) * wcnpr_temp1 / wcnpr_temp2 + wcn(0),
+			grndNormal(1) * wcnpr_temp1 / wcnpr_temp2 + wcn(1),
+			grndNormal(2) * wcnpr_temp1 / wcnpr_temp2 + wcn(2)
+		};
+
+		float spnpr_temp1 =
+			grndNormal(0) * cpL(0) - grndNormal(0) * wcn(0) +
+			grndNormal(1) * cpL(1) - grndNormal(1) * wcn(1) +
+			grndNormal(2) * cpL(2) - grndNormal(2) * wcn(2);
+
+		float spnpr_temp2 =
+			grndNormal(0) * grndNormal(0) +
+			grndNormal(1) * grndNormal(1) +
+			grndNormal(2) * grndNormal(2);
+
+		Eigen::Vector3f spnpr{
+			grndNormal(0) * spnpr_temp1 / spnpr_temp2 + spn(0),
+			grndNormal(1) * spnpr_temp1 / spnpr_temp2 + spn(1),
+			grndNormal(2) * spnpr_temp1 / spnpr_temp2 + spn(2)
+		};
+
+		float l3u3intrs_temp1 =
+			-grndNormal(0) * cpL(0) + grndNormal(0) * lca3L(0)
+			- grndNormal(1) * cpL(1) + grndNormal(1) * lca3L(1)
+			- grndNormal(2) * cpL(2) + grndNormal(2) * lca3L(2);
+
+		float l3u3intrs_temp2 =
+			grndNormal(0) * lca3L(0) - grndNormal(0) * uca3L(0) +
+			grndNormal(1) * lca3L(1) - grndNormal(1) * uca3L(1) +
+			grndNormal(2) * lca3L(2) - grndNormal(2) * uca3L(2);
+
+		Eigen::Vector3f l3u3intrs{
+			lca3L(0) - (lca3L(0) - uca3L(0)) * l3u3intrs_temp1 / l3u3intrs_temp2,
+			lca3L(1) - (lca3L(1) - uca3L(1)) * l3u3intrs_temp1 / l3u3intrs_temp2,
+			lca3L(2) - (lca3L(2) - uca3L(2)) * l3u3intrs_temp1 / l3u3intrs_temp2
+		};
 
 		// scrub radius
 		float scrubRadius_temp1 =
@@ -839,17 +913,18 @@ public:
 
 		scrubRadius = scrubRadius_temp1 / sqrtf(scrubRadius_temp2);
 
-
+		return scrubRadius;
 
 	}
 
-	void CalculateKingpinAngle(Eigen::MatrixXf& lca3, Eigen::MatrixXf& uca3, Eigen::MatrixXf& cpMat, float& kingpinAngle, int position)
+	float GetKingpinAngle(int position)
 	{
+		float kingpinAngle;
 		int L = position;                  // L means left
-		int R = cpMat.rows() - 1 - position;  // R means right
+		int R = cpGlob.rows() - 1 - position;  // R means right
 
-		Eigen::Vector3f cpL{ cpMat.row(L) };
-		Eigen::Vector3f cpR{ cpMat.row(R) };
+		Eigen::Vector3f cpL{ cpGlob.row(L) };
+		Eigen::Vector3f cpR{ cpGlob.row(R) };
 
 		Eigen::Vector3f grndNormal{
 			0,
@@ -860,26 +935,33 @@ public:
 
 		Eigen::Vector3f l3u3pr{
 			0,
-			-uca3.row(L)(1) + lca3.row(L)(1),
-			-uca3.row(L)(2) + lca3.row(L)(2)
+			-uca3Glob.row(L)(1) + lca3Glob.row(L)(1),
+			-uca3Glob.row(L)(2) + lca3Glob.row(L)(2)
 		};
 
 		// if uca3 is closer to chassis centre then kingpin angle is positive
-		if (abs(uca3.row(L)(1)) < abs(lca3.row(L)(1)))
+		if (abs(uca3Glob.row(L)(1)) < abs(lca3Glob.row(L)(1)))
+		{
 			kingpinAngle = acos(grndNormal.dot(l3u3pr) / grndNormal.norm() / l3u3pr.norm()) * 180.0f / 3.14159f;
+			return kingpinAngle;
+		}
 		// otherwise negative kingpin angle
 		else
+		{
 			kingpinAngle = -acos(grndNormal.dot(l3u3pr) / grndNormal.norm() / l3u3pr.norm()) * 180.0f / 3.14159f;
+			return kingpinAngle;
+
+		}
 	}
 
-	void CalculateAntiFeatures(Eigen::Vector3f& lca1, Eigen::Vector3f& lca2, Eigen::MatrixXf& lca3Mat, Eigen::Vector3f& uca1, Eigen::Vector3f& uca2, Eigen::MatrixXf& uca3Mat, Eigen::MatrixXf& cpMat, Eigen::MatrixXf& wcnMat, float& antiDrive, float& antiBrakes, int position)
+	void GetAntiFeatures(float& antiDrive, float& antiBrakes, int position)
 	{
 		int L = position;
 
-		Eigen::Vector3f lca3{ lca3Mat.row(L) };
-		Eigen::Vector3f uca3{ uca3Mat.row(L) };
-		Eigen::Vector3f cp{ cpMat.row(position) };
-		Eigen::Vector3f wcn{ wcnMat.row(position) };
+		Eigen::Vector3f lca3{ lca3Glob.row(L) };
+		Eigen::Vector3f uca3{ uca3Glob.row(L) };
+		Eigen::Vector3f cp{ cpGlob.row(position) };
+		Eigen::Vector3f wcn{ wcnGlob.row(position) };
 
 		float aLCA;
 		float aUCA;
@@ -904,8 +986,8 @@ public:
 			bCa = (B * D2 - D) / C;
 		};
 
-		intersectionLineCalc(aLCA, bLCA, lca1, lca2, lca3);
-		intersectionLineCalc(aUCA, bUCA, uca1, uca2, uca3);
+		intersectionLineCalc(aLCA, bLCA, lca1ref, lca2ref, lca3);
+		intersectionLineCalc(aUCA, bUCA, uca1ref, uca2ref, uca3);
 
 		float tanThetaOutboard;
 		float tanThetaInboard;
@@ -960,28 +1042,64 @@ public:
 		}
 	}
 
-	void CalculateHalfTrackAndWheelbaseChange(Eigen::MatrixXf& cpMat, float& halfTrackChange, float& wheelbaseChange, int position)
+	void GetHalfTrackAndWheelbaseChange(float& halfTrackChange, float& wheelbaseChange, int position)
 	{
 		// if current wheelbase or half track is smaller than reference than negative sign, otherwise positive
-		halfTrackChange = cpMat.row(cpMat.rows() / 2)[1] - cpMat.row(position)[1];
-		wheelbaseChange = -cpMat.row(cpMat.rows() / 2)[0] + cpMat.row(position)[0];
+		halfTrackChange = cpGlob.row(cpGlob.rows() / 2)[1] - cpGlob.row(position)[1];
+		wheelbaseChange = -cpGlob.row(cpGlob.rows() / 2)[0] + cpGlob.row(position)[0];
 	}
 
-	void CalculateDistancePointToLine(float& distance, const Eigen::Vector3f& linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
+	float GetLca3DistanceFromWheelAxis()
 	{
-		distance = (Pt - linePt1).cross(Pt - linePt2).norm() / (linePt2 - linePt1).norm();
+		return CalculateDistancePointToLine(spnref, wcnref, lca3ref);
+
 	}
 
-	void CalculateSignedPointToPlaneDistance(float& distance, const Eigen::Vector3f linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
+	float GetUca3DistanceFromWheelAxis()
+	{
+		return CalculateDistancePointToLine(spnref, wcnref, uca3ref);
+
+	}
+
+	float GetTr2DistanceFromWheelAxis()
+	{
+		return CalculateDistancePointToLine(spnref, wcnref, tr2ref);
+
+	}
+
+	float CalculateDistancePointToLine(const Eigen::Vector3f& linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
+	{	
+		float distance;
+		distance = (Pt - linePt1).cross(Pt - linePt2).norm() / (linePt2 - linePt1).norm();
+		return distance;
+	}
+
+	float GetLca3DistanceToWheelCentrePlane()
+	{
+		return CalculateSignedPointToPlaneDistance(wcnref, spnref, lca3ref);
+	}
+
+	float GetUca3DistanceToWheelCentrePlane()
+	{
+		return CalculateSignedPointToPlaneDistance(wcnref, spnref, uca3ref);
+	}
+
+	float GetTr2DistanceToWheelCentrePlane()
+	{
+		return CalculateSignedPointToPlaneDistance(wcnref, spnref, tr2ref);
+	}
+
+	float CalculateSignedPointToPlaneDistance(const Eigen::Vector3f linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
 	{
 		/*Calculates distance from point to plane and gives a sign (+ or -) for distance, positive when distanced in direction of plane normal and  negative otherwise, linePt1 is the head of normal vector and linePt2 tail*/
-
+		float distance;
 		float A = linePt1[0] - linePt2[0];
 		float B = linePt1[1] - linePt2[1];
 		float C = linePt1[2] - linePt2[2];
 		float D = -linePt1[0] * A - linePt1[1] * B - linePt1[2] * C;
 
 		distance = (A * Pt[0] + B * Pt[1] + C * Pt[2] + D) / sqrtf(A * A + B * B + C * C);
+		return distance;
 	}
 
 };
@@ -1012,7 +1130,60 @@ float optimisation_obj_res(float* hardpoints, float wRadiusin,
 		vertIncrin, steerIncrin, precisionin
 	};
 
-	susp.CalculateMovement(outputParams);
+	susp.CalculateMovement();
+
+	outputParams[0] = susp.GetObjCamberScore();
+	outputParams[1] = susp.GetCamberAngle(0);
+	outputParams[2] = susp.GetCamberAngle(2);
+	outputParams[3] = susp.GetToeAngle(0);
+	outputParams[4] = susp.GetToeAngle(2);
+	outputParams[5] = susp.GetCasterAngle(1);
+	outputParams[6] = susp.GetRollCentreHeight(1);
+	outputParams[7] = susp.GetCasterTrail(1);
+	outputParams[8] = susp.GetScrubRadius(1);
+	outputParams[9] = susp.GetKingpinAngle(1);
+	susp.GetAntiFeatures(outputParams[10], outputParams[11], 1);
+	susp.GetHalfTrackAndWheelbaseChange(outputParams[12], outputParams[13], 0);
+	susp.GetHalfTrackAndWheelbaseChange(outputParams[14], outputParams[15], 2);
+	// for constraints inside wheel
+	outputParams[16] = susp.GetLca3DistanceFromWheelAxis();
+	outputParams[17] = susp.GetUca3DistanceFromWheelAxis();
+	outputParams[18] = susp.GetTr2DistanceFromWheelAxis();
+
+	outputParams[19] = susp.GetLca3DistanceToWheelCentrePlane();
+	outputParams[20] = susp.GetUca3DistanceToWheelCentrePlane();
+	outputParams[21] = susp.GetTr2DistanceToWheelCentrePlane();
 
 	return 1.0f;
+}
+
+
+
+void suspension_movement(float* hardpoints, float wRadiusin,
+	float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
+	int suspPos, int drivePos, int brakePos,
+	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float* outputParams)
+{
+
+	Suspension susp{
+
+		hardpoints[0], hardpoints[1],hardpoints[2],
+		hardpoints[3], hardpoints[4],hardpoints[5],
+		hardpoints[6], hardpoints[7],hardpoints[8],
+		hardpoints[9], hardpoints[10],hardpoints[11],
+		hardpoints[12], hardpoints[13],hardpoints[14],
+		hardpoints[15], hardpoints[16],hardpoints[17],
+		hardpoints[18], hardpoints[19],hardpoints[20],
+		hardpoints[21], hardpoints[22],hardpoints[23],
+		hardpoints[24], hardpoints[25],hardpoints[26],
+		hardpoints[27], hardpoints[28],hardpoints[29],
+		wRadiusin,
+		wheelbase, cogHeight, frontDriveBias, frontBrakeBias,
+		suspPos, drivePos, brakePos,
+		wVertin, wSteerin,
+		vertIncrin, steerIncrin, precisionin
+	};
+
+	susp.CalculateMovement();
+
 }

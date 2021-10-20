@@ -4,23 +4,45 @@
 #include <Eigen/Geometry>
 #include <iostream>
 
-void test_f(float& anti)
+float* test_f()
 {
-	anti = 5.0f;
+	float returnFloat[] ={ 5.0f,6.0f };
+	return returnFloat;
 }
 
 
+class Test
+{
+	// members
+private:
+	Eigen::MatrixXf lca3Glob;// (vertIncr * 2 + 1, 3);
+
+public:
+	Test(int size):lca3Glob(size, size)
+	{
+		
+		
+	}
+
+	void printTest()
+	{
+		lca3Glob <<
+			1, 2, 3,
+			4, 5, 6,
+			7, 8, 9;
+		std::cout << lca3Glob;
+	}
+
+};
+
 int main()
 {
-	float params[5];
+	Test newTest{3};
+	float outputFloat[5];
 
-	for (float param : params)
-		std::cout << param << "\n";
+	*outputFloat = test_f();
 
-	test_f(params[4]);
-
-	for (float param : params)
-		std::cout << param << "\n";
+	newTest.printTest();
 
 
 }

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FS_BMK_ui"
         xmlns:vm="clr-namespace:FS_BMK_ui.ViewModels"
         
         mc:Ignorable="d"
@@ -11,6 +10,7 @@
 
     <Window.Resources>
         <vm:OptimizationSuspensionViewModel x:Key="OptimizationSuspensionVM"/>
+        <vm:CurrentSuspensionViewModel x:Key="CurrentSuspensionVM"/>
 
     </Window.Resources>
 
@@ -357,7 +357,7 @@
             </ScrollViewer>
             
             <!-- Current suspension parameters and visualization -->
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" DataContext="{StaticResource CurrentSuspensionVM}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -371,7 +371,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <!-- Suspension hardpoints -->
-                    <DataGrid Grid.Column="0" ItemsSource="{Binding HardpointsMV}" 
+                    <DataGrid Grid.Column="0" ItemsSource="{Binding CurrentSuspension.Hardpoints}" 
                               AutoGenerateColumns="False"
                               CanUserAddRows="False"
                               CanUserReorderColumns="False"
@@ -380,9 +380,9 @@
                               CanUserResizeColumns="False"
                               CanUserSortColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="X" Binding="{Binding XValLow}"/>
-                            <DataGridTextColumn Header="Y" Binding="{Binding YValLow}"/>
-                            <DataGridTextColumn Header="Z" Binding="{Binding ZValLow}"/>
+                            <DataGridTextColumn Header="X" Binding="{Binding XVal}"/>
+                            <DataGridTextColumn Header="Y" Binding="{Binding YVal}"/>
+                            <DataGridTextColumn Header="Z" Binding="{Binding ZVal}"/>
                         </DataGrid.Columns>
                         <DataGrid.RowHeaderTemplate>
                             <DataTemplate>
@@ -410,9 +410,9 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Wheel radius"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Wheelbase"/>
                             <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="CoG height"/>
-                            <TextBox Grid.Row="1" Grid.Column="0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2"/>
-                            <TextBox Grid.Row="1" Grid.Column="4"/>
+                            <TextBox Text="{Binding CurrentSuspension.WheelRadius}" Grid.Row="1" Grid.Column="0"/>
+                            <TextBox Text="{Binding CurrentSuspension.Wheelbase}" Grid.Row="1" Grid.Column="2"/>
+                            <TextBox Text="{Binding CurrentSuspension.CoGHeight}" Grid.Row="1" Grid.Column="4"/>
                         </Grid>
                         <!-- Front brake and drive bias -->
                         <Grid Margin="15,0,0,0">
@@ -430,8 +430,8 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Front drive bias"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Front brake bias"/>
-                            <TextBox Grid.Row="1" Grid.Column="0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2"/>
+                            <TextBox Text="{Binding CurrentSuspension.FrontDriveBias}" Grid.Row="1" Grid.Column="0"/>
+                            <TextBox Text="{Binding CurrentSuspension.FrontBrakeBias}" Grid.Row="1" Grid.Column="2"/>
                         </Grid>
                         <!-- Rear brake and drive bias -->
                         <Grid Margin="15,0,0,0">
@@ -449,8 +449,8 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Rear drive bias"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Rear brake bias"/>
-                            <TextBox Grid.Row="1" Grid.Column="0"/>
-                            <TextBox Grid.Row="1" Grid.Column="2"/>
+                            <TextBox IsReadOnly="True" Background="LightGray" Text="{Binding CurrentSuspension.RearDriveBias}" Grid.Row="1" Grid.Column="0"/>
+                            <TextBox IsReadOnly="True" Background="LightGray" Text="{Binding CurrentSuspension.RearBrakeBias}" Grid.Row="1" Grid.Column="2"/>
                         </Grid>
                         <!-- Vertical movement from reference position (mm) -->
                         <TextBlock Margin="15,5,0,5" TextWrapping="Wrap" Text="Vertical movement from reference position, positive value is down w.r.t. chassis and vice versa."/>
@@ -466,7 +466,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBox Grid.Row="0" Grid.Column="0"/>
+                            <TextBox Text="{Binding CurrentSuspension.VerticalMovement}" Grid.Row="0" Grid.Column="0"/>
                         </Grid>
                     </StackPanel>
                     
@@ -496,11 +496,11 @@
                         <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Caster angle"/>
                         <TextBlock Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Text="RC height"/>
                         <TextBlock Grid.Row="0" Grid.Column="8" Grid.ColumnSpan="2" Text="Caster trail"/>
-                        <TextBox Grid.Row="1" Grid.Column="0"/>
-                        <TextBox Grid.Row="1" Grid.Column="2"/>
-                        <TextBox Grid.Row="1" Grid.Column="4"/>
-                        <TextBox Grid.Row="1" Grid.Column="6"/>
-                        <TextBox Grid.Row="1" Grid.Column="8"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value}" Grid.Row="1" Grid.Column="0"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[1].Value}" Grid.Row="1" Grid.Column="2"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[2].Value}" Grid.Row="1" Grid.Column="4"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[3].Value}" Grid.Row="1" Grid.Column="6"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[4].Value}" Grid.Row="1" Grid.Column="8"/>
                     </Grid>
                     <!-- scrub radius kingpin angle anti drive and anti brake -->
                     <Grid>
@@ -524,11 +524,11 @@
                         <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Kingpin angle"/>
                         <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Anti dive"/>
                         <TextBlock Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Text="Anti brake"/>
-                        <TextBox Grid.Row="1" Grid.Column="0"/>
-                        <TextBox Grid.Row="1" Grid.Column="2"/>
-                        <TextBox Grid.Row="1" Grid.Column="4"/>
-                        <TextBox Grid.Row="1" Grid.Column="6"/>
-                    </Grid>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[5].Value}" Grid.Row="1" Grid.Column="0"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[6].Value}" Grid.Row="1" Grid.Column="2"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[7].Value}" Grid.Row="1" Grid.Column="4"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[8].Value}" Grid.Row="1" Grid.Column="6"/>
+                    </Grid>     
                     <!-- wheelbase change half track change -->
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -549,13 +549,15 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Wheelbase change"/>
                         <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Half track change"/>
-                        <TextBox Grid.Row="1" Grid.Column="0"/>
-                        <TextBox Grid.Row="1" Grid.Column="2"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[9].Value}"  Grid.Row="1" Grid.Column="0"/>
+                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[10].Value}"  Grid.Row="1" Grid.Column="2"/>
                     </Grid>
                 </StackPanel>
                 <!-- Suspension visualization -->
-                
-                <Button Grid.Row="2"  >Update</Button>
+
+                <Button Grid.Row="2" Command="{Binding CalculateSuspensionMovementCommand}">
+                    Update
+                </Button>
             </Grid>
 
 
