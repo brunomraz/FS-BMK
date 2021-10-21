@@ -55,6 +55,20 @@ class Suspension():
 	c.c_float,
 	c.POINTER(c.c_float)]
 
+    mydll.suspension_movement.argtypes = [
+	c.POINTER(c.c_float), 
+	c.c_float, c.c_float, c.c_float, c.c_float, c.c_float,
+	c.c_int, c.c_int, c.c_int,
+    c.c_float, c.c_float, 
+    c.c_int, c.c_int,
+	c.c_float,
+	c.POINTER(c.c_float),
+	c.POINTER(c.c_float)
+    ]
+
+    hardpoints2 = []															
+    hardpoints2_c = (c.c_float * 15)(*hardpoints2)#c.c_float * 15
+
     hardpoints = []															
     hardpoints_c = c.c_float * 30
 
@@ -66,7 +80,7 @@ class Suspension():
     suspPos = c.c_int(1) # 0 for front, 1 for rear
     drivePos = c.c_int(1) # 0 for outboard, 1 for inboard
     brakePos = c.c_int(0) # 0 for outboard, 1 for inboard
-    wVertin = c.c_float(30)
+    wVertin = c.c_float(-8)
     wSteerin = c.c_float(30)
     vertIncrin = c.c_int(1)
     steerIncrin = c.c_int(10)
@@ -77,7 +91,8 @@ class Suspension():
     outputParams =[]
     outputParams_c = (c.c_float * 22)(*outputParams)
 
-
+    outputParams2 =[]
+    outputParams2_c = (c.c_float * 11)(*outputParams2)
 
 
     # INPUT VALUES FOR OPTIMIZATION
@@ -218,6 +233,28 @@ class Suspension():
 	            Suspension.outputParams_c
                 )
 
+    def calculateMovement2(self):
+        hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
+
+        Suspension.mydll.suspension_movement(
+	            hardpoints_c_arr,
+	            Suspension.wRadiusin,
+	            Suspension.wheelbase,
+	            Suspension.cogHeight,
+	            Suspension.frontDriveBias,
+	            Suspension.frontBrakeBias,
+	            Suspension.suspPos,
+	            Suspension.drivePos,
+	            Suspension.brakePos,
+	            Suspension.wVertin ,
+	            Suspension.wSteerin ,
+	            Suspension.vertIncrin,
+	            Suspension.steerIncrin ,
+	            Suspension.precisionin,
+	            Suspension.outputParams2_c,
+	            Suspension.hardpoints2_c
+                )
+
 
     def printResult(self):
         # OUTPUT PARAMETERS
@@ -306,5 +343,12 @@ if __name__ == "__main__":
     print("suspension output parameters___________")
     print("suspension normal done")
 
+    print("suspension normal output parameters___________22222222222")
+    suspension.calculateMovement2()
+ 
+    for i in range(11):
+        print(Suspension.outputParams2_c[i])
+    print("suspension output parameters___________")
+    print("suspension normal done")
 
     input("numeric_sol program finished, press any key")

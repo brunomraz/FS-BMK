@@ -13,16 +13,16 @@ namespace FS_BMK_ui.Models
         public class Hardpoint
         {
             private string _hardpointName;
-            private int _xVal;
-            private int _yVal;
-            private int _zVal;
+            private float _xVal;
+            private float _yVal;
+            private float _zVal;
 
 
 
 
             public Hardpoint(string hardpointName,
-                int xVal,int yVal,
-                int zVal)
+                float xVal, float yVal,
+                float zVal)
             {
                 HardpointNameClass = hardpointName;
                 XVal = xVal;
@@ -37,38 +37,41 @@ namespace FS_BMK_ui.Models
                 set { _hardpointName = value; }
             }
 
-            public int XVal
+            public float XVal
             {
                 get { return _xVal; }
                 set { _xVal = value; }
             }
-            public int YVal
+            public float YVal
             {
                 get { return _yVal; }
                 set { _yVal = value; }
             }
-            public int ZVal
+            public float ZVal
             {
                 get { return _zVal; }
                 set { _zVal = value; }
             }
+
+
         }
 
         private List<Hardpoint> _hardpoints = new List<Hardpoint> {
-            new Hardpoint("LCA1", 100,120,-600),
-            new Hardpoint("LCA2", 100,120,-600),
-            new Hardpoint("LCA3", 100,120,-600),
-            new Hardpoint("UCA1", 100,120,-600),
-            new Hardpoint("UCA2", 100,120,-600),
-            new Hardpoint("UCA3", 100,120,-600),
-            new Hardpoint("TR1", 100,120,-600),
-            new Hardpoint("TR2", 100,120,-600),
-            new Hardpoint("WCN", 100,120,-600),
-            new Hardpoint("SPN", 100,120,-600)
+            new Hardpoint("LCA1", -2038.666f, -411.709f, -132.316f),
+            new Hardpoint("LCA2", -2241.147f, -408.195f, -126.205f),
+            new Hardpoint("LCA3", -2135f, -600f, -140f),	
+            new Hardpoint("UCA1", -2040.563f, -416.249f, -275.203f),
+            new Hardpoint("UCA2", -2241.481f, -417.314f, -270.739f),
+            new Hardpoint("UCA3", -2153f, -578f, -315f),	
+            new Hardpoint("TR1",  -2234.8f, -411.45f, -194.6f),	
+            new Hardpoint("TR2",  -2225f, -582f, -220f),	
+            new Hardpoint("WCN",  -2143.6f, -620.5f, -220.07f),	
+            new Hardpoint("SPN",  -2143.6f, -595.5f, -219.34f)
 
         };
 
-        private float[] _hardpointsMoved = new float[30];
+        /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _hardpointsMoved = new float[15];
 
 
 
@@ -120,7 +123,6 @@ namespace FS_BMK_ui.Models
             get { return _hardpoints; }
         }
 
-        private float[] testArray = new float[] { 0f, 0f, 0f };
 
         private float _wheelRadius = 210f;
         private float _wheelbase = 1530f;

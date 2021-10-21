@@ -117,35 +117,26 @@ public:
 	}
 
 	Suspension(
-		float lca1xin, float lca1yin, float lca1zin, // in suffix stands for input
-		float lca2xin, float lca2yin, float lca2zin,
-		float lca3xin, float lca3yin, float lca3zin,
-		float uca1xin, float uca1yin, float uca1zin,
-		float uca2xin, float uca2yin, float uca2zin,
-		float uca3xin, float uca3yin, float uca3zin,
-		float tr1xin, float tr1yin, float tr1zin,
-		float tr2xin, float tr2yin, float tr2zin,
-		float wcnxin, float wcnyin, float wcnzin,
-		float spnxin, float spnyin, float spnzin,
+		float *hps,
 		float wRadiusin,
 		float wheelbasein, float cogHeightin, float frontDriveBiasin,
 		float frontBrakeBiasin, int suspPosin, int drivePosin, int brakePosin,
 		float wVertin, float wSteerin,
-		int vertIncrin, int steerIncrin, float precisionin):lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3), tr2Glob(vertIncrin * 2 + 1, 3), wcnGlob(vertIncrin * 2 + 1, 3), spnGlob(vertIncrin * 2 + 1, 3), cpGlob(vertIncrin * 2 + 1, 3)
+		int vertIncrin, int steerIncrin, float precisionin) :lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3), tr2Glob(vertIncrin * 2 + 1, 3), wcnGlob(vertIncrin * 2 + 1, 3), spnGlob(vertIncrin * 2 + 1, 3), cpGlob(vertIncrin * 2 + 1, 3)
 	{
-		lca1ref << lca1xin, lca1yin, lca1zin;
-		lca2ref << lca2xin, lca2yin, lca2zin;
-		lca3ref << lca3xin, lca3yin, lca3zin;
+		lca1ref << hps[0], hps[1], hps[2];
+		lca2ref << hps[3], hps[4], hps[5];
+		lca3ref << hps[6], hps[7], hps[8];
 
-		uca1ref << uca1xin, uca1yin, uca1zin;
-		uca2ref << uca2xin, uca2yin, uca2zin;
-		uca3ref << uca3xin, uca3yin, uca3zin;
+		uca1ref << hps[9], hps[10], hps[11];
+		uca2ref << hps[12], hps[13], hps[14];
+		uca3ref << hps[15], hps[16], hps[17];
 
-		tr1ref << tr1xin, tr1yin, tr1zin;
-		tr2ref << tr2xin, tr2yin, tr2zin;
+		tr1ref << hps[18], hps[19], hps[20];
+		tr2ref << hps[21], hps[22], hps[23];
 
-		wcnref << wcnxin, wcnyin, wcnzin;
-		spnref << spnxin, spnyin, spnzin;
+		wcnref << hps[24], hps[25], hps[26];
+		spnref << hps[27], hps[28], hps[29];
 
 		wRadius = wRadiusin;
 
@@ -318,7 +309,6 @@ public:
 		// global positions of LCA3 for whole wheel movement
 		lca3Glob = (lca3LocLCA * rotLCA.transpose()).array().rowwise() + lca12.array().transpose();
 
-		std::cout <<"lca3glob\n" << lca3Glob << "\n";
 
 		// global position of UCA3 for whole wheel movement
 		Eigen::MatrixXf uca3LocUCA(vertIncr * 2 + 1, 3);
@@ -1076,20 +1066,20 @@ public:
 
 	float GetLca3DistanceToWheelCentrePlane()
 	{
-		return CalculateSignedPointToPlaneDistance(wcnref, spnref, lca3ref);
+		return GetSignedPointToPlaneDistance(wcnref, spnref, lca3ref);
 	}
 
 	float GetUca3DistanceToWheelCentrePlane()
 	{
-		return CalculateSignedPointToPlaneDistance(wcnref, spnref, uca3ref);
+		return GetSignedPointToPlaneDistance(wcnref, spnref, uca3ref);
 	}
 
 	float GetTr2DistanceToWheelCentrePlane()
 	{
-		return CalculateSignedPointToPlaneDistance(wcnref, spnref, tr2ref);
+		return GetSignedPointToPlaneDistance(wcnref, spnref, tr2ref);
 	}
 
-	float CalculateSignedPointToPlaneDistance(const Eigen::Vector3f linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
+	float GetSignedPointToPlaneDistance(const Eigen::Vector3f linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
 	{
 		/*Calculates distance from point to plane and gives a sign (+ or -) for distance, positive when distanced in direction of plane normal and  negative otherwise, linePt1 is the head of normal vector and linePt2 tail*/
 		float distance;
@@ -1100,6 +1090,14 @@ public:
 
 		distance = (A * Pt[0] + B * Pt[1] + C * Pt[2] + D) / sqrtf(A * A + B * B + C * C);
 		return distance;
+	}
+
+	void GetMovedHardpoints(float* movedHardpoints) {
+		movedHardpoints[0] = lca3Glob.row(0)(0), movedHardpoints[1] = lca3Glob.row(0)(1), movedHardpoints[2] = lca3Glob.row(0)(2);
+		movedHardpoints[3] = uca3Glob.row(0)(0), movedHardpoints[4] = uca3Glob.row(0)(1), movedHardpoints[5] = uca3Glob.row(0)(2);
+		movedHardpoints[6] = tr2Glob.row(0)(0), movedHardpoints[7] = tr2Glob.row(0)(1), movedHardpoints[8] = tr2Glob.row(0)(2);
+		movedHardpoints[9] = wcnGlob.row(0)(0), movedHardpoints[10] = wcnGlob.row(0)(1), movedHardpoints[11] = wcnGlob.row(0)(2);
+		movedHardpoints[12] = spnGlob.row(0)(0), movedHardpoints[13] = spnGlob.row(0)(1), movedHardpoints[14] = spnGlob.row(0)(2);
 	}
 
 };
@@ -1113,16 +1111,7 @@ float optimisation_obj_res(float* hardpoints, float wRadiusin,
 
 	Suspension susp{
 
-		hardpoints[0], hardpoints[1],hardpoints[2],
-		hardpoints[3], hardpoints[4],hardpoints[5],
-		hardpoints[6], hardpoints[7],hardpoints[8],
-		hardpoints[9], hardpoints[10],hardpoints[11],
-		hardpoints[12], hardpoints[13],hardpoints[14],
-		hardpoints[15], hardpoints[16],hardpoints[17],
-		hardpoints[18], hardpoints[19],hardpoints[20],
-		hardpoints[21], hardpoints[22],hardpoints[23],
-		hardpoints[24], hardpoints[25],hardpoints[26],
-		hardpoints[27], hardpoints[28],hardpoints[29],
+		hardpoints,
 		wRadiusin,
 		wheelbase, cogHeight, frontDriveBias, frontBrakeBias,
 		suspPos, drivePos, brakePos,
@@ -1162,21 +1151,11 @@ float optimisation_obj_res(float* hardpoints, float wRadiusin,
 void suspension_movement(float* hardpoints, float wRadiusin,
 	float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
 	int suspPos, int drivePos, int brakePos,
-	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float* outputParams)
+	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float* outputParams, float* outputHardpoints)
 {
 
 	Suspension susp{
-
-		hardpoints[0], hardpoints[1],hardpoints[2],
-		hardpoints[3], hardpoints[4],hardpoints[5],
-		hardpoints[6], hardpoints[7],hardpoints[8],
-		hardpoints[9], hardpoints[10],hardpoints[11],
-		hardpoints[12], hardpoints[13],hardpoints[14],
-		hardpoints[15], hardpoints[16],hardpoints[17],
-		hardpoints[18], hardpoints[19],hardpoints[20],
-		hardpoints[21], hardpoints[22],hardpoints[23],
-		hardpoints[24], hardpoints[25],hardpoints[26],
-		hardpoints[27], hardpoints[28],hardpoints[29],
+		hardpoints,
 		wRadiusin,
 		wheelbase, cogHeight, frontDriveBias, frontBrakeBias,
 		suspPos, drivePos, brakePos,
@@ -1185,5 +1164,18 @@ void suspension_movement(float* hardpoints, float wRadiusin,
 	};
 
 	susp.CalculateMovement();
+
+	susp.GetMovedHardpoints(outputHardpoints);
+
+	outputParams[0] = susp.GetCamberAngle(0);
+	outputParams[1] = susp.GetToeAngle(0);
+	outputParams[2] = susp.GetCasterAngle(0);
+	outputParams[3] = susp.GetRollCentreHeight(0);
+	outputParams[4] = susp.GetCasterTrail(0);
+	outputParams[5] = susp.GetScrubRadius(0);
+	outputParams[6] = susp.GetKingpinAngle(0);
+	susp.GetAntiFeatures(outputParams[7], outputParams[8], 0);
+	susp.GetHalfTrackAndWheelbaseChange(outputParams[9], outputParams[10], 0);
+
 
 }

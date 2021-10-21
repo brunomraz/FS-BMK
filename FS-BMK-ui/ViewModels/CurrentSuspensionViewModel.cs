@@ -15,7 +15,10 @@ namespace FS_BMK_ui.ViewModels
     {
         public const string MechanicsDLL = @"..\..\..\bin\x64\Release\MechanicsDll.dll";
         [DllImport(MechanicsDLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void suspension_movement(float[] inputArray);
+        public static extern void suspension_movement(float[] hardpoints, float wRadiusin,
+    float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
+    int suspPos, int drivePos, int brakePos,
+    float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float[] outputParams, float[] outputHardpoints);
 
 
         // private members
@@ -63,32 +66,47 @@ namespace FS_BMK_ui.ViewModels
 
         private void CalculateSuspensionMovement(object parameter)
         {
-            float[] intermediateArray = new float[11];
-
-            suspension_movement(intermediateArray);
-
-
-
-            MessageBox.Show($"novo calculating suspension characteristics");
-
-            //for (int i = 0; i < intermediateArray.Length; i++)
-            //{
-            //    CurrentSuspension.SuspensionCharacteristics[i].Value = intermediateArray[i];
-            //}
-            CurrentSuspension.SuspensionCharacteristics[0].Value = intermediateArray[0];
-            CurrentSuspension.SuspensionCharacteristics[1].Value = intermediateArray[1];
-            CurrentSuspension.SuspensionCharacteristics[2].Value = intermediateArray[2];
-            CurrentSuspension.SuspensionCharacteristics[3].Value = intermediateArray[3];
-            CurrentSuspension.SuspensionCharacteristics[4].Value = intermediateArray[4];
-            CurrentSuspension.SuspensionCharacteristics[5].Value = intermediateArray[5];
-            CurrentSuspension.SuspensionCharacteristics[6].Value = intermediateArray[6];
-            CurrentSuspension.SuspensionCharacteristics[7].Value = intermediateArray[7];
-            CurrentSuspension.SuspensionCharacteristics[8].Value = intermediateArray[8];
-            CurrentSuspension.SuspensionCharacteristics[9].Value = intermediateArray[9];
-            CurrentSuspension.SuspensionCharacteristics[10].Value = intermediateArray[10];
-            //CurrentSuspension.Test = 5f * CurrentSuspension.Hardpoints[0].XVal;
+            float[] _suspChars = new float[11];
+            float[] _movedHps = new float[15];
+            float[] hardpoints = {
+                CurrentSuspension.Hardpoints[0].XVal, CurrentSuspension.Hardpoints[0].YVal, CurrentSuspension.Hardpoints[0].ZVal, 
+                CurrentSuspension.Hardpoints[1].XVal, CurrentSuspension.Hardpoints[1].YVal, CurrentSuspension.Hardpoints[1].ZVal, 
+                CurrentSuspension.Hardpoints[2].XVal, CurrentSuspension.Hardpoints[2].YVal, CurrentSuspension.Hardpoints[2].ZVal, 
+                CurrentSuspension.Hardpoints[3].XVal, CurrentSuspension.Hardpoints[3].YVal, CurrentSuspension.Hardpoints[3].ZVal, 
+                CurrentSuspension.Hardpoints[4].XVal, CurrentSuspension.Hardpoints[4].YVal, CurrentSuspension.Hardpoints[4].ZVal, 
+                CurrentSuspension.Hardpoints[5].XVal, CurrentSuspension.Hardpoints[5].YVal, CurrentSuspension.Hardpoints[5].ZVal, 
+                CurrentSuspension.Hardpoints[6].XVal, CurrentSuspension.Hardpoints[6].YVal, CurrentSuspension.Hardpoints[6].ZVal, 
+                CurrentSuspension.Hardpoints[7].XVal, CurrentSuspension.Hardpoints[7].YVal, CurrentSuspension.Hardpoints[7].ZVal, 
+                CurrentSuspension.Hardpoints[8].XVal, CurrentSuspension.Hardpoints[8].YVal, CurrentSuspension.Hardpoints[8].ZVal, 
+                CurrentSuspension.Hardpoints[9].XVal, CurrentSuspension.Hardpoints[9].YVal, CurrentSuspension.Hardpoints[9].ZVal
+            };
 
 
+            suspension_movement(hardpoints, CurrentSuspension.WheelRadius,
+     CurrentSuspension.Wheelbase, CurrentSuspension.CoGHeight, CurrentSuspension.FrontDriveBias, CurrentSuspension.FrontBrakeBias,
+    1,//int suspPos, 
+    1,//int drivePos, 
+    0,//int brakePos,
+    CurrentSuspension.VerticalMovement,//float wVertin, 
+    30f,//float wSteerin, 
+    1,//int vertIncrin, 
+    10,//int steerIncrin, 
+    0.01f,//float precisionin,
+    _suspChars,
+    _movedHps);
+
+
+            CurrentSuspension.SuspensionCharacteristics[0].Value = _suspChars[0];
+            CurrentSuspension.SuspensionCharacteristics[1].Value = _suspChars[1];
+            CurrentSuspension.SuspensionCharacteristics[2].Value = _suspChars[2];
+            CurrentSuspension.SuspensionCharacteristics[3].Value = _suspChars[3];
+            CurrentSuspension.SuspensionCharacteristics[4].Value = _suspChars[4];
+            CurrentSuspension.SuspensionCharacteristics[5].Value = _suspChars[5];
+            CurrentSuspension.SuspensionCharacteristics[6].Value = _suspChars[6];
+            CurrentSuspension.SuspensionCharacteristics[7].Value = _suspChars[7];
+            CurrentSuspension.SuspensionCharacteristics[8].Value = _suspChars[8];
+            CurrentSuspension.SuspensionCharacteristics[9].Value = _suspChars[9];
+            CurrentSuspension.SuspensionCharacteristics[10].Value = _suspChars[10];
 
         }
 

@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FS-BMK", "FS-BMK\FS-BMK.vcxproj", "{9E465D64-39A4-4108-B826-18B2AA7599DF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A1190B82-CCFC-4CE9-AE29-C474147229FD} = {A1190B82-CCFC-4CE9-AE29-C474147229FD}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FS-BMK-ui", "FS-BMK-ui\FS-BMK-ui.csproj", "{A45010B9-380B-4FC8-A68B-51FC7C691A64}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Optimization", "Optimization\Optimization.pyproj", "{6C9FDA81-B0ED-4E75-9A78-789C5A443FC8}"
@@ -30,16 +25,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Debug|x64.ActiveCfg = Debug|x64
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Debug|x64.Build.0 = Debug|x64
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Debug|x86.ActiveCfg = Debug|Win32
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Debug|x86.Build.0 = Debug|Win32
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Release|Any CPU.ActiveCfg = Release|Win32
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Release|x64.ActiveCfg = Release|x64
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Release|x64.Build.0 = Release|x64
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Release|x86.ActiveCfg = Release|Win32
-		{9E465D64-39A4-4108-B826-18B2AA7599DF}.Release|x86.Build.0 = Release|Win32
 		{A45010B9-380B-4FC8-A68B-51FC7C691A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A45010B9-380B-4FC8-A68B-51FC7C691A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A45010B9-380B-4FC8-A68B-51FC7C691A64}.Debug|x64.ActiveCfg = Debug|Any CPU

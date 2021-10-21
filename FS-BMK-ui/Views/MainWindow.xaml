@@ -467,6 +467,9 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBox Text="{Binding CurrentSuspension.VerticalMovement}" Grid.Row="0" Grid.Column="0"/>
+                            <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
+                                    Command="{Binding CalculateSuspensionMovementCommand}"
+                                    Content="Update"/>
                         </Grid>
                     </StackPanel>
                     
@@ -555,9 +558,7 @@
                 </StackPanel>
                 <!-- Suspension visualization -->
 
-                <Button Grid.Row="2" Command="{Binding CalculateSuspensionMovementCommand}">
-                    Update
-                </Button>
+                
             </Grid>
 
 
