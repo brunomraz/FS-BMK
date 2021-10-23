@@ -6,7 +6,8 @@
         xmlns:vm="clr-namespace:FS_BMK_ui.ViewModels"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="910" Width="1000">
+        Title="FS BMK" Height="910" Width="1000"
+        Loaded="Window_Loaded">
 
     <Window.Resources>
         <vm:OptimizationSuspensionViewModel x:Key="OptimizationSuspensionVM"/>
@@ -557,7 +558,9 @@
                     </Grid>
                 </StackPanel>
                 <!-- Suspension visualization -->
-
+                <Viewport3D x:Name="mainViewport" Grid.Row="2">
+                   
+                </Viewport3D>
                 
             </Grid>
 

@@ -76,6 +76,7 @@
     </Compile>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Models\CurrentSuspension.cs" />
+    <Compile Include="Models\SuspensionVisualization.cs" />
     <Compile Include="ViewModels\OptimizationSuspensionViewModel.cs" />
     <Compile Include="ViewModels\CurrentSuspensionViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
