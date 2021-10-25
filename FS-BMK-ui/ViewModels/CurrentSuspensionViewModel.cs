@@ -19,7 +19,9 @@ namespace FS_BMK_ui.ViewModels
     float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
     int suspPos, int drivePos, int brakePos,
     float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float[] outputParams, float[] outputHardpoints);
+        private float testVar;
 
+        public float TestVar { get { return testVar; } set { testVar = value; } }
 
         // private members
         private CurrentSuspension _currentSuspension;
@@ -108,6 +110,7 @@ namespace FS_BMK_ui.ViewModels
             CurrentSuspension.SuspensionCharacteristics[9].Value = _suspChars[9];
             CurrentSuspension.SuspensionCharacteristics[10].Value = _suspChars[10];
 
+            testVar += 0.1f;
         }
 
         private bool CanCalculateSuspensionMovementExecute(object parameter)

@@ -74,6 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CameraController\SphericalCameraController.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Models\CurrentSuspension.cs" />
     <Compile Include="Models\SuspensionVisualization.cs" />

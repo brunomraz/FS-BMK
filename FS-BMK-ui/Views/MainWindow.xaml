@@ -358,7 +358,7 @@
             </ScrollViewer>
             
             <!-- Current suspension parameters and visualization -->
-            <Grid Grid.Column="1" DataContext="{StaticResource CurrentSuspensionVM}">
+            <Grid x:Name="CurrSuspDataContext" Grid.Column="1" DataContext="{StaticResource CurrentSuspensionVM}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -470,7 +470,8 @@
                             <TextBox Text="{Binding CurrentSuspension.VerticalMovement}" Grid.Row="0" Grid.Column="0"/>
                             <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
                                     Command="{Binding CalculateSuspensionMovementCommand}"
-                                    Content="Update"/>
+                                    Content="Update" HorizontalAlignment="Right" Click="Button_Click"
+                                    />
                         </Grid>
                     </StackPanel>
                     
@@ -558,9 +559,14 @@
                     </Grid>
                 </StackPanel>
                 <!-- Suspension visualization -->
-                <Viewport3D x:Name="mainViewport" Grid.Row="2">
-                   
-                </Viewport3D>
+                <Border Grid.Row="2" BorderBrush="Black" BorderThickness="2">
+                    <Viewport3D x:Name="mainViewport"
+                                
+                                >
+
+                    </Viewport3D>
+
+                </Border>
                 
             </Grid>
 
