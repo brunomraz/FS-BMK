@@ -29,7 +29,7 @@ namespace FS_BMK_ui
 
         }
 
-        private Model3DGroup lca1Model, lca2Model, uca1Model, uca2Model, trModel, uprightModel, wheelModel;
+        private Model3DGroup xAxis, yAxis, zAxis, lca1Model, lca2Model, uca1Model, uca2Model, trModel, uprightModel, wheelModel;
 
         private CurrentSuspensionViewModel vm1;
 
@@ -44,15 +44,27 @@ namespace FS_BMK_ui
         {
             // Define WPF objects.
             ModelVisual3D visual3d = new ModelVisual3D();
-            lca1Model = new Model3DGroup();
-            visual3d.Content = lca1Model;
+            xAxis = new Model3DGroup();
+            yAxis = new Model3DGroup();
+            visual3d.Content = xAxis;
+            //visual3d.Content = yAxis;
             mainViewport.Children.Add(visual3d);
 
             // Define the camera, lights, and model.
             DefineCamera(mainViewport);
-            DefineLights(lca1Model);
-            DefineModel(lca1Model);
-
+            DefineLights(xAxis);
+            DefineModel(xAxis, Colors.Blue);
+            xAxis.Transform = new MatrixTransform3D(new Matrix3D(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1));
+            //DefineModel(yAxis, Colors.Red);
+            //yAxis.Transform = new MatrixTransform3D(new Matrix3D(
+            //    0, -1, 0, 0,
+            //    1, 0, 0, 0,
+            //    0, 0, 1, 0,
+            //    0, 0, 0, 1));
         }
 
         // Define the camera.
@@ -79,7 +91,7 @@ namespace FS_BMK_ui
         }
 
         // Define the model.
-        private void DefineModel(Model3DGroup group)
+        private void DefineModel(Model3DGroup group, Color color)
         {
             //// Make some cubes.
             //for (int x = -2; x <= 2; x += 2)
@@ -102,12 +114,13 @@ namespace FS_BMK_ui
             //        }
             //    }
             //}
-            MeshGeometry3D mesh = MakeCubeMesh(0, 0, 0, 1);
+            MeshGeometry3D mesh = MakeCylinderMesh(3, 1, 15, 1);
+            //MeshGeometry3D mesh = MakeCubeMesh(0, 0, 0, 1);
 
-            byte r = (byte)(128 + 0 * 50);
-            byte g = (byte)(128 + 0 * 50);
-            byte b = (byte)(128 + 0* 50);
-            Color color = Color.FromArgb(255, r, g, b);
+            //byte r = (byte)(128 + 0 * 50);
+            //byte g = (byte)(128 + 0 * 50);
+            //byte b = (byte)(128 + 0* 50);
+            //Color color = Color.FromArgb(255, r, g, b);
             DiffuseMaterial material = new DiffuseMaterial(
                 new SolidColorBrush(color));
 
@@ -178,10 +191,80 @@ namespace FS_BMK_ui
             return mesh;
         }
 
+        private MeshGeometry3D MakeCylinderMesh(double length, double diameter, int radialIncrements, int axialIncrements)
+        {
+            // Create the geometry.
+            MeshGeometry3D mesh = new MeshGeometry3D();
+
+            // Define the positions.
+            Point3D[] points = new Point3D[radialIncrements * (axialIncrements + 1)];
+            //{
+            //    //new Point3D(x - width, y - width, z - width),
+
+            //};
+
+
+            double angleIncr = 2 * Math.PI / radialIncrements;
+            double heightIncr = length / axialIncrements;
+
+            // creates points for mesh
+            for (int j = 0; j < axialIncrements + 1; j++)
+            {
+                for (int i = 0; i < radialIncrements; i++)
+                {
+                    points[i + j * radialIncrements] =
+                        new Point3D(
+                            Math.Cos(angleIncr * i),
+                            Math.Sin(angleIncr * i),
+                            heightIncr * j);
+                }
+            }
+
+
+
+            foreach (Point3D point in points) mesh.Positions.Add(point);
+
+            //// Define the triangles.
+            Tuple<int, int, int>[] triangles = new Tuple<int, int, int>[radialIncrements * 2 * axialIncrements];
+            //{
+            //     //new Tuple<int, int, int>(0, 1, 2),
+
+            //};
+
+            for (int j = 0; j < axialIncrements; j++)
+            {
+                for (int i = 0; i < radialIncrements - 1; i++)
+                {
+                    triangles[2 * i + j * radialIncrements] =
+                        new Tuple<int, int, int>(j * radialIncrements + i, j * radialIncrements + i + 1, (j + 1) * radialIncrements + i);
+                    triangles[2 * i + 1 + j * radialIncrements] =
+                        new Tuple<int, int, int>(j * radialIncrements + i + 1, (j + 1) * radialIncrements + i + 1, (j + 1) * radialIncrements + i);
+
+                }
+
+                triangles[2 * radialIncrements - 2 + j * radialIncrements] =
+                        new Tuple<int, int, int>
+                        (j * radialIncrements + radialIncrements - 1, j * radialIncrements, (j + 1) * radialIncrements + radialIncrements - 1);
+
+                triangles[2 * radialIncrements - 1 + j * radialIncrements] =
+                        new Tuple<int, int, int>
+                        (j * radialIncrements, j * radialIncrements + radialIncrements, (j + 1) * radialIncrements + radialIncrements - 1);
+            }
+
+            foreach (Tuple<int, int, int> tuple in triangles)
+            {
+                mesh.TriangleIndices.Add(tuple.Item1);
+                mesh.TriangleIndices.Add(tuple.Item2);
+                mesh.TriangleIndices.Add(tuple.Item3);
+            }
+
+            return mesh;
+        }
+
+        double t = 0.5;
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
             // Add the rotation transform to a Transform3DGroup
             Transform3DGroup myTransform3DGroup = new Transform3DGroup();
 
@@ -198,7 +281,13 @@ namespace FS_BMK_ui
             // Set the Transform property of the GeometryModel to the Transform3DGroup which includes
             // both transformations. The 3D object now has two Transformations applied to it.
             lca1Model.Transform = myTransform3DGroup;
-
+            lca1Model.Transform = new MatrixTransform3D(
+    new Matrix3D(
+        t, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, t));
+            t += 1;
 
         }
     }

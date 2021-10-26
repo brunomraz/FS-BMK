@@ -220,7 +220,6 @@ namespace FS_BMK_ui.CameraController
             SphericalToCartesian(CameraR, CameraTheta, CameraPhi,
                 out x, out y, out z);
             TheCamera.Position = new Point3D(x, y, z);
-
             // Look toward the origin.
             TheCamera.LookDirection = new Vector3D(-x, -y, -z);
 
