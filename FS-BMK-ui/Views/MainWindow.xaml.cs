@@ -114,7 +114,7 @@ namespace FS_BMK_ui
             //        }
             //    }
             //}
-            MeshGeometry3D mesh = MakeCylinderMesh(3, 1, 15, 1);
+            MeshGeometry3D mesh = MakeCylinderMesh(3, 1, 3, 1, 2);
             //MeshGeometry3D mesh = MakeCubeMesh(0, 0, 0, 1);
 
             //byte r = (byte)(128 + 0 * 50);
@@ -191,46 +191,67 @@ namespace FS_BMK_ui
             return mesh;
         }
 
-        private MeshGeometry3D MakeCylinderMesh(double length, double diameter, int radialIncrements, int axialIncrements)
+        private MeshGeometry3D MakeCylinderMesh(double length, double radius, int radialIncrements, int axialIncrements, int faceIncrements)
         {
             // Create the geometry.
             MeshGeometry3D mesh = new MeshGeometry3D();
 
-            // Define the positions.
-            Point3D[] points = new Point3D[radialIncrements * (axialIncrements + 1)];
-            //{
-            //    //new Point3D(x - width, y - width, z - width),
+            // Define the positions, there are separate points for faces and side wall.
+            Point3D[] points = new Point3D[radialIncrements * (axialIncrements + 1) + 2 * (1 + radialIncrements * faceIncrements)];
 
-            //};
+            int bottomPtIndex = radialIncrements * (axialIncrements + 1);
+            int topPtIndex = bottomPtIndex + radialIncrements * faceIncrements + 1;
 
+            double angleSegment = 2 * Math.PI / radialIncrements;
+            double heightSegment = length / axialIncrements;
+            double faceSegment = radius / faceIncrements;
 
-            double angleIncr = 2 * Math.PI / radialIncrements;
-            double heightIncr = length / axialIncrements;
-
-            // creates points for mesh
+            // creates points for side wall mesh
             for (int j = 0; j < axialIncrements + 1; j++)
             {
                 for (int i = 0; i < radialIncrements; i++)
                 {
                     points[i + j * radialIncrements] =
                         new Point3D(
-                            Math.Cos(angleIncr * i),
-                            Math.Sin(angleIncr * i),
-                            heightIncr * j);
+                            radius * Math.Cos(angleSegment * i),
+                            radius * Math.Sin(angleSegment * i),
+                            heightSegment * j);
                 }
             }
 
+
+            // creates points for faces
+            points[bottomPtIndex] = new Point3D(0, 0, 0);
+            points[topPtIndex] = new Point3D(0, 0, length);
+            for (int j = 0; j < radialIncrements; j++)
+            {
+
+                for (int i = 0; i < faceIncrements; i++)
+                {
+                    // bottom face
+                    points[bottomPtIndex + j * faceIncrements + 1 + i] = new Point3D(
+                        faceSegment * (i + 1) * Math.Cos(angleSegment * j),
+                        faceSegment * (i + 1) * Math.Sin(angleSegment * j),
+                        0
+                        );
+
+                    // top face
+                    points[topPtIndex + j * faceIncrements + 1 + i] = new Point3D(
+                        faceSegment * (i + 1) * Math.Cos(angleSegment * j),
+                        faceSegment * (i + 1) * Math.Sin(angleSegment * j),
+                        length
+                        );
+                }
+            }
 
 
             foreach (Point3D point in points) mesh.Positions.Add(point);
 
             //// Define the triangles.
             Tuple<int, int, int>[] triangles = new Tuple<int, int, int>[radialIncrements * 2 * axialIncrements];
-            //{
-            //     //new Tuple<int, int, int>(0, 1, 2),
 
-            //};
 
+            // create triangles for side wall
             for (int j = 0; j < axialIncrements; j++)
             {
                 for (int i = 0; i < radialIncrements - 1; i++)
@@ -249,6 +270,25 @@ namespace FS_BMK_ui
                 triangles[2 * radialIncrements - 1 + j * radialIncrements] =
                         new Tuple<int, int, int>
                         (j * radialIncrements, j * radialIncrements + radialIncrements, (j + 1) * radialIncrements + radialIncrements - 1);
+            }
+
+            // cerate triangles for faces
+            for (int j=0;j<radialIncrements-1;j++)
+            {
+                // inner triangles bottom
+
+                // inner triangles top
+
+                for (int i = 0; i < faceIncrements - 1; i++)
+                {
+                    // outer triangles bottom
+
+
+                    // outer triangles top
+
+                    
+                }
+
             }
 
             foreach (Tuple<int, int, int> tuple in triangles)
@@ -280,8 +320,8 @@ namespace FS_BMK_ui
 
             // Set the Transform property of the GeometryModel to the Transform3DGroup which includes
             // both transformations. The 3D object now has two Transformations applied to it.
-            lca1Model.Transform = myTransform3DGroup;
-            lca1Model.Transform = new MatrixTransform3D(
+            xAxis.Transform = myTransform3DGroup;
+            xAxis.Transform = new MatrixTransform3D(
     new Matrix3D(
         t, 0, 0, 0,
         0, 1, 0, 0,
