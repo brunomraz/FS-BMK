@@ -114,7 +114,7 @@ namespace FS_BMK_ui
             //        }
             //    }
             //}
-            MeshGeometry3D mesh = MakeCylinderMesh(3, 1, 3, 1, 2);
+            MeshGeometry3D mesh = MakeCylinderMesh(3, 1, 114, 20, 35);
             //MeshGeometry3D mesh = MakeCubeMesh(0, 0, 0, 1);
 
             //byte r = (byte)(128 + 0 * 50);
@@ -248,7 +248,11 @@ namespace FS_BMK_ui
             foreach (Point3D point in points) mesh.Positions.Add(point);
 
             //// Define the triangles.
-            Tuple<int, int, int>[] triangles = new Tuple<int, int, int>[radialIncrements * 2 * axialIncrements];
+            Tuple<int, int, int>[] triangles = new Tuple<int, int, int>[
+                radialIncrements * 2 * axialIncrements + 2 * (radialIncrements + (faceIncrements - 1) * radialIncrements * 2)];
+            int bottomTriangleIndex = radialIncrements * 2 * axialIncrements;
+            int topTriangleIndex = radialIncrements * 2 * axialIncrements + radialIncrements + (faceIncrements - 1) * radialIncrements * 2;
+
 
 
             // create triangles for side wall
@@ -256,41 +260,128 @@ namespace FS_BMK_ui
             {
                 for (int i = 0; i < radialIncrements - 1; i++)
                 {
-                    triangles[2 * i + j * radialIncrements] =
+                    triangles[2 * i + 2 * j * radialIncrements] =
                         new Tuple<int, int, int>(j * radialIncrements + i, j * radialIncrements + i + 1, (j + 1) * radialIncrements + i);
-                    triangles[2 * i + 1 + j * radialIncrements] =
+                    triangles[2 * i + 1 + 2 * j * radialIncrements] =
                         new Tuple<int, int, int>(j * radialIncrements + i + 1, (j + 1) * radialIncrements + i + 1, (j + 1) * radialIncrements + i);
 
                 }
 
-                triangles[2 * radialIncrements - 2 + j * radialIncrements] =
+                triangles[2 * radialIncrements - 2 + 2*j * radialIncrements] =
                         new Tuple<int, int, int>
                         (j * radialIncrements + radialIncrements - 1, j * radialIncrements, (j + 1) * radialIncrements + radialIncrements - 1);
 
-                triangles[2 * radialIncrements - 1 + j * radialIncrements] =
+                triangles[2 * radialIncrements - 1 + 2*j * radialIncrements] =
                         new Tuple<int, int, int>
                         (j * radialIncrements, j * radialIncrements + radialIncrements, (j + 1) * radialIncrements + radialIncrements - 1);
             }
 
             // cerate triangles for faces
-            for (int j=0;j<radialIncrements-1;j++)
+            for (int j = 0; j < radialIncrements - 1; j++)
             {
                 // inner triangles bottom
+                int currentBottomInnerTriangleIndex = bottomTriangleIndex + j * (1 + (faceIncrements - 1) * 2);
+                triangles[currentBottomInnerTriangleIndex] =
+                        new Tuple<int, int, int>(
+                            bottomPtIndex,
+                            bottomPtIndex + faceIncrements * (j + 1) + 1,
+                            bottomPtIndex + faceIncrements * j + 1);
 
                 // inner triangles top
+                int currentTopInnerTriangleIndex = topTriangleIndex + j * (1 + (faceIncrements - 1) * 2);
+                triangles[currentTopInnerTriangleIndex] =
+                        new Tuple<int, int, int>(
+                            topPtIndex,
+                            topPtIndex + faceIncrements * j + 1,
+                            topPtIndex + faceIncrements * (j + 1) + 1);
 
                 for (int i = 0; i < faceIncrements - 1; i++)
                 {
                     // outer triangles bottom
-
-
+                    triangles[currentBottomInnerTriangleIndex + 2 * i + 1] =
+                        new Tuple<int, int, int>(
+                            bottomPtIndex + j * faceIncrements + i + 1,
+                            bottomPtIndex + (j + 1) * faceIncrements + i + 1,
+                            bottomPtIndex + j * faceIncrements + i + 1 + 1
+                            );
+                    triangles[currentBottomInnerTriangleIndex + 2 * i + 2] =
+                        new Tuple<int, int, int>(
+                            1 + bottomPtIndex + i + (j + 1) * faceIncrements,
+                            1 + bottomPtIndex + i + 1 + (j + 1) * faceIncrements,
+                            1 + bottomPtIndex + i + 1 + j * faceIncrements
+                            );
                     // outer triangles top
+                    triangles[currentTopInnerTriangleIndex + 2 * i + 1] =
+                        new Tuple<int, int, int>(
+                            topPtIndex + j * faceIncrements + i + 1,
+                            topPtIndex + j * faceIncrements + i + 1 + 1,
+                            topPtIndex + (j + 1) * faceIncrements + i + 1
+                            );
+                    triangles[currentTopInnerTriangleIndex + 2 * i + 2] =
+                        new Tuple<int, int, int>(
+                            1 + topPtIndex + i + (j + 1) * faceIncrements,
+                            1 + topPtIndex + i + 1 + j * faceIncrements,
+                            1 + topPtIndex + i + 1 + (j + 1) * faceIncrements
+                            );
 
-                    
                 }
 
             }
 
+            // last inner triangle
+            int lastBottomInnerTriangleIndex = bottomTriangleIndex + (radialIncrements - 1) * (1 + (faceIncrements - 1) * 2);
+            int lastTopInnerTriangleIndex = topTriangleIndex + (radialIncrements - 1) * (1 + (faceIncrements - 1) * 2);
+            triangles[lastBottomInnerTriangleIndex] =
+                new Tuple<int, int, int>(
+                    bottomPtIndex,
+                    bottomPtIndex + 1,
+                    bottomPtIndex + (radialIncrements - 1) * faceIncrements + 1
+                    );
+            triangles[lastTopInnerTriangleIndex] =
+                new Tuple<int, int, int>(
+                    topPtIndex,
+                    topPtIndex + (radialIncrements - 1) * faceIncrements + 1,
+                    topPtIndex + 1
+                    );
+
+
+            // last outer triangles
+            for (int i = 0; i < faceIncrements - 1; i++)
+            {
+                // last radial section outer bottom triangles
+                triangles[lastBottomInnerTriangleIndex + 2 * i + 1] =
+                    new Tuple<int, int, int>(
+                        bottomPtIndex + (radialIncrements - 1) * faceIncrements + 1 + i,
+                        bottomPtIndex + +1 + i,
+                        bottomPtIndex + (radialIncrements - 1) * faceIncrements + 1 + i + 1
+                        );
+                triangles[lastBottomInnerTriangleIndex + 2 * i + 2] =
+                    new Tuple<int, int, int>(
+                        bottomPtIndex + (radialIncrements - 1) * faceIncrements + 1 + i + 1,
+                        bottomPtIndex + 1 + i,
+                        bottomPtIndex + 1 + i + 1
+                        );
+
+                // last radial section outer top triangles
+                triangles[lastTopInnerTriangleIndex + 2 * i + 1] =
+                    new Tuple<int, int, int>(
+                        topPtIndex + (radialIncrements - 1) * faceIncrements + 1 + i,
+                        topPtIndex + (radialIncrements - 1) * faceIncrements + 1 + i + 1,
+                        topPtIndex + +1 + i
+                        );
+                triangles[lastTopInnerTriangleIndex + 2 * i + 2] =
+                    new Tuple<int, int, int>(
+                        topPtIndex + (radialIncrements - 1) * faceIncrements + 1 + i + 1,
+                        topPtIndex + 1 + i + 1,
+                        topPtIndex + 1 + i
+                        );
+            }
+
+
+
+
+
+            // add triangles to mesh
             foreach (Tuple<int, int, int> tuple in triangles)
             {
                 mesh.TriangleIndices.Add(tuple.Item1);
