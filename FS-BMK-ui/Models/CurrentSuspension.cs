@@ -56,24 +56,32 @@ namespace FS_BMK_ui.Models
 
         }
 
+
+        private float _wheelRadius = 210f;
+        private float _wheelbase = 1530f;
+        private float _cogHeight = 300f;
+        private float _frontDriveBias = 0f;
+        private float _frontBrakeBias = 0.6f;
+        private float _rearDriveBias;
+        private float _rearBrakeBias;
+        private float _verticalMovement = 0f;
+
         private List<Hardpoint> _hardpoints = new List<Hardpoint> {
             new Hardpoint("LCA1", -2038.666f, -411.709f, -132.316f),
             new Hardpoint("LCA2", -2241.147f, -408.195f, -126.205f),
-            new Hardpoint("LCA3", -2135f, -600f, -140f),	
+            new Hardpoint("LCA3", -2135f, -600f, -140f),
             new Hardpoint("UCA1", -2040.563f, -416.249f, -275.203f),
             new Hardpoint("UCA2", -2241.481f, -417.314f, -270.739f),
-            new Hardpoint("UCA3", -2153f, -578f, -315f),	
-            new Hardpoint("TR1",  -2234.8f, -411.45f, -194.6f),	
-            new Hardpoint("TR2",  -2225f, -582f, -220f),	
-            new Hardpoint("WCN",  -2143.6f, -620.5f, -220.07f),	
+            new Hardpoint("UCA3", -2153f, -578f, -315f),
+            new Hardpoint("TR1",  -2234.8f, -411.45f, -194.6f),
+            new Hardpoint("TR2",  -2225f, -582f, -220f),
+            new Hardpoint("WCN",  -2143.6f, -620.5f, -220.07f),
             new Hardpoint("SPN",  -2143.6f, -595.5f, -219.34f)
 
         };
 
         /* lca3, uca3, tr2, wcn, spn*/
         private float[] _hardpointsMoved = new float[15];
-
-
 
         public float[] HardpointsMoved
         {
@@ -84,12 +92,8 @@ namespace FS_BMK_ui.Models
             set
             {
                 _hardpointsMoved = value;
-
             }
         }
-
-
-
 
         private List<WPFFloat> _suspensionCharacteristics = new List<WPFFloat>
         {
@@ -106,15 +110,15 @@ namespace FS_BMK_ui.Models
             new WPFFloat()
         };
 
-
-        public List<WPFFloat> SuspensionCharacteristics { 
-            get { 
+        public List<WPFFloat> SuspensionCharacteristics
+        {
+            get
+            {
                 return _suspensionCharacteristics;
-            } 
+            }
             set
             {
                 _suspensionCharacteristics = value;
-
             }
         }
 
@@ -122,18 +126,6 @@ namespace FS_BMK_ui.Models
         {
             get { return _hardpoints; }
         }
-
-
-        private float _wheelRadius = 210f;
-        private float _wheelbase = 1530f;
-        private float _cogHeight = 300f;
-        private float _frontDriveBias = 0f;
-        private float _frontBrakeBias = 0.6f;
-        private float _rearDriveBias;
-        private float _rearBrakeBias;
-
-        private float _verticalMovement = 0f;
-
 
         public float WheelRadius
         {

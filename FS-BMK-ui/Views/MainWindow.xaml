@@ -16,7 +16,7 @@
     </Window.Resources>
 
     <Border BorderThickness=" 5">
-        <Grid>
+        <Grid Margin="-7,0,7,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="*"/>
@@ -501,11 +501,11 @@
                         <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Caster angle"/>
                         <TextBlock Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Text="RC height"/>
                         <TextBlock Grid.Row="0" Grid.Column="8" Grid.ColumnSpan="2" Text="Caster trail"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value}" Grid.Row="1" Grid.Column="0"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[1].Value}" Grid.Row="1" Grid.Column="2"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[2].Value}" Grid.Row="1" Grid.Column="4"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[3].Value}" Grid.Row="1" Grid.Column="6"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[4].Value}" Grid.Row="1" Grid.Column="8"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value}" Grid.Row="1" Grid.Column="0"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[1].Value}" Grid.Row="1" Grid.Column="2"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[2].Value}" Grid.Row="1" Grid.Column="4"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[3].Value}" Grid.Row="1" Grid.Column="6"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[4].Value}" Grid.Row="1" Grid.Column="8"/>
                     </Grid>
                     <!-- scrub radius kingpin angle anti drive and anti brake -->
                     <Grid>
@@ -529,10 +529,10 @@
                         <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Kingpin angle"/>
                         <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Anti dive"/>
                         <TextBlock Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Text="Anti brake"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[5].Value}" Grid.Row="1" Grid.Column="0"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[6].Value}" Grid.Row="1" Grid.Column="2"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[7].Value}" Grid.Row="1" Grid.Column="4"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[8].Value}" Grid.Row="1" Grid.Column="6"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[5].Value}" Grid.Row="1" Grid.Column="0"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[6].Value}" Grid.Row="1" Grid.Column="2"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[7].Value}" Grid.Row="1" Grid.Column="4"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[8].Value}" Grid.Row="1" Grid.Column="6"/>
                     </Grid>     
                     <!-- wheelbase change half track change -->
                     <Grid>
@@ -554,8 +554,8 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Wheelbase change"/>
                         <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Half track change"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[9].Value}"  Grid.Row="1" Grid.Column="0"/>
-                        <TextBox Text="{Binding CurrentSuspension.SuspensionCharacteristics[10].Value}"  Grid.Row="1" Grid.Column="2"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[9].Value}"  Grid.Row="1" Grid.Column="0"/>
+                        <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[10].Value}"  Grid.Row="1" Grid.Column="2"/>
                     </Grid>
                 </StackPanel>
                 <!-- Suspension visualization -->

@@ -29,7 +29,13 @@ namespace FS_BMK_ui
 
         }
 
-        private Model3DGroup xAxis, yAxis, zAxis, lca1Model, lca2Model, uca1Model, uca2Model, trModel, uprightModel, wheelModel;
+        private Model3DGroup suspensionGroup;
+        private Model3DGroup lcaGroup, ucaGroup, trGroup, wheelAssyGroup;
+        private GeometryModel3D lca1Model, lca2Model, uca1Model, uca2Model, trModel, uprightModel, wheelModel;
+
+        private Model3DGroup axisSystem;
+
+        private GeometryModel3D xAxis, yAxis, zAxis;
 
         private CurrentSuspensionViewModel vm1;
 
@@ -44,27 +50,69 @@ namespace FS_BMK_ui
         {
             // Define WPF objects.
             ModelVisual3D visual3d = new ModelVisual3D();
-            xAxis = new Model3DGroup();
-            yAxis = new Model3DGroup();
-            visual3d.Content = xAxis;
-            //visual3d.Content = yAxis;
-            mainViewport.Children.Add(visual3d);
+            suspensionGroup = new Model3DGroup();
+
+            lcaGroup = new Model3DGroup();
+            ucaGroup = new Model3DGroup();
+            trGroup = new Model3DGroup();
+            wheelAssyGroup = new Model3DGroup();
+
+            axisSystem = new Model3DGroup();
+
+            xAxis = new GeometryModel3D();
+            yAxis = new GeometryModel3D();
+            zAxis = new GeometryModel3D();
+
+            lca1Model = new GeometryModel3D();
+            lca2Model = new GeometryModel3D();
+            uca1Model = new GeometryModel3D();
+            uca2Model = new GeometryModel3D();
+            trModel = new GeometryModel3D();
+            uprightModel = new GeometryModel3D();
+            wheelModel = new GeometryModel3D();
 
             // Define the camera, lights, and model.
             DefineCamera(mainViewport);
-            DefineLights(xAxis);
-            DefineModel(xAxis, Colors.Blue);
+            DefineLights(suspensionGroup);
+
+            xAxis = DefineControlArmTubeModel(Colors.Red);
+            yAxis = DefineControlArmTubeModel(Colors.Green);
+            zAxis = DefineControlArmTubeModel(Colors.Blue);
+
+            axisSystem.Children.Add(xAxis);
+            axisSystem.Children.Add(yAxis);
+            axisSystem.Children.Add(zAxis);
+
+            lca1Model = DefineControlArmTubeModel(Colors.Green);
+            lca2Model = DefineControlArmTubeModel(Colors.Green);
+            uca1Model = DefineControlArmTubeModel(Colors.Red);
+            uca2Model = DefineControlArmTubeModel(Colors.Red);
+            trModel = DefineControlArmTubeModel(Colors.Cyan);
+            wheelModel = DefineWheelModel(Colors.Black);
+            uprightModel = DefineUprightModel(Colors.Blue);
+
+            lcaGroup.Children.Add(lca1Model);
+            lcaGroup.Children.Add(lca2Model);
+            ucaGroup.Children.Add(uca1Model);
+            ucaGroup.Children.Add(uca2Model);
+            trGroup.Children.Add(trModel);
+            wheelAssyGroup.Children.Add(uprightModel);
+            wheelAssyGroup.Children.Add(wheelModel);
+
+            suspensionGroup.Children.Add(axisSystem);
+            suspensionGroup.Children.Add(lcaGroup);
+            suspensionGroup.Children.Add(ucaGroup);
+            suspensionGroup.Children.Add(trGroup);
+            suspensionGroup.Children.Add(wheelAssyGroup);
+
+            visual3d.Content = suspensionGroup;
+            mainViewport.Children.Add(visual3d);
+
             xAxis.Transform = new MatrixTransform3D(new Matrix3D(
                 1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1));
-            //DefineModel(yAxis, Colors.Red);
-            //yAxis.Transform = new MatrixTransform3D(new Matrix3D(
-            //    0, -1, 0, 0,
-            //    1, 0, 0, 0,
-            //    0, 0, 1, 0,
-            //    0, 0, 0, 1));
         }
 
         // Define the camera.
@@ -91,24 +139,48 @@ namespace FS_BMK_ui
         }
 
         // Define the model.
-        private void DefineModel(Model3DGroup group, Color color)
+        private GeometryModel3D DefineUprightModel(Color color)
         {
 
             //MeshGeometry3D mesh = MakeCylinderMesh(3, 1, 114, 20, 35);
-            MeshGeometry3D mesh = MakeHollowCylinderMesh(3, 2, 1, 400, 100, 200);
+            //MeshGeometry3D mesh = MakeHollowCylinderMesh(3, 2, 1, 400, 100, 200);
+            MeshGeometry3D mesh = MakeUprightMesh(
+                new Point3D(vm1.CurrentSuspension.Hardpoints[2].XVal, vm1.CurrentSuspension.Hardpoints[2].YVal, vm1.CurrentSuspension.Hardpoints[2].ZVal),
+                new Point3D(vm1.CurrentSuspension.Hardpoints[5].XVal, vm1.CurrentSuspension.Hardpoints[5].YVal, vm1.CurrentSuspension.Hardpoints[5].ZVal),
+                new Point3D(vm1.CurrentSuspension.Hardpoints[8].XVal, vm1.CurrentSuspension.Hardpoints[8].YVal, vm1.CurrentSuspension.Hardpoints[8].ZVal),
+                new Point3D(vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal)
+                );
 
-            //MeshGeometry3D mesh = MakeCubeMesh(0, 0, 0, 1);
-
-            //byte r = (byte)(128 + 0 * 50);
-            //byte g = (byte)(128 + 0 * 50);
-            //byte b = (byte)(128 + 0* 50);
-            //Color color = Color.FromArgb(255, r, g, b);
             DiffuseMaterial material = new DiffuseMaterial(
                 new SolidColorBrush(color));
 
             GeometryModel3D model = new GeometryModel3D(mesh, material);
+            return model;
+        }
 
-            group.Children.Add(model);
+        // Define the model.
+        private GeometryModel3D DefineControlArmTubeModel(Color color)
+        {
+            MeshGeometry3D mesh = MakeCylinderMesh(1, 1, 114, 20, 35);
+
+            DiffuseMaterial material = new DiffuseMaterial(
+                new SolidColorBrush(color));
+
+            GeometryModel3D model = new GeometryModel3D(mesh, material);
+            return model;
+        }
+
+        // Define the model.
+        private GeometryModel3D DefineWheelModel(Color color)
+        {
+
+            MeshGeometry3D mesh = MakeHollowCylinderMesh(1, 2, 1, 400, 100, 200);
+            
+            DiffuseMaterial material = new DiffuseMaterial(
+                new SolidColorBrush(color));
+
+            GeometryModel3D model = new GeometryModel3D(mesh, material);
+            return model;
         }
 
         // Make a mesh containing a cube centered at this point.
@@ -598,34 +670,68 @@ namespace FS_BMK_ui
             return mesh;
         }
 
+        private MeshGeometry3D MakeUprightMesh(Point3D lca3, Point3D uca3, Point3D wcn, Point3D tr2)
+        {
+            // Create the geometry.
+            MeshGeometry3D mesh = new MeshGeometry3D();
 
-        double t = 0.5;
+            // Define the positions.
+            Point3D[] points =
+            {
+                lca3,
+                uca3,
+                wcn,
+                tr2
+            };
+            foreach (Point3D point in points) mesh.Positions.Add(point);
+
+            // Define the triangles.
+            Tuple<int, int, int>[] triangles =
+            {
+                 new Tuple<int, int, int>(0, 2, 1),
+                 new Tuple<int, int, int>(2, 3, 1),
+                 new Tuple<int, int, int>(0, 3, 2),
+                 new Tuple<int, int, int>(0, 1, 3)
+            };
+            foreach (Tuple<int, int, int> tuple in triangles)
+            {
+                mesh.TriangleIndices.Add(tuple.Item1);
+                mesh.TriangleIndices.Add(tuple.Item2);
+                mesh.TriangleIndices.Add(tuple.Item3);
+            }
+            return mesh;
+        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // Add the rotation transform to a Transform3DGroup
-            Transform3DGroup myTransform3DGroup = new Transform3DGroup();
+            //DefineModel(xAxis, Colors.Blue);
+            //// Add the rotation transform to a Transform3DGroup
+            ///
+            //Transform3DGroup myTransform3DGroup = new Transform3DGroup();
 
-            // Create and apply a scale transformation that stretches the object along the local x-axis
-            // by 200 percent and shrinks it along the local y-axis by 50 percent.
-            ScaleTransform3D myScaleTransform3D = new ScaleTransform3D();
-            myScaleTransform3D.ScaleX = vm1.TestVar;
-            myScaleTransform3D.ScaleY = 0.5;
-            myScaleTransform3D.ScaleZ = 1;
+            //// Create and apply a scale transformation that stretches the object along the local x-axis
+            //// by 200 percent and shrinks it along the local y-axis by 50 percent.
 
-            // Add the scale transform to the Transform3DGroup.
-            myTransform3DGroup.Children.Add(myScaleTransform3D);
+            //ScaleTransform3D myScaleTransform3D = new ScaleTransform3D();
+            //myScaleTransform3D.ScaleX = vm1.TestVar;
+            //myScaleTransform3D.ScaleY = 0.5;
+            //myScaleTransform3D.ScaleZ = 1;
 
-            // Set the Transform property of the GeometryModel to the Transform3DGroup which includes
-            // both transformations. The 3D object now has two Transformations applied to it.
-            xAxis.Transform = myTransform3DGroup;
-            xAxis.Transform = new MatrixTransform3D(
-    new Matrix3D(
-        t, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, t));
-            t += 1;
+            //// Add the scale transform to the Transform3DGroup.
+            ///
+            //myTransform3DGroup.Children.Add(myScaleTransform3D);
+
+            //// Set the Transform property of the GeometryModel to the Transform3DGroup which includes
+            //// both transformations. The 3D object now has two Transformations applied to it.
+
+            //xAxis.Transform = myTransform3DGroup;
+            //        xAxis.Transform = new MatrixTransform3D(
+            //new Matrix3D(
+            //    vm1.TestVar, 0, 0, 0,
+            //    0, 1, 0, 0,
+            //    0, 0, 1, 0,
+            //    0, 0, 0, vm1.TestVar));
 
         }
     }

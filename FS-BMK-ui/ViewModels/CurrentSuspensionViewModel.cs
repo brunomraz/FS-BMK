@@ -19,7 +19,7 @@ namespace FS_BMK_ui.ViewModels
     float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
     int suspPos, int drivePos, int brakePos,
     float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float[] outputParams, float[] outputHardpoints);
-        private float testVar;
+        private float testVar=1f;
 
         public float TestVar { get { return testVar; } set { testVar = value; } }
 
@@ -85,17 +85,32 @@ namespace FS_BMK_ui.ViewModels
 
 
             suspension_movement(hardpoints, CurrentSuspension.WheelRadius,
-     CurrentSuspension.Wheelbase, CurrentSuspension.CoGHeight, CurrentSuspension.FrontDriveBias, CurrentSuspension.FrontBrakeBias,
-    1,//int suspPos, 
-    1,//int drivePos, 
-    0,//int brakePos,
-    CurrentSuspension.VerticalMovement,//float wVertin, 
-    30f,//float wSteerin, 
-    1,//int vertIncrin, 
-    10,//int steerIncrin, 
-    0.01f,//float precisionin,
-    _suspChars,
-    _movedHps);
+                 CurrentSuspension.Wheelbase, CurrentSuspension.CoGHeight, CurrentSuspension.FrontDriveBias, CurrentSuspension.FrontBrakeBias,
+                1,//int suspPos, 
+                1,//int drivePos, 
+                0,//int brakePos,
+                CurrentSuspension.VerticalMovement,//float wVertin, 
+                30f,//float wSteerin, 
+                1,//int vertIncrin, 
+                10,//int steerIncrin, 
+                0.01f,//float precisionin,
+                _suspChars,
+                CurrentSuspension.HardpointsMoved);
+
+            //suspension_movement(hardpoints, CurrentSuspension.WheelRadius,
+            //    CurrentSuspension.Wheelbase, CurrentSuspension.CoGHeight, CurrentSuspension.FrontDriveBias, CurrentSuspension.FrontBrakeBias,
+            //    1,//int suspPos, 
+            //    1,//int drivePos, 
+            //    0,//int brakePos,
+            //    CurrentSuspension.VerticalMovement,//float wVertin, 
+            //    30f,//float wSteerin, 
+            //    1,//int vertIncrin, 
+            //    10,//int steerIncrin, 
+            //    0.01f,//float precisionin,
+            //    _suspChars,
+            //    _movedHps);
+
+            //CurrentSuspension.HardpointsMoved = _movedHps;
 
 
             CurrentSuspension.SuspensionCharacteristics[0].Value = _suspChars[0];
