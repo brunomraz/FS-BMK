@@ -4,11 +4,20 @@
 #include <Eigen/Geometry>
 #include <iostream>
 
+
+template <typename T> int sgn(T val) {
+	return (T(0) < val) - (val < T(0));
+}
+
 int main()
 {
-	for (int i = 0; i < 0; i++)
-		std::cout << "printed\n";
-	std::cout << "outside printed\n";
+	float a = 555.0f;
+	float b = 55.0f;
+	int c = sgn(a-b);
+
+
+
+	std::cout << c <<" is sign\n";
 
 }
 

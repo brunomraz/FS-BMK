@@ -7,7 +7,9 @@
 #include <sstream>
 #include <math.h>
 
-
+template <typename T> int sgn(T val) {
+	return (T(0) < val) - (val < T(0));
+}
 
 class Suspension
 {
@@ -117,7 +119,7 @@ public:
 	}
 
 	Suspension(
-		float *hps,
+		float* hps,
 		float wRadiusin,
 		float wheelbasein, float cogHeightin, float frontDriveBiasin,
 		float frontBrakeBiasin, int suspPosin, int drivePosin, int brakePosin,
@@ -430,7 +432,8 @@ public:
 					tr1locTR(1) * tr1locTR(1) * tr1locTR(1) * tr1locTR(1) -
 					tr1locTR(2) * tr1locTR(2) * tr1locTR(2) * tr1locTR(2);
 
-				float temp7TR2 = std::sqrt(temp3TR2 + temp4TR2 + temp5TR2 + temp6TR2);
+				float temp7TR2 = sgn(wcnref[0] - tr2ref[0]) * std::sqrt(temp3TR2 + temp4TR2 + temp5TR2 + temp6TR2);
+
 
 
 				tr2locTR(0) = (tr1locTR(0) * temp1TR2 - tr1locTR(1) * temp7TR2) / temp2TR2;
@@ -496,12 +499,12 @@ public:
 			13 wheelbase change down
 			14 half track change up
 			15 wheelbase change up
-		    16 distance lca3 to wcn-spn line
+			16 distance lca3 to wcn-spn line
 			17 distance uca3 to wcn-spn line
 			18 distance tr2 to wcn-spn line
 			19 distance lca3 to plane with wcn-spn normal through wcn point
 			20 distance uca3 to plane with wcn-spn normal through wcn point
-			21 distance tr2 to plane with wcn-spn normal through wcn point 
+			21 distance tr2 to plane with wcn-spn normal through wcn point
 			*/
 
 		}
@@ -517,14 +520,14 @@ public:
 		float camberScore;
 		float camberUp;
 		float camberDown;
-		camberUp=GetCamberAngle(2);
-		camberDown =GetCamberAngle(0);
+		camberUp = GetCamberAngle(2);
+		camberDown = GetCamberAngle(0);
 		float wantedCamberUp = -0.978327f;
 		float wantedCamberDown = -2.65318f;
 		float peakWidth = 100.0f;
 		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2)) * 0.5f };
 		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) * 0.5f };
-		
+
 		camberScore = 1 - camberUpObj - camberDownObj;
 		return camberScore;
 	}
@@ -571,11 +574,11 @@ public:
 
 		// tests if camber is negative, if it is it returns negative angle
 		if ((wcnpr - (Eigen::Vector3f)wcnGlob.row(L))(2) > 0)
-		{ 
+		{
 			camberAngle = -asin(camber) * 180 / 3.14159f;
 			return camberAngle;
 		}
-			
+
 		// if camber is not negative, returns positive angle
 		else
 		{
@@ -603,7 +606,7 @@ public:
 			toeAngle = -toe * 180 / 3.14159f;
 			return toeAngle;
 		}
-			
+
 		else // toe in case
 		{
 			toeAngle = toe * 180 / 3.14159f;
@@ -672,7 +675,7 @@ public:
 			aCa = -B / C;
 			bCa = (A * D2 - D) / C;
 		};
-		
+
 		intersectionLineCalc(aLCAL, bLCAL, lca1ref, lca2ref, lca3L);
 		intersectionLineCalc(aUCAL, bUCAL, uca1ref, uca2ref, uca3L);
 		intersectionLineCalc(aLCAR, bLCAR, lca1R, lca2R, lca3R);
@@ -715,7 +718,7 @@ public:
 			aICR = (ICRz - cpR(2)) / (ICRy - cpR(1));
 			bICR = -cpR(1) * aICR + cpR(2);
 		}
-		
+
 		if (abs((aICR - aICL)) < precision)
 		{
 			rollCentreHeight = 0;
@@ -1004,32 +1007,32 @@ public:
 		{
 			if (drivePos == 0)     // outboard drive
 				antiDrive = tanThetaOutboard * wheelbase / cogHeight * frontDriveBias * 100;
-			
+
 			else                   // inboard drive
 				antiDrive = tanThetaInboard * wheelbase / cogHeight / frontDriveBias * 100;
-			
+
 
 			if (brakePos == 0)       // outboard brakes
 				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * frontBrakeBias * 100;
-			
+
 			else                   // inboard brakes
-				antiBrakes = tanThetaInboard * wheelbase / cogHeight / frontBrakeBias * 100;	
+				antiBrakes = tanThetaInboard * wheelbase / cogHeight / frontBrakeBias * 100;
 		}
 		// rear suspension
 		else
 		{
 			if (drivePos == 0)     // outboard drive
 				antiDrive = -tanThetaOutboard * wheelbase / cogHeight * rearDriveBias * 100;
-			
+
 			else                   // inboard drive
 				antiDrive = -tanThetaInboard * wheelbase / cogHeight / rearDriveBias * 100;
-			
+
 			if (brakePos == 0)     // outboard brakes
 				antiBrakes = -tanThetaOutboard * wheelbase / cogHeight * rearBrakeBias * 100;
-			
+
 			else                   // inboard brakes
 				antiBrakes = -tanThetaInboard * wheelbase / cogHeight / rearBrakeBias * 100;
-			
+
 		}
 	}
 
@@ -1059,7 +1062,7 @@ public:
 	}
 
 	float CalculateDistancePointToLine(const Eigen::Vector3f& linePt1, const Eigen::Vector3f& linePt2, const Eigen::Vector3f& Pt)
-	{	
+	{
 		float distance;
 		distance = (Pt - linePt1).cross(Pt - linePt2).norm() / (linePt2 - linePt1).norm();
 		return distance;
