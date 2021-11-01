@@ -365,6 +365,7 @@ public:
 
 		// calculating TR2, WCN, SPN and CP
 		// steering is not enabled, for optimization
+		// condition should be if (steerIncr = 0 || wSteer = 0)
 		if (steerIncr != 0 || wSteer != 0)
 		{
 

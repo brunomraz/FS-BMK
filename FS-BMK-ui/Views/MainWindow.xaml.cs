@@ -901,13 +901,8 @@ namespace FS_BMK_ui
 
             uprightModel = DefineUprightModel(Colors.Blue);
 
-            lcaGroup.Children.Add(lca1Model);
-            lcaGroup.Children.Add(lca2Model);
-            ucaGroup.Children.Add(uca1Model);
-            ucaGroup.Children.Add(uca2Model);
-            trGroup.Children.Add(trModel);
+
             wheelAssyGroup.Children.Add(uprightModel);
-            wheelAssyGroup.Children.Add(wheelModel);
 
 
 
@@ -918,9 +913,12 @@ namespace FS_BMK_ui
                     vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal
                 );
 
-            uprightModel = DefineUprightModel(Colors.Blue);
             wheelAssyGroup.Children.Add(wheelModel);
-            wheelAssyGroup.Children.Add(uprightModel);
+
+
+            //uprightModel = DefineUprightModel(Colors.Blue);
+            //wheelAssyGroup.Children.Add(wheelModel);
+            //wheelAssyGroup.Children.Add(uprightModel);
 
             lca1Model.Transform = TransformCylindricalModel(
                     vm1.CurrentSuspension.Hardpoints[0].XVal, vm1.CurrentSuspension.Hardpoints[0].YVal, vm1.CurrentSuspension.Hardpoints[0].ZVal,

@@ -69,6 +69,13 @@ namespace FS_BMK_ui.Models
         private float _rearBrakeBias;
         private float _verticalMovement = 0f;
 
+        // front or rear suspension 0 for front, 1 for rear
+        private int suspensionPos = 1;
+        // outboard or inboard drive 0 for outboard, 1 for inboard
+        private int drivePos = 1;
+        // outboard or inboard brakes 0 for outboard, 1 for inboard
+        private int brakesPos = 1;
+
         private List<Hardpoint> _hardpoints = new List<Hardpoint> {
             new Hardpoint("LCA1", -2038.666f, -411.709f, -132.316f),
             new Hardpoint("LCA2", -2241.147f, -408.195f, -126.205f),

@@ -53,6 +53,14 @@
         private float _rearDriveBias;
         private float _rearBrakeBias;
 
+        // front or rear suspension 0 for front, 1 for rear
+        private int suspensionPos=1;
+        // outboard or inboard drive 0 for outboard, 1 for inboard
+        private int drivePos=1;
+        // outboard or inboard brakes 0 for outboard, 1 for inboard
+        private int brakesPos=1;
+
+
         private float _verticalMovement = 30f;
 
         public float WheelRadius 
