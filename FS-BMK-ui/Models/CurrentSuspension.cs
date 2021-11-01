@@ -58,6 +58,9 @@ namespace FS_BMK_ui.Models
 
 
         private float _wheelRadius = 210f;
+        private float _wheelWidth = 200f;
+        private float _wheelInsideRadius = 100f;
+
         private float _wheelbase = 1530f;
         private float _cogHeight = 300f;
         private float _frontDriveBias = 0f;
@@ -133,6 +136,8 @@ namespace FS_BMK_ui.Models
             set { _wheelRadius = value; }
         }
 
+        public float WheelInsideRadius { get { return _wheelInsideRadius; } set { _wheelInsideRadius = value; } }
+        public float WheelWidth { get { return _wheelWidth; } set { _wheelWidth = value; } }
         public float Wheelbase
         {
             get { return _wheelbase; }

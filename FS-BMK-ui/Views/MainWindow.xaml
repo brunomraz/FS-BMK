@@ -394,7 +394,7 @@
                     </DataGrid>
                     <!-- suspension parameters -->
                     <StackPanel Grid.Column="1">
-                        <!-- Wheel radius, wheelbase and CoG height -->
+                        <!-- Wheel radius, wheel inside radius -->
                         <Grid Margin="15,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -408,12 +408,31 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Wheel radius"/>
-                            <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Wheelbase"/>
-                            <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="CoG height"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Wheel Radius"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Wheel Width"/>
+                            <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Text="Wheel Inside Radius"/>
                             <TextBox Text="{Binding CurrentSuspension.WheelRadius}" Grid.Row="1" Grid.Column="0"/>
-                            <TextBox Text="{Binding CurrentSuspension.Wheelbase}" Grid.Row="1" Grid.Column="2"/>
-                            <TextBox Text="{Binding CurrentSuspension.CoGHeight}" Grid.Row="1" Grid.Column="4"/>
+                            <TextBox Text="{Binding CurrentSuspension.WheelWidth}" Grid.Row="1" Grid.Column="2"/>
+                            <TextBox Text="{Binding CurrentSuspension.WheelInsideRadius}" Grid.Row="1" Grid.Column="4"/>
+                        </Grid>
+                        <!-- wheelbase and CoG height -->
+                        <Grid Margin="15,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Wheelbase"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="CoG height"/>
+                            <TextBox Text="{Binding CurrentSuspension.Wheelbase}" Grid.Row="1" Grid.Column="0"/>
+                            <TextBox Text="{Binding CurrentSuspension.CoGHeight}" Grid.Row="1" Grid.Column="2"/>
                         </Grid>
                         <!-- Front brake and drive bias -->
                         <Grid Margin="15,0,0,0">
