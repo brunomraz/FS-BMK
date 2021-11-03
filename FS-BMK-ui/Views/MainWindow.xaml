@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:FS_BMK_ui.ViewModels"
+        xmlns:intboolconverter="clr-namespace:FS_BMK_ui.Converters"
         
         mc:Ignorable="d"
         Title="FS BMK" Height="910" Width="1000"
@@ -12,7 +13,7 @@
     <Window.Resources>
         <vm:OptimizationSuspensionViewModel x:Key="OptimizationSuspensionVM"/>
         <vm:CurrentSuspensionViewModel x:Key="CurrentSuspensionVM"/>
-
+        <intboolconverter:RadioButtonPositionConverter x:Key="IntBoolConverter"/>
     </Window.Resources>
 
     <Border BorderThickness=" 5">
@@ -292,8 +293,10 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Suspension position"/>
-                            <RadioButton GroupName="OptimizationSuspPosition" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0" Content="Front"/>
-                            <RadioButton GroupName="OptimizationSuspPosition" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="2" Content="Rear"/>
+                            <RadioButton GroupName="OptimizationSuspPosition" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0" Content="Front"
+                                         IsChecked="{Binding OptimizationSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
+                            <RadioButton GroupName="OptimizationSuspPosition" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="2" Content="Rear"
+                                         IsChecked="{Binding OptimizationSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}" />
                         </Grid>
                         <!-- Wheel radius wheelbase and Cog height -->
                         <Grid>
@@ -337,8 +340,10 @@
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Drive Position"/>
                             <TextBox Text="{Binding OptimizationSuspension.FrontDriveBias}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.RearDriveBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="4" Content="Inboard"/>
-                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="6" Content="Outboard"/>
+                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="4" Content="Inboard"
+                                         IsChecked="{Binding OptimizationSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>                            
+                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="6" Content="Outboard"
+                                         IsChecked="{Binding OptimizationSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>                            
                         </Grid>
                         <!-- Front and rear brake bias -->
                         <Grid>
@@ -361,8 +366,10 @@
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Brakes Position"/>
                             <TextBox Text="{Binding OptimizationSuspension.FrontBrakeBias}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.RearBrakeBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="4" Content="Inboard"/>
-                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="6" Content="Outboard"/>
+                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="4" Content="Inboard"
+                                         IsChecked="{Binding OptimizationSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="6" Content="Outboard"
+                                         IsChecked="{Binding OptimizationSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
                         </Grid>
                         <!-- Vertical movement from reference position and optimize button -->
                         <Grid>
@@ -439,9 +446,12 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Wheel Radius"/>
-                            <RadioButton GroupName="CurrentSuspPosition" Content="Front" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
-                            <RadioButton GroupName="CurrentSuspPosition" Content="Rear" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Suspension position"/>
+                            <RadioButton GroupName="CurrentSuspPosition" Content="Front" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                         IsChecked="{Binding CurrentSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>                            
+                            <RadioButton GroupName="CurrentSuspPosition" Content="Rear" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                                         IsChecked="{Binding CurrentSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+
                         </Grid>
                         <!-- Wheel radius, wheel inside radius -->
                         <Grid Margin="15,0,0,0">
@@ -502,8 +512,12 @@
                             <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Drive position"/>
                             <TextBox Text="{Binding CurrentSuspension.FrontDriveBias}" Grid.Row="1" Grid.Column="0"/>
                             <TextBox Text="{Binding CurrentSuspension.RearDriveBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2"/>
-                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Inboard" Grid.Row="1" Grid.Column="4"/>
-                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Outboard" Grid.Row="1" Grid.Column="6"/>
+                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Inboard" Grid.Row="1" Grid.Column="4"
+                                         IsChecked="{Binding CurrentSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
+
+                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Outboard" Grid.Row="1" Grid.Column="6" 
+                                         IsChecked="{Binding CurrentSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+
 
                         </Grid>
                         <!-- Rear brake and drive bias -->
@@ -522,11 +536,15 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Front brake bias"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Rear brake bias"/>
-                            <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Drive position"/>
+                            <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Brakes position"/>
                             <TextBox Text="{Binding CurrentSuspension.FrontBrakeBias}" Grid.Row="1" Grid.Column="0"/>
                             <TextBox Text="{Binding CurrentSuspension.RearBrakeBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2"/>
-                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Inboard" Grid.Row="1" Grid.Column="4"/>
-                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Outboard" Grid.Row="1" Grid.Column="6"/>
+                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Inboard" Grid.Row="1" Grid.Column="4"
+                                         IsChecked="{Binding CurrentSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
+
+                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Outboard" Grid.Row="1" Grid.Column="6"
+                                         IsChecked="{Binding CurrentSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+
                         </Grid>
                         <!-- Vertical movement from reference position (mm) -->
                         <TextBlock Margin="15,5,0,5" TextWrapping="Wrap" Text="Vertical movement from reference position, positive value is down w.r.t. chassis and vice versa."/>

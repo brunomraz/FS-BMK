@@ -60,7 +60,6 @@ namespace FS_BMK_ui.Models
         private float _wheelRadius = 210f;
         private float _wheelWidth = 200f;
         private float _wheelInsideRadius = 100f;
-
         private float _wheelbase = 1530f;
         private float _cogHeight = 300f;
         private float _frontDriveBias = 0f;
@@ -68,43 +67,23 @@ namespace FS_BMK_ui.Models
         private float _rearDriveBias;
         private float _rearBrakeBias;
         private float _verticalMovement = 0f;
-
-        // front or rear suspension 0 for front, 1 for rear
-        private int suspensionPos = 1;
-        // outboard or inboard drive 0 for outboard, 1 for inboard
-        private int drivePos = 1;
-        // outboard or inboard brakes 0 for outboard, 1 for inboard
-        private int brakesPos = 1;
-
+        private float[] _hardpointsMoved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private int _suspensionPos = 1; // front or rear suspension 0 for front, 1 for rear
+        private int _drivePos = 1;  // outboard or inboard drive 0 for outboard, 1 for inboard
+        private int _brakesPos = 1; // outboard or inboard brakes 0 for outboard, 1 for inboard
         private List<Hardpoint> _hardpoints = new List<Hardpoint> {
-            new Hardpoint("LCA1", -2038.666f, -411.709f, -132.316f),
-            new Hardpoint("LCA2", -2241.147f, -408.195f, -126.205f),
-            new Hardpoint("LCA3", -2135f, -600f, -140f),
-            new Hardpoint("UCA1", -2040.563f, -416.249f, -275.203f),
-            new Hardpoint("UCA2", -2241.481f, -417.314f, -270.739f),
-            new Hardpoint("UCA3", -2153f, -578f, -315f),
-            new Hardpoint("TR1",  -2234.8f, -411.45f, -194.6f),
-            new Hardpoint("TR2",  -2225f, -582f, -220f),
-            new Hardpoint("WCN",  -2143.6f, -620.5f, -220.07f),
-            new Hardpoint("SPN",  -2143.6f, -595.5f, -219.34f)
+            new Hardpoint("LCA1", -2038.666f, -411.709f, -132.316f),  // 0
+            new Hardpoint("LCA2", -2241.147f, -408.195f, -126.205f),  // 1 
+            new Hardpoint("LCA3", -2135f, -600f, -140f),              // 2
+            new Hardpoint("UCA1", -2040.563f, -416.249f, -275.203f),  // 3
+            new Hardpoint("UCA2", -2241.481f, -417.314f, -270.739f),  // 4
+            new Hardpoint("UCA3", -2153f, -578f, -315f),              // 5 
+            new Hardpoint("TR1",  -2234.8f, -411.45f, -194.6f),       // 6
+            new Hardpoint("TR2",  -2225f, -582f, -220f),              // 7
+            new Hardpoint("WCN",  -2143.6f, -620.5f, -220.07f),       // 8
+            new Hardpoint("SPN",  -2143.6f, -595.5f, -219.34f)        // 9
 
         };
-
-        /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _hardpointsMoved = new float[15];
-
-        public float[] HardpointsMoved
-        {
-            get
-            {
-                return _hardpointsMoved;
-            }
-            set
-            {
-                _hardpointsMoved = value;
-            }
-        }
-
         private List<WPFFloat> _suspensionCharacteristics = new List<WPFFloat>
         {
             new WPFFloat(),
@@ -120,6 +99,44 @@ namespace FS_BMK_ui.Models
             new WPFFloat()
         };
 
+        public int SuspensionPos
+        {
+            get { return _suspensionPos; }
+            set
+            {
+                _suspensionPos = value;
+                OnPropertyChanged("SuspensionPos");
+            }
+        }
+        public int DrivePos
+        {
+            get { return _drivePos; }
+            set
+            {
+                _drivePos = value;
+                OnPropertyChanged("DrivePos");
+            }
+        }
+        public int BrakesPos
+        {
+            get { return _brakesPos; }
+            set
+            {
+                _brakesPos = value;
+                OnPropertyChanged("BrakesPos");
+            }
+        }
+        public float[] HardpointsMoved
+        {
+            get
+            {
+                return _hardpointsMoved;
+            }
+            set
+            {
+                _hardpointsMoved = value;
+            }
+        }
         public List<WPFFloat> SuspensionCharacteristics
         {
             get
@@ -131,18 +148,15 @@ namespace FS_BMK_ui.Models
                 _suspensionCharacteristics = value;
             }
         }
-
         public List<Hardpoint> Hardpoints
         {
             get { return _hardpoints; }
         }
-
         public float WheelRadius
         {
             get { return _wheelRadius; }
             set { _wheelRadius = value; }
         }
-
         public float WheelInsideRadius { get { return _wheelInsideRadius; } set { _wheelInsideRadius = value; } }
         public float WheelWidth { get { return _wheelWidth; } set { _wheelWidth = value; } }
         public float Wheelbase

@@ -7,7 +7,7 @@
     public class OptimizationSuspension : INotifyPropertyChanged
     {
 
-        private List<Hardpoint> _hardpoints = new List<Hardpoint> { 
+        private List<Hardpoint> _hardpoints = new List<Hardpoint> {
             new Hardpoint("LCA1", 100,120,-600,-550,100,120),
             new Hardpoint("LCA2", 100,120,-600,-550,100,120),
             new Hardpoint("LCA3", 100,120,-600,-550,100,120),
@@ -52,77 +52,103 @@
         private float _frontBrakeBias = 0.6f;
         private float _rearDriveBias;
         private float _rearBrakeBias;
-
-        // front or rear suspension 0 for front, 1 for rear
-        private int suspensionPos=1;
-        // outboard or inboard drive 0 for outboard, 1 for inboard
-        private int drivePos=1;
-        // outboard or inboard brakes 0 for outboard, 1 for inboard
-        private int brakesPos=1;
-
-
+        private int _suspensionPos = 1;  // front or rear suspension 0 for front, 1 for rear
+        private int _drivePos = 1;  // outboard or inboard drive 0 for outboard, 1 for inboard
+        private int _brakesPos = 1;  // outboard or inboard brakes 0 for outboard, 1 for inboard
         private float _verticalMovement = 30f;
 
-        public float WheelRadius 
+        public int SuspensionPos
         {
-            get { return _wheelRadius; } 
+            get { return _suspensionPos; }
+            set
+            {
+                _suspensionPos = value;
+                OnPropertyChanged("SuspensionPos");
+            }
+        }
+        public int DrivePos
+        {
+            get { return _drivePos; }
+            set
+            {
+                _drivePos = value;
+                OnPropertyChanged("DrivePos");
+            }
+        }
+        public int BrakesPos
+        {
+            get { return _brakesPos; }
+            set
+            {
+                _brakesPos = value;
+                OnPropertyChanged("BrakesPos");
+            }
+        }
+
+
+        public float WheelRadius
+        {
+            get { return _wheelRadius; }
             set { _wheelRadius = value; }
         }
 
-        public float Wheelbase { 
-            get { return _wheelbase; } 
+        public float Wheelbase
+        {
+            get { return _wheelbase; }
             set { _wheelbase = value; }
         }
-        public float CoGHeight {
+        public float CoGHeight
+        {
             get { return _cogHeight; }
             set { _cogHeight = value; }
         }
-        public float FrontDriveBias { 
-            get { return _frontDriveBias; } 
-            set {
+        public float FrontDriveBias
+        {
+            get { return _frontDriveBias; }
+            set
+            {
                 _frontDriveBias = value;
                 OnPropertyChanged("RearDriveBias");
-            } 
+            }
         }
-        public float FrontBrakeBias { 
-            get { return _frontBrakeBias; } 
-            set { 
+        public float FrontBrakeBias
+        {
+            get { return _frontBrakeBias; }
+            set
+            {
                 _frontBrakeBias = value;
                 OnPropertyChanged("RearBrakeBias");
 
             }
         }
-        public float RearDriveBias { 
-            get { return _rearDriveBias = 1 - _frontDriveBias; } 
-            set { 
+        public float RearDriveBias
+        {
+            get { return _rearDriveBias = 1 - _frontDriveBias; }
+            set
+            {
                 _rearDriveBias = value;
             }
         }
-        public float RearBrakeBias { 
-            get { return _rearBrakeBias = 1 - _frontBrakeBias; } 
-            set { 
-                _rearBrakeBias=value ; 
-            } 
+        public float RearBrakeBias
+        {
+            get { return _rearBrakeBias = 1 - _frontBrakeBias; }
+            set
+            {
+                _rearBrakeBias = value;
+            }
         }
         public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
-
         public List<Hardpoint> Hardpoints
         {
             get { return _hardpoints; }
 
         }
-
         public List<float> SuspensionFeatureLimits
         {
             get { return _suspensionFeatureLimits; }
 
         }
 
-        //public List<float> SuspensionSetupParameters
-        //{
-        //    get { return _suspensionSetupParameters; }
-
-        //}
 
         public class Hardpoint
         {
@@ -136,9 +162,9 @@
 
 
 
-            public Hardpoint(string hardpointName, 
-                int xValLow, int xValHigh, 
-                int yValLow, int yValHigh, 
+            public Hardpoint(string hardpointName,
+                int xValLow, int xValHigh,
+                int yValLow, int yValHigh,
                 int zValLow, int zValHigh)
             {
                 HardpointNameClass = hardpointName;
@@ -158,7 +184,7 @@
             }
 
             public int XValLow
-            { 
+            {
                 get { return _xValLow; }
                 set { _xValLow = value; }
             }
@@ -202,22 +228,17 @@
 
         public bool CompareLowHighValues()
         {
-            for (int i=0; i<Hardpoints.Count; i++)
+            for (int i = 0; i < Hardpoints.Count; i++)
             {
                 if (Hardpoints[i].XValHigh < Hardpoints[i].XValLow || Hardpoints[i].YValHigh < Hardpoints[i].YValLow || Hardpoints[i].ZValHigh < Hardpoints[i].ZValLow)
                     return false;
-
             }
-
-            for (int i = 0; i < SuspensionFeatureLimits.Count/2; i++)
+            for (int i = 0; i < SuspensionFeatureLimits.Count / 2; i++)
             {
-                if (SuspensionFeatureLimits[2*i] > SuspensionFeatureLimits[2*i+1])
+                if (SuspensionFeatureLimits[2 * i] > SuspensionFeatureLimits[2 * i + 1])
                     return false;
-
             }
-
             return true;
-
         }
 
 
