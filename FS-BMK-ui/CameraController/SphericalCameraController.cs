@@ -73,9 +73,6 @@ namespace FS_BMK_ui.CameraController
             TheCamera = camera;
             viewport.Camera = TheCamera;
 
-            KeyboardControl = keyboardControl;
-            KeyboardControl.PreviewKeyDown += KeyboardControl_KeyDown;
-
             WheelControl = wheelControl;
             WheelControl.PreviewMouseWheel += WheelControl_PreviewMouseWheel;
 
@@ -141,35 +138,7 @@ namespace FS_BMK_ui.CameraController
         #region Camera Control
 
         // Adjust the camera's position.
-        private void KeyboardControl_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.Key)
-            {
-                case Key.Up:
-                    IncreasePhi();
-                    break;
-                case Key.Down:
-                    DecreasePhi();
-                    break;
-                case Key.Left:
-                    IncreaseTheta();
-                    break;
-                case Key.Right:
-                    DecreaseTheta();
-                    break;
-                case Key.Add:
-                case Key.OemPlus:
-                    IncreaseR();
-                    break;
-                case Key.Subtract:
-                case Key.OemMinus:
-                    DecreaseR();
-                    break;
-            }
 
-            // Update the camera's position.
-            PositionCamera();
-        }
 
         // Zoom in or out.
         private void WheelControl_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

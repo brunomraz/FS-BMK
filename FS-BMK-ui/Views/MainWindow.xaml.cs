@@ -29,7 +29,7 @@ namespace FS_BMK_ui
 
         }
 
-        private Model3DGroup suspensionGroup;
+        public  Model3DGroup suspensionGroup;
         private Model3DGroup lcaGroup, ucaGroup, trGroup, wheelAssyGroup;
         private GeometryModel3D lca1Model, lca2Model, uca1Model, uca2Model, trModel, uprightModel, wheelModel;
 
@@ -144,7 +144,13 @@ namespace FS_BMK_ui
                     vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal
                 );
 
-            uprightModel = DefineUprightModel(Colors.Blue);
+            uprightModel = DefineUprightModel(Colors.Blue, 
+                new Point3D(vm1.CurrentSuspension.Hardpoints[2].XVal, vm1.CurrentSuspension.Hardpoints[2].YVal, vm1.CurrentSuspension.Hardpoints[2].ZVal),
+                new Point3D(vm1.CurrentSuspension.Hardpoints[5].XVal, vm1.CurrentSuspension.Hardpoints[5].YVal, vm1.CurrentSuspension.Hardpoints[5].ZVal),
+                new Point3D(vm1.CurrentSuspension.Hardpoints[8].XVal, vm1.CurrentSuspension.Hardpoints[8].YVal, vm1.CurrentSuspension.Hardpoints[8].ZVal),
+                new Point3D(vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal));
+
+
 
             lcaGroup.Children.Add(lca1Model);
             lcaGroup.Children.Add(lca2Model);
@@ -232,13 +238,19 @@ namespace FS_BMK_ui
             group.Children.Add(new DirectionalLight(Colors.Gray, direction2));
         }
 
-        private GeometryModel3D DefineUprightModel(Color color)
+        private GeometryModel3D DefineUprightModel(Color color, Point3D lca3, Point3D uca3, Point3D wcn, Point3D tr2)
         {
+            //MeshGeometry3D mesh = MakeUprightMesh(
+            //    new Point3D(vm1.CurrentSuspension.Hardpoints[2].XVal, vm1.CurrentSuspension.Hardpoints[2].YVal, vm1.CurrentSuspension.Hardpoints[2].ZVal),
+            //    new Point3D(vm1.CurrentSuspension.Hardpoints[5].XVal, vm1.CurrentSuspension.Hardpoints[5].YVal, vm1.CurrentSuspension.Hardpoints[5].ZVal),
+            //    new Point3D(vm1.CurrentSuspension.Hardpoints[8].XVal, vm1.CurrentSuspension.Hardpoints[8].YVal, vm1.CurrentSuspension.Hardpoints[8].ZVal),
+            //    new Point3D(vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal)
+            //    );           
             MeshGeometry3D mesh = MakeUprightMesh(
-                new Point3D(vm1.CurrentSuspension.Hardpoints[2].XVal, vm1.CurrentSuspension.Hardpoints[2].YVal, vm1.CurrentSuspension.Hardpoints[2].ZVal),
-                new Point3D(vm1.CurrentSuspension.Hardpoints[5].XVal, vm1.CurrentSuspension.Hardpoints[5].YVal, vm1.CurrentSuspension.Hardpoints[5].ZVal),
-                new Point3D(vm1.CurrentSuspension.Hardpoints[8].XVal, vm1.CurrentSuspension.Hardpoints[8].YVal, vm1.CurrentSuspension.Hardpoints[8].ZVal),
-                new Point3D(vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal)
+                lca3,
+                uca3,
+                wcn,
+                tr2
                 );
 
             DiffuseMaterial material = new DiffuseMaterial(
@@ -805,50 +817,19 @@ namespace FS_BMK_ui
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            vm1.CalculateSuspensionMovement2();
+
             wheelAssyGroup.Children.Clear();
 
-            uprightModel = DefineUprightModel(Colors.Blue);
+            uprightModel = DefineUprightModel(Colors.Blue, 
+                new Point3D(vm1.CurrentSuspension.HardpointsMoved[0], vm1.CurrentSuspension.HardpointsMoved[1], vm1.CurrentSuspension.HardpointsMoved[2]),   // LCA3
+                new Point3D(vm1.CurrentSuspension.HardpointsMoved[3], vm1.CurrentSuspension.HardpointsMoved[4], vm1.CurrentSuspension.HardpointsMoved[5]),   // UCA3
+                new Point3D(vm1.CurrentSuspension.HardpointsMoved[9], vm1.CurrentSuspension.HardpointsMoved[10], vm1.CurrentSuspension.HardpointsMoved[11]), // WCN
+                new Point3D(vm1.CurrentSuspension.HardpointsMoved[6], vm1.CurrentSuspension.HardpointsMoved[7], vm1.CurrentSuspension.HardpointsMoved[8])    // TR2
+                );
             wheelAssyGroup.Children.Add(uprightModel);
 
             wheelModel = DefineWheelModel(Colors.Black);
-
-            //wheelModel.Transform = TransformHollowCylindricalModel(
-            //        vm1.CurrentSuspension.Hardpoints[8].XVal, vm1.CurrentSuspension.Hardpoints[8].YVal, vm1.CurrentSuspension.Hardpoints[8].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[9].XVal, vm1.CurrentSuspension.Hardpoints[9].YVal, vm1.CurrentSuspension.Hardpoints[9].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal
-            //    );
-
-            //wheelAssyGroup.Children.Add(wheelModel);
-
-            //lca1Model.Transform = TransformCylindricalModel(
-            //        vm1.CurrentSuspension.Hardpoints[0].XVal, vm1.CurrentSuspension.Hardpoints[0].YVal, vm1.CurrentSuspension.Hardpoints[0].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[2].XVal, vm1.CurrentSuspension.Hardpoints[2].YVal, vm1.CurrentSuspension.Hardpoints[2].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[1].XVal, vm1.CurrentSuspension.Hardpoints[1].YVal, vm1.CurrentSuspension.Hardpoints[1].ZVal
-            //    );
-
-            //lca2Model.Transform = TransformCylindricalModel(
-            //        vm1.CurrentSuspension.Hardpoints[1].XVal, vm1.CurrentSuspension.Hardpoints[1].YVal, vm1.CurrentSuspension.Hardpoints[1].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[2].XVal, vm1.CurrentSuspension.Hardpoints[2].YVal, vm1.CurrentSuspension.Hardpoints[2].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[0].XVal, vm1.CurrentSuspension.Hardpoints[0].YVal, vm1.CurrentSuspension.Hardpoints[0].ZVal
-            //    );
-
-            //uca1Model.Transform = TransformCylindricalModel(
-            //        vm1.CurrentSuspension.Hardpoints[3].XVal, vm1.CurrentSuspension.Hardpoints[3].YVal, vm1.CurrentSuspension.Hardpoints[3].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[5].XVal, vm1.CurrentSuspension.Hardpoints[5].YVal, vm1.CurrentSuspension.Hardpoints[5].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[4].XVal, vm1.CurrentSuspension.Hardpoints[4].YVal, vm1.CurrentSuspension.Hardpoints[4].ZVal
-            //    );
-
-            //uca2Model.Transform = TransformCylindricalModel(
-            //        vm1.CurrentSuspension.Hardpoints[4].XVal, vm1.CurrentSuspension.Hardpoints[4].YVal, vm1.CurrentSuspension.Hardpoints[4].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[5].XVal, vm1.CurrentSuspension.Hardpoints[5].YVal, vm1.CurrentSuspension.Hardpoints[5].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[3].XVal, vm1.CurrentSuspension.Hardpoints[3].YVal, vm1.CurrentSuspension.Hardpoints[3].ZVal
-            //    );
-
-            //trModel.Transform = TransformCylindricalModel(
-            //        vm1.CurrentSuspension.Hardpoints[6].XVal, vm1.CurrentSuspension.Hardpoints[6].YVal, vm1.CurrentSuspension.Hardpoints[6].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[7].XVal, vm1.CurrentSuspension.Hardpoints[7].YVal, vm1.CurrentSuspension.Hardpoints[7].ZVal,
-            //        vm1.CurrentSuspension.Hardpoints[0].XVal, vm1.CurrentSuspension.Hardpoints[0].YVal, vm1.CurrentSuspension.Hardpoints[0].ZVal
-            //    );
 
 
 
