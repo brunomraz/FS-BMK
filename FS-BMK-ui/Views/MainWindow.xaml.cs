@@ -40,7 +40,7 @@ namespace FS_BMK_ui
         private CurrentSuspensionViewModel vm1;
 
         // The camera.
-        private PerspectiveCamera TheCamera = null;
+        private OrthographicCamera TheCamera = null;
 
         // The camera controller.
         private SphericalCameraController CameraController = null;
@@ -75,24 +75,24 @@ namespace FS_BMK_ui
             DefineCamera(mainViewport);
             DefineLights(suspensionGroup);
 
-            xAxis = DefineCylinderModel(Colors.Red, 0, 0, 0, 1, 0, 0, 0.1);
+            xAxis = DefineCylinderModel(Colors.Red, 0, 0, 0, 100, 0, 0, 5);
             xAxis.Transform = new MatrixTransform3D(new Matrix3D(
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 5, 0, 0, 0,
-                0, 0, 0, 1));
-            yAxis = DefineCylinderModel(Colors.Green, 0, 0, 0, 1, 0, 0, 0.1);
+                0, -vm1.CurrentSuspension.Hardpoints[8].YVal, 0, 1));
+            yAxis = DefineCylinderModel(Colors.Green, 0, 0, 0, 100, 0, 0, 5);
             yAxis.Transform = new MatrixTransform3D(new Matrix3D(
                 -1, 0, 0, 0,
                 0, 0, 1, 0,
                 0, 5, 0, 0,
-                0, 0, 0, 1));
-            zAxis = DefineCylinderModel(Colors.Blue, 0, 0, 0, 1, 0, 0, 0.1);
+                0, -vm1.CurrentSuspension.Hardpoints[8].YVal, 0, 1));
+            zAxis = DefineCylinderModel(Colors.Blue, 0, 0, 0, 100, 0, 0, 5);
             zAxis.Transform = new MatrixTransform3D(new Matrix3D(
                 1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 5, 0,
-                0, 0, 0, 1));
+                0, -vm1.CurrentSuspension.Hardpoints[8].YVal, 0, 1));
 
             axisSystem.Children.Add(xAxis);
             axisSystem.Children.Add(yAxis);
@@ -189,7 +189,7 @@ namespace FS_BMK_ui
                 v3.X, v3.Y, v3.Z, 0,
                 v2.X, v2.Y, v2.Z, 0,
                 v1.X * length, v1.Y * length, v1.Z * length, 0,
-                startx, starty, startz, 1
+                 startx - vm1.CurrentSuspension.Hardpoints[8].XVal, starty- vm1.CurrentSuspension.Hardpoints[8].YVal, startz - vm1.CurrentSuspension.Hardpoints[8].ZVal, 1
                 ));
 
             return transformMatrix;
@@ -213,7 +213,7 @@ namespace FS_BMK_ui
                 v3.X, v3.Y, v3.Z, 0,
                 v2.X, v2.Y, v2.Z, 0,
                 v1.X, v1.Y, v1.Z, 0,
-                startx, starty, startz, 1
+                startx-vm1.CurrentSuspension.Hardpoints[8].XVal, starty- vm1.CurrentSuspension.Hardpoints[8].YVal, startz - vm1.CurrentSuspension.Hardpoints[8].ZVal, 1
                 ));
 
             return transformMatrix;
@@ -221,8 +221,10 @@ namespace FS_BMK_ui
 
         private void DefineCamera(Viewport3D viewport)
         {
-            TheCamera = new PerspectiveCamera();
-            TheCamera.FieldOfView = 60;
+            //TheCamera = new PerspectiveCamera();
+            TheCamera = new OrthographicCamera();
+            TheCamera.Width = 60;
+            //TheCamera.FieldOfView = 60;
             CameraController = new SphericalCameraController
                 (TheCamera, viewport, this, mainViewport, mainViewport);
         }
@@ -236,6 +238,8 @@ namespace FS_BMK_ui
 
             Vector3D direction2 = new Vector3D(0, -1, 0);
             group.Children.Add(new DirectionalLight(Colors.Gray, direction2));
+
+            group.Children.Add(new PointLight(Colors.Gray, new Point3D(vm1.CurrentSuspension.Hardpoints[8].XVal, vm1.CurrentSuspension.Hardpoints[8].XVal - 500, vm1.CurrentSuspension.Hardpoints[8].XVal - 500)));
         }
 
         private GeometryModel3D DefineUprightModel(Color color, Point3D lca3, Point3D uca3, Point3D wcn, Point3D tr2)
@@ -263,7 +267,7 @@ namespace FS_BMK_ui
         private GeometryModel3D DefineCylinderModel(Color color, double startx, double starty, double startz, double endx, double endy, double endz, double radius)
         {
             double length = new Vector3D(startx - endx, starty - endy, startz - endz).Length;
-            MeshGeometry3D mesh = MakeCylinderMesh(length, radius, 114, 20, 35);
+            MeshGeometry3D mesh = MakeCylinderMesh(length, radius, 40, 10, 20);
 
             DiffuseMaterial material = new DiffuseMaterial(
                 new SolidColorBrush(color));
@@ -274,7 +278,7 @@ namespace FS_BMK_ui
 
         private GeometryModel3D DefineCylinderModel2(Color color, double radius)
         {
-            MeshGeometry3D mesh = MakeCylinderMesh(1, radius, 114, 20, 35);
+            MeshGeometry3D mesh = MakeCylinderMesh(1, radius, 40, 10, 20);
 
             DiffuseMaterial material = new DiffuseMaterial(
                 new SolidColorBrush(color));
@@ -287,10 +291,10 @@ namespace FS_BMK_ui
         {
 
             MeshGeometry3D mesh = MakeHollowCylinderMesh(
-                vm1.CurrentSuspension.WheelWidth, vm1.CurrentSuspension.WheelRadius, vm1.CurrentSuspension.WheelInsideRadius, 400, 100, 200);
+                vm1.CurrentSuspension.WheelWidth, vm1.CurrentSuspension.WheelRadius, vm1.CurrentSuspension.WheelInsideRadius, 40, 10, 20);
 
             DiffuseMaterial material = new DiffuseMaterial(
-                new SolidColorBrush(Color.FromArgb(50, 50, 50, 50)));
+                new SolidColorBrush(Color.FromArgb(200, 50, 50, 50)));
 
 
             GeometryModel3D model = new GeometryModel3D(mesh, material);
@@ -785,14 +789,16 @@ namespace FS_BMK_ui
 
         private MeshGeometry3D MakeUprightMesh(Point3D lca3, Point3D uca3, Point3D wcn, Point3D tr2)
         {
-           MeshGeometry3D mesh = new MeshGeometry3D();
+            MeshGeometry3D mesh = new MeshGeometry3D();
+            Point3D offset = new Point3D(vm1.CurrentSuspension.Hardpoints[8].XVal, vm1.CurrentSuspension.Hardpoints[8].YVal, vm1.CurrentSuspension.Hardpoints[8].ZVal);
 
-           Point3D[] points =
-           {
-                lca3,
-                uca3,
-                wcn,
-                tr2
+
+            Point3D[] points =
+            {
+                 (Point3D)(lca3-offset),
+                 (Point3D)(uca3-offset),
+                 (Point3D)(wcn - offset),
+                 (Point3D)(tr2-offset)
             };
 
             foreach (Point3D point in points) mesh.Positions.Add(point);

@@ -56,6 +56,19 @@
         private int _drivePos = 1;  // outboard or inboard drive 0 for outboard, 1 for inboard
         private int _brakesPos = 1;  // outboard or inboard brakes 0 for outboard, 1 for inboard
         private float _verticalMovement = 30f;
+        private int _coreNum = 1;
+        private float _optimisationDuration = 20f;
+
+        public int CoreNum { 
+            get { return _coreNum; }
+            set { _coreNum = value; }
+        }
+
+        public float OptimisationDuration 
+        {
+            get { return _optimisationDuration; }
+            set { _optimisationDuration = value; }
+        }
 
         public int SuspensionPos
         {

@@ -14,20 +14,19 @@ namespace FS_BMK_ui.CameraController
     public class SphericalCameraController
     {
         // The camera.
-        public PerspectiveCamera TheCamera = null;
+        public OrthographicCamera TheCamera = null;
 
         // The controls that provide events.
-        private UIElement KeyboardControl = null;
         private UIElement WheelControl = null;
         private UIElement MouseControl = null;
 
         // Adjustment values.
-        public double CameraDR = 0.1;
+        public double CameraDR = 30;
         public double CameraDTheta = Math.PI / 30;
         public double CameraDPhi = Math.PI / 15;
 
         // The current position.
-        private double CameraR = 8.0;
+        private double CameraR = 1000;
         private double CameraTheta = Math.PI / 3.0;
         private double CameraPhi = Math.PI / 3.0;
 
@@ -67,7 +66,7 @@ namespace FS_BMK_ui.CameraController
         }
 
         // Constructor.
-        public SphericalCameraController(PerspectiveCamera camera, Viewport3D viewport,
+        public SphericalCameraController(OrthographicCamera camera, Viewport3D viewport,
             UIElement keyboardControl, UIElement wheelControl, UIElement mouseControl)
         {
             TheCamera = camera;
@@ -189,11 +188,12 @@ namespace FS_BMK_ui.CameraController
             SphericalToCartesian(CameraR, CameraTheta, CameraPhi,
                 out x, out y, out z);
             TheCamera.Position = new Point3D(x, y, z);
+            TheCamera.Width = CameraR;
             // Look toward the origin.
             TheCamera.LookDirection = new Vector3D(-x, -y, -z);
 
             // Set the Up direction.
-            TheCamera.UpDirection = new Vector3D(0, 1, 0);
+            TheCamera.UpDirection = new Vector3D(0, 0, -1);
         }
 
         // Convert from Cartesian to spherical coordinates.
@@ -210,10 +210,10 @@ namespace FS_BMK_ui.CameraController
         private void SphericalToCartesian(double r, double theta, double phi,
             out double x, out double y, out double z)
         {
-            y = r * Math.Cos(phi);
+            z = -r * Math.Cos(phi);
             double h = r * Math.Sin(phi);
             x = h * Math.Sin(theta);
-            z = h * Math.Cos(theta);
+            y = h * Math.Cos(theta);
         }
 
         #endregion Camera Control
