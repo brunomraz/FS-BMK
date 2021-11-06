@@ -71,20 +71,35 @@ class Suspension():
 
     hardpoints = []															
     hardpoints_c = c.c_float * 30
+    
+    wheel_radius = 210
+    wheelbase = 1530
+    cog_height = 300
+    drive_bias = 0
+    brake_bias = 0.6
+    suspension_position = 1 # 0 for front, 1 for rear
+    drive_position = 1 # 0 for outboard, 1 for inboard
+    brake_position = 0 # 0 for outboard, 1 for inboard
+    vertical_movement = -8
+    steering_movement = 30
+    vertical_increments = 1
+    steering_increments = 10
+    precision = 0.001
+    
 
-    wRadiusin = c.c_float(210)
-    wheelbase = c.c_float(1530)
-    cogHeight = c.c_float(300)
-    drive_bias = c.c_float(0)
-    brake_bias = c.c_float(0.6)
-    suspPos = c.c_int(1) # 0 for front, 1 for rear
-    drivePos = c.c_int(1) # 0 for outboard, 1 for inboard
-    brakePos = c.c_int(0) # 0 for outboard, 1 for inboard
-    wVertin = c.c_float(-8)
-    wSteerin = c.c_float(30)
-    vertIncrin = c.c_int(1)
-    steerIncrin = c.c_int(10)
-    precisionin = c.c_float(0.001)
+    wheel_radius_c = c.c_float(wheel_radius)
+    wheelbase_c = c.c_float(wheelbase)
+    cog_height_c = c.c_float(cog_height)
+    drive_bias_c = c.c_float(drive_bias)
+    brake_bias_c = c.c_float(brake_bias)
+    suspension_position_c = c.c_int(suspension_position) 
+    drive_position_c = c.c_int(drive_position)
+    brake_position_c = c.c_int(brake_position)
+    vertical_movement_c = c.c_float(vertical_movement)
+    steering_movement_c = c.c_float(steering_movement)
+    vertical_increments_c = c.c_int(vertical_increments)
+    steering_increments_c = c.c_int(steerInrcin)
+    precision_c = c.c_float(precision)
     
     # OUTPUT PARAMETERS
 
@@ -217,19 +232,19 @@ class Suspension():
         hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
         Suspension.mydll.optimisation_obj_res(
 	            hardpoints_c_arr,
-	            Suspension.wRadiusin,
-	            Suspension.wheelbase,
-	            Suspension.cogHeight,
-	            Suspension.drive_bias,
-	            Suspension.brake_bias,
-	            Suspension.suspPos,
-	            Suspension.drivePos,
-	            Suspension.brakePos,
-	            Suspension.wVertin ,
-	            Suspension.wSteerin ,
-	            Suspension.vertIncrin,
-	            Suspension.steerIncrin ,
-	            Suspension.precisionin,
+	            Suspension.wheel_radius_c,
+	            Suspension.wheelbase_c,
+	            Suspension.cog_height_c,
+	            Suspension.drive_bias_c,
+	            Suspension.brake_bias_c,
+	            Suspension.suspension_position_c,
+	            Suspension.drive_position_c,
+	            Suspension.brake_position_c,
+	            Suspension.vertical_movement_c ,
+	            Suspension.steering_movement_c ,
+	            Suspension.vertical_increments_c,
+	            Suspension.steering_increments_c ,
+	            Suspension.precision_c,
 	            Suspension.outputParams_c
                 )
 
@@ -238,19 +253,19 @@ class Suspension():
 
         Suspension.mydll.suspension_movement(
 	            hardpoints_c_arr,
-	            Suspension.wRadiusin,
-	            Suspension.wheelbase,
-	            Suspension.cogHeight,
-	            Suspension.drive_bias,
-	            Suspension.brake_bias,
-	            Suspension.suspPos,
-	            Suspension.drivePos,
-	            Suspension.brakePos,
-	            Suspension.wVertin ,
-	            Suspension.wSteerin ,
-	            Suspension.vertIncrin,
-	            Suspension.steerIncrin ,
-	            Suspension.precisionin,
+	            Suspension.wheel_radius_c,
+	            Suspension.wheelbase_c,
+	            Suspension.cog_height_c,
+	            Suspension.drive_bias_c,
+	            Suspension.brake_bias_c,
+	            Suspension.suspension_position_c,
+	            Suspension.drive_position_c,
+	            Suspension.brake_position_c,
+	            Suspension.vertical_movement_c ,
+	            Suspension.steering_movement_c ,
+	            Suspension.vertical_increments_c,
+	            Suspension.steering_increments_c ,
+	            Suspension.precision_c,
 	            Suspension.outputParams2_c,
 	            Suspension.hardpoints2_c
                 )

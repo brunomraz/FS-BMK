@@ -48,8 +48,8 @@
             CanPressOptimizeButton = false;
             try
             {
-                //await Task.Factory.StartNew(ExecProcess);
-                await Task.Factory.StartNew(() => Thread.Sleep(3000));
+                await Task.Factory.StartNew(ExecProcess);
+                //await Task.Factory.StartNew(() => Thread.Sleep(3000));
             }
             finally
             {
@@ -64,8 +64,8 @@
 
             var script = @"C:\dev\FS-BMK\Optimization\module1.py";
             var a = OptimizationSuspension.SuspensionFeatureLimits[0]; //"rtgf";
-
-            psi.Arguments = string.Format("\"{0}\" \"{1}\"", script, a); // $"\"{script}\"\"{a}\"";
+            string args = string.Format("{0} {1} {2}", script, a, a);
+            psi.Arguments = args; // $"\"{script}\"\"{a}\"";
 
             psi.UseShellExecute = false;
             psi.CreateNoWindow = true;
@@ -79,7 +79,7 @@
             {
                 //results = process.StandardOutput.ReadToEnd();
             }
-            //MessageBox.Show($"done");
+            MessageBox.Show($"done");
 
         }
 

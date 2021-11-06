@@ -5,9 +5,12 @@ import pandas as pd
 if __name__=="__main__":
 
     a = sys.argv[1]
+    b = sys.argv[2]
 
+    #a="a"
+    #b="b"
 
-    column_names = [a,"b"]
+    column_names = [a, b]
     return_dict = []
     for i in range(5000):        
         return_dict.append([i,i-0.5])
