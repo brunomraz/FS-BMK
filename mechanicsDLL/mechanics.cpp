@@ -36,18 +36,13 @@ private:
 
 
 
-	// wheel radius
-	float wRadius = 210;
-	// wheel vertical movement
-	float wVert = 30;
-	// wheel steering movement
-	float wSteer = 30;
-	// number of increments between reference position and
-	// downmost/upmost/leftmost/rightmost position
-	int vertIncr = 30;
-	int steerIncr = 0;
-	// precision- at what value has the iterator converged, in percentage- 0...1
-	float precision;
+
+	float wRadius;     // wheel radius	
+	float wVert;       // wheel vertical movement	
+	float wSteer;      // wheel steering movement	
+	int vertIncr;      // number of increments between reference position and upmost and downmost
+	int steerIncr;     // number of increments between reference position and leftmost and rightmost	
+	float precision;   // precision- at what value has the iterator converged, in percentage- 0...1
 
 	float wheelbase;
 	float cogHeight;
@@ -57,12 +52,9 @@ private:
 	float frontBrakeBias;
 	float rearBrakeBias{ 1.0f - frontBrakeBias };
 
-	// front or rear suspension 0 for front, 1 for rear
-	int suspPos;
-	// outboard or inboard drive 0 for outboard, 1 for inboard
-	int drivePos;
-	// outboard or inboard brakes 0 for outboard, 1 for inboard
-	int brakePos;
+	int suspPos;      // front or rear suspension 0 for front, 1 for rear	
+	int drivePos;     // outboard or inboard drive 0 for outboard, 1 for inboard	
+	int brakePos;     // outboard or inboard brakes 0 for outboard, 1 for inboard
 
 
 	// derived values
@@ -82,49 +74,16 @@ private:
 public:
 
 
-	Suspension()
-	{
-		std::vector<float> hps;
-		std::string userArrayInput;
-		std::cout << "enter numbers: ";
-		std::cin >> userArrayInput;
-
-		std::istringstream iss(userArrayInput);
-		std::string item;
-
-		while (std::getline(iss, item, ','))
-		{
-			hps.push_back(std::stof(item));
-		}
-
-		std::cout << "for loop vector output" << std::endl;
-
-		for (auto i = hps.begin(); i != hps.end(); i++)
-			std::cout << *i << std::endl;
-
-		lca1ref << hps[0], hps[1], hps[2];
-		lca2ref << hps[3], hps[4], hps[5];
-		lca3ref << hps[6], hps[7], hps[8];
-
-		uca1ref << hps[9], hps[10], hps[11];
-		uca2ref << hps[12], hps[13], hps[14];
-		uca3ref << hps[15], hps[16], hps[17];
-
-		tr1ref << hps[18], hps[19], hps[20];
-		tr2ref << hps[21], hps[22], hps[23];
-
-		wcnref << hps[24], hps[25], hps[26];
-		spnref << hps[27], hps[28], hps[29];
-
-	}
-
 	Suspension(
 		float* hps,
 		float wRadiusin,
 		float wheelbasein, float cogHeightin, float frontDriveBiasin,
 		float frontBrakeBiasin, int suspPosin, int drivePosin, int brakePosin,
 		float wVertin, float wSteerin,
-		int vertIncrin, int steerIncrin, float precisionin) :lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3), tr2Glob(vertIncrin * 2 + 1, 3), wcnGlob(vertIncrin * 2 + 1, 3), spnGlob(vertIncrin * 2 + 1, 3), cpGlob(vertIncrin * 2 + 1, 3)
+		int vertIncrin, int steerIncrin, float precisionin) :
+		lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3),
+		tr2Glob(vertIncrin * 2 + 1, 3), wcnGlob(vertIncrin * 2 + 1, 3),
+		spnGlob(vertIncrin * 2 + 1, 3), cpGlob(vertIncrin * 2 + 1, 3)
 	{
 		lca1ref << hps[0], hps[1], hps[2];
 		lca2ref << hps[3], hps[4], hps[5];
@@ -513,18 +472,29 @@ public:
 		else
 		{
 		}
+
+
 	}
 
-	float GetObjCamberScore()
+	void LogToConsole()
+	{
+
+		std::cout << "lca3\n " << lca3Glob << "\n";
+		std::cout << "uca3\n " << uca3Glob << "\n";
+		std::cout << "tr2\n " << tr2Glob << "\n";
+		std::cout << "wcn\n " << wcnGlob << "\n";
+		std::cout << "spn\n " << spnGlob << "\n";
+	}
+
+	float GetObjCamberScore(float peakWidth, float wantedCamberDown, float wantedCamberUp)
 	{
 		float camberScore;
 		float camberUp;
 		float camberDown;
 		camberUp = GetCamberAngle(2);
 		camberDown = GetCamberAngle(0);
-		float wantedCamberUp = -0.978327f;
-		float wantedCamberDown = -2.65318f;
-		float peakWidth = 100.0f;
+		//float wantedCamberUp = -0.978327f;
+		//float wantedCamberDown = -2.65318f;
 		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2)) * 0.5f };
 		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) * 0.5f };
 
@@ -544,11 +514,16 @@ public:
 			-wcnGlob.row(L)(1) + cpGlob.row(L)(1),
 			-wcnGlob.row(L)(2) + cpGlob.row(L)(2)
 		};
+
+
 		Eigen::Vector3f groundNormal{
 			0,
 			-cpGlob.row(R)(2) + cpGlob.row(L)(2),
 			-cpGlob.row(R)(1) - cpGlob.row(L)(1)
 		};
+
+
+		
 		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
 
 		float temp1_wcnpr =
@@ -686,6 +661,9 @@ public:
 		float bICL;
 		float bICR;
 
+		
+
+		// CALCULATE LEFT SIDE
 		// case if LEFT LCA and UCA are parallel
 		if (abs(aLCAL - aUCAL) < slopePrecision)
 		{
@@ -702,7 +680,7 @@ public:
 			bICL = -cpL(1) * aICL + cpL(2);
 		}
 
-
+		// CALCULATE RIGHT SIDE
 		// case if RIGHT LCA and UCA are parallel
 		if (abs(aLCAR - aUCAR) < slopePrecision)
 		{
@@ -719,12 +697,16 @@ public:
 			bICR = -cpR(1) * aICR + cpR(2);
 		}
 
+		
+		// instantenous centre lines are parallel
 		if (abs((aICR - aICL)) < precision)
 		{
+
 			rollCentreHeight = 0;
 			return rollCentreHeight;
 		}
 
+		// instantenous centre lines are NOT parallel
 		else
 		{
 			float RCy = (bICL - bICR) / (aICR - aICL);
@@ -1110,7 +1092,8 @@ public:
 float optimisation_obj_res(float* hardpoints, float wRadiusin,
 	float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
 	int suspPos, int drivePos, int brakePos,
-	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float* outputParams)
+	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float camberDown,
+	float camberUp, float peakWidth, float* outputParams)
 {
 
 	Suspension susp{
@@ -1122,10 +1105,9 @@ float optimisation_obj_res(float* hardpoints, float wRadiusin,
 		wVertin, wSteerin,
 		vertIncrin, steerIncrin, precisionin
 	};
-
 	susp.CalculateMovement();
 
-	outputParams[0] = susp.GetObjCamberScore();
+	outputParams[0] = susp.GetObjCamberScore(peakWidth, camberDown, camberUp);
 	outputParams[1] = susp.GetCamberAngle(0);
 	outputParams[2] = susp.GetCamberAngle(2);
 	outputParams[3] = susp.GetToeAngle(0);

@@ -19,8 +19,9 @@
     <Border BorderThickness=" 5">
         <Grid  Margin="7,0,7,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="500"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <!-- Optimisation suspension parameters-->
             <ScrollViewer DataContext="{StaticResource OptimizationSuspensionVM}">
@@ -42,11 +43,47 @@
                               CanUserSortColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="X low" Binding="{Binding XValLow}"/>
-                            <DataGridTextColumn Header="X high" Binding="{Binding XValHigh}"/>
+                            <!-- LCA1 LCA2 UCA1 UCA2 WCN and SPN X values disabled-->
+                            <DataGridTextColumn Header="X high" Binding="{Binding XValHigh}">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding XIsEditable}" Value="false">
+                                                <Setter Property="IsEnabled" Value="false"/>
+                                                <Setter Property="Background" Value="LightGray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="Y low" Binding="{Binding YValLow}"/>
-                            <DataGridTextColumn Header="Y high" Binding="{Binding YValHigh}"/>
+                            <!-- WCN and SPN Y values disabled-->
+                            <DataGridTextColumn Header="Y high" Binding="{Binding YValHigh}">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding YIsEditable}" Value="false">
+                                                <Setter Property="IsEnabled" Value="false"/>
+                                                <Setter Property="Background" Value="LightGray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="Z low" Binding="{Binding ZValLow}"/>
-                            <DataGridTextColumn Header="Z high" Binding="{Binding ZValHigh}"/>
+                            <!-- WCN and SPN Z values disabled-->
+                            <DataGridTextColumn Header="Z high" Binding="{Binding ZValHigh}">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ZIsEditable}" Value="false">
+                                                <Setter Property="IsEnabled" Value="false"/>
+                                                <Setter Property="Background" Value="LightGray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                         <DataGrid.RowHeaderTemplate>
                             <DataTemplate>
@@ -62,6 +99,7 @@
                                Text="Low position is wheel moved down w.r.t. chassis and vice versa, angles are in degrees or distances in mm."/>
                     <!-- Other parameters for suspension optimization -->
                     <StackPanel Grid.Row="2">
+                        
                         <!-- Camber angle down and up limits-->
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -74,12 +112,9 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Camber down position"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Camber up position"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Text="Camber down and up position"/>
                             <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[0]}" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[1]}" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[2]}" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Grid.Row="1" Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[3]}" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Toe angle down and up limits-->
                         <Grid>
@@ -95,18 +130,14 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Toe down position"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Toe up position"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[4]}"  Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[5]}"  Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[6]}"  Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[7]}"  Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[2]}"  Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[3]}"  Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[4]}"  Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[5]}"  Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
-                        <!-- Caster angle RC height Caster trail scrub radius limits-->
+                        <!-- Caster angle RC height limits-->
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -118,24 +149,33 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Caster angle"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Roll Centre height"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Caster trail"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="6" Text="Scrub radius"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[8]}"  Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[9]}"  Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[10]}"  Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[11]}"  Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[12]}"  Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[13]}"  Grid.Row="1" Grid.Column="5" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[14]}"  Grid.Row="1" Grid.Column="6" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[15]}"  Grid.Row="1" Grid.Column="7" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[6]}"  Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[7]}"  Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[8]}"  Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[9]}"  Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
-                        <!-- Kingpin angle anti dive and anti brake -->
+                        <!-- Caster trail scrub radius limits-->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Caster trail"/>
+                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Scrub radius"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[10]}"  Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[11]}"  Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[12]}"  Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[13]}"  Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                        </Grid>
+                        <!-- Kingpin angle -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -146,14 +186,27 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Kingpin angle"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Anti drive"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Anti brake"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[14]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[15]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                        </Grid>
+                        <!-- anti dive and anti brake -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Anti drive"/>
+                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Anti brake"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[16]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[17]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[18]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[19]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[20]}" Grid.Row="1" Grid.Column="4" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[21]}" Grid.Row="1" Grid.Column="5" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Half track change down  and up pos  -->
                         <Grid>
@@ -167,12 +220,11 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Half track change down position"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Half track change up position"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[22]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[23]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[26]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[27]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Text="Half track change down and up position"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[20]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[21]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[22]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[23]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Wheelbase change down  and up pos  -->
                         <Grid>
@@ -186,14 +238,13 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="wheelbase change down position"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Wheelbase change up position"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Text="Wheelbase change down and up position"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[24]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[25]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[28]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[29]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[26]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[27]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
-                        <!-- LCA3 and UCA3 inside wheel free radius  -->
+                        <!-- LCA3 inside wheel free radius  -->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -206,11 +257,24 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="LCA3 inside wheel free radius"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="UCA3 inside wheel free radius"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[28]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[29]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                        </Grid>
+                        <!-- UCA3 inside wheel free radius  -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="UCA3 inside wheel free radius"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[30]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[31]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[32]}" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[33]}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- TR2 inside wheel free radius   -->
                         <Grid>
@@ -225,8 +289,8 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="TR2 inside wheel free radius"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[34]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[35]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[32]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[33]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- LCA3 distance to WCN, along WCN-SPN axis   -->
                         <Grid>
@@ -240,9 +304,9 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" Text="LCA3 distance to WCN, along WCN-SPN axis"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[36]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[37]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Text="LCA3 distance to WCN, along WCN-SPN axis"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[34]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[35]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- UCA3 distance to WCN, along WCN-SPN axis   -->
                         <Grid>
@@ -256,9 +320,9 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" Text="UCA3 distance to WCN, along WCN-SPN axis"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[38]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[39]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Text="UCA3 distance to WCN, along WCN-SPN axis"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[36]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[37]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- TR2 distance to WCN, along WCN-SPN axis   -->
                         <Grid>
@@ -272,9 +336,9 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" Text="TR2 distance to WCN, along WCN-SPN axis"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[40]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[41]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Text="TR2 distance to WCN, along WCN-SPN axis"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[38]}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
+                            <TextBox Text="{Binding OptimizationSuspension.SuspensionFeatureLimits[39]}" Grid.Row="1" Grid.Column="1" Margin="5,0,10,0"/>
                         </Grid>
                         <!-- Suspension position -->
                         <Grid>
@@ -328,8 +392,6 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -337,19 +399,32 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Front Drive Bias"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Rear Drive Bias"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Drive Position"/>
                             <TextBox Text="{Binding OptimizationSuspension.FrontDriveBias}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.RearDriveBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="4" Content="Inboard"
-                                         IsChecked="{Binding OptimizationSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>                            
-                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="6" Content="Outboard"
-                                         IsChecked="{Binding OptimizationSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>                            
                         </Grid>
-                        <!-- Front and rear brake bias -->
+                        <!-- drive position -->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Drive Position"/>
+                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0" Content="Inboard"
+                                         IsChecked="{Binding OptimizationSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+                            <RadioButton GroupName="OptimizationSuspDrivePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="2" Content="Outboard"
+                                         IsChecked="{Binding OptimizationSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
+                        </Grid>
+                        <!-- Front and rear brake bias -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -363,12 +438,27 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Front Brake Bias"/>
                             <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" Text="Rear Brake Bias"/>
-                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="4" Text="Brakes Position"/>
                             <TextBox Text="{Binding OptimizationSuspension.FrontBrakeBias}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <TextBox Text="{Binding OptimizationSuspension.RearBrakeBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2" Margin="5,0,10,0"/>
-                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="4" Content="Inboard"
+                        </Grid>
+                        <!-- brakes position -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Text="Brakes Position"/>
+                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0" Content="Inboard"
                                          IsChecked="{Binding OptimizationSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
-                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="6" Content="Outboard"
+                            <RadioButton GroupName="OptimizationSuspBrakePos" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="2" Content="Outboard"
                                          IsChecked="{Binding OptimizationSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
                         </Grid>
                         <!-- Vertical movement from reference position -->
@@ -388,7 +478,7 @@
                             <TextBlock Grid.ColumnSpan="6" Grid.Row="0" Grid.Column="0" Text="Vertical movement from reference position"/>
                             <TextBox Text="{Binding OptimizationSuspension.VerticalMovement}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                         </Grid>
-                        <!-- Vertical movement from reference position and optimize button -->
+                        <!-- number of processes to use -->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -403,40 +493,47 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.ColumnSpan="6" Grid.Row="0" Grid.Column="0" Text="Number of cores to use for optimisation"/>
-                            <TextBlock Grid.ColumnSpan="6" Grid.Row="0" Grid.Column="3" Text="Optimisation duration"/>
                             <TextBox Text="{Binding OptimizationSuspension.CoreNum}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
-                            <TextBox Text="{Binding OptimizationSuspension.OptimisationDuration}" Grid.Row="1" Grid.Column="3" Margin="5,0,10,0"/>
+                        </Grid>
+                        <!-- optimisation duration and optimise button -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.ColumnSpan="6" Grid.Row="0" Grid.Column="0" Text="Optimisation duration in seconds"/>
+                            <TextBox Text="{Binding OptimizationSuspension.OptimisationDuration}" Grid.Row="1" Grid.Column="0" Margin="5,0,10,0"/>
                             <Button IsEnabled="{Binding CanPressOptimizeButton}" Grid.Row="1" Grid.Column=" 4" Command="{Binding OptimiseCommand}" Content="Optimise"/>
                         </Grid>
-
+                        <TextBlock Text="Location of python files (all must be in one folder)"/>
+                        <TextBox Text="{Binding PythonFilesPath}" Width="300"/>
+                        <TextBlock Text="Location of python environment"/>
+                        <TextBox Text="{Binding PythonEnvironmentPath}" Width="300"/>
                     </StackPanel>
 
                 </Grid>
             </ScrollViewer>
-
-            <!-- Current suspension parameters and visualization -->
-            <Grid x:Name="CurrSuspDataContext" Grid.Column="1" DataContext="{StaticResource CurrentSuspensionVM}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Suspension hardpoints and parameters -->
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            
+            <!-- Current suspension parameters -->
+            <ScrollViewer Grid.Column="1">
+                <StackPanel Margin="5,0,5,0" x:Name="CurrSuspDataContext" DataContext="{StaticResource CurrentSuspensionVM}">
                     <!-- Suspension hardpoints -->
                     <DataGrid Grid.Column="0" ItemsSource="{Binding CurrentSuspension.Hardpoints}" 
-                              AutoGenerateColumns="False"
-                              CanUserAddRows="False"
-                              CanUserReorderColumns="False"
-                              ColumnWidth="*"
-                              CanUserResizeRows="False"
-                              CanUserResizeColumns="False"
-                              CanUserSortColumns="False">
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserReorderColumns="False"
+                            ColumnWidth="*"
+                            CanUserResizeRows="False"
+                            CanUserResizeColumns="False"
+                            CanUserSortColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="X" Binding="{Binding XVal}"/>
                             <DataGridTextColumn Header="Y" Binding="{Binding YVal}"/>
@@ -445,7 +542,7 @@
                         <DataGrid.RowHeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding DataContext.HardpointNameClass, 
-                        RelativeSource={RelativeSource AncestorType=DataGridRow}}"></TextBlock>
+                    RelativeSource={RelativeSource AncestorType=DataGridRow}}"></TextBlock>
                             </DataTemplate>
                         </DataGrid.RowHeaderTemplate>
                     </DataGrid>
@@ -467,9 +564,9 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Suspension position"/>
                             <RadioButton GroupName="CurrentSuspPosition" Content="Front" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                         IsChecked="{Binding CurrentSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>                            
+                                        IsChecked="{Binding CurrentSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
                             <RadioButton GroupName="CurrentSuspPosition" Content="Rear" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
-                                         IsChecked="{Binding CurrentSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+                                        IsChecked="{Binding CurrentSuspension.SuspensionPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
 
                         </Grid>
                         <!-- Wheel radius, wheel inside radius -->
@@ -512,7 +609,7 @@
                             <TextBox Text="{Binding CurrentSuspension.Wheelbase}" Grid.Row="1" Grid.Column="0"/>
                             <TextBox Text="{Binding CurrentSuspension.CoGHeight}" Grid.Row="1" Grid.Column="2"/>
                         </Grid>
-                        <!-- Front brake and drive bias -->
+                        <!-- Front and rear drive bias -->
                         <Grid Margin="15,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -528,18 +625,36 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Front drive bias"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Rear drive bias"/>
-                            <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Drive position"/>
                             <TextBox Text="{Binding CurrentSuspension.FrontDriveBias}" Grid.Row="1" Grid.Column="0"/>
                             <TextBox Text="{Binding CurrentSuspension.RearDriveBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2"/>
-                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Inboard" Grid.Row="1" Grid.Column="4"
-                                         IsChecked="{Binding CurrentSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
 
-                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Outboard" Grid.Row="1" Grid.Column="6" 
-                                         IsChecked="{Binding CurrentSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
 
 
                         </Grid>
-                        <!-- Rear brake and drive bias -->
+                        <!-- drive position -->
+                        <Grid Margin="15,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Drive position"/>
+                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Inboard" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                        IsChecked="{Binding CurrentSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+
+                            <RadioButton GroupName="CurrentSuspDrivePosition" Content="Outboard" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                                        IsChecked="{Binding CurrentSuspension.DrivePos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
+
+
+                        </Grid>
+                        <!-- Front and rear brake bias -->
                         <Grid Margin="15,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -555,15 +670,28 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Front brake bias"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Rear brake bias"/>
-                            <TextBlock Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Text="Brakes position"/>
                             <TextBox Text="{Binding CurrentSuspension.FrontBrakeBias}" Grid.Row="1" Grid.Column="0"/>
                             <TextBox Text="{Binding CurrentSuspension.RearBrakeBias}" IsReadOnly="True" Background="LightGray" Grid.Row="1" Grid.Column="2"/>
-                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Inboard" Grid.Row="1" Grid.Column="4"
-                                         IsChecked="{Binding CurrentSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
-
-                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Outboard" Grid.Row="1" Grid.Column="6"
-                                         IsChecked="{Binding CurrentSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
-
+                        </Grid>
+                        <!-- brakes position -->
+                        <Grid Margin="15,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Brakes position"/>
+                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Inboard" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                        IsChecked="{Binding CurrentSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=1}"/>
+                            <RadioButton GroupName="CurrentSuspBrakesPosition" Content="Outboard" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                                        IsChecked="{Binding CurrentSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
                         </Grid>
                         <!-- Vertical movement from reference position (mm) -->
                         <TextBlock Margin="15,5,0,5" TextWrapping="Wrap" Text="Vertical movement from reference position, positive value is down w.r.t. chassis and vice versa."/>
@@ -581,16 +709,26 @@
                             </Grid.RowDefinitions>
                             <TextBox Text="{Binding CurrentSuspension.VerticalMovement}" Grid.Row="0" Grid.Column="0"/>
                             <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
-                                    Content="Update" HorizontalAlignment="Right" Click="Button_Click"
-                                    />
+                                Content="Update" HorizontalAlignment="Right" Click="Button_Click"
+                                />
                             <!-- Command="{Binding CalculateSuspensionMovementCommand}" -->
 
                         </Grid>
                     </StackPanel>
+                    <!-- Suspension hardpoints and parameters -->
 
-                </Grid>
-                <!-- Suspension parameters output -->
-                <StackPanel Margin="15,5,15,15" Grid.Row="1">
+                    <!-- Suspension parameters output -->
+                </StackPanel>                
+            </ScrollViewer>
+            
+            <!-- Current suspension visualization and characteristics -->
+            <Grid Grid.Column="2" DataContext="{StaticResource CurrentSuspensionVM}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!-- Suspension characteristics -->
+                <StackPanel Margin="15,5,15,15" Grid.Row="0">
                     <!-- Camber toe caster angle RC height and caster trail -->
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -671,17 +809,24 @@
                         <TextBox Background="LightGray" IsReadOnly="True" Text="{Binding CurrentSuspension.SuspensionCharacteristics[10].Value, StringFormat={}{0:#,0.00}}"  Grid.Row="1" Grid.Column="2"/>
                     </Grid>
                 </StackPanel>
+
                 <!-- Suspension visualization -->
-                <Border Grid.Row="2" BorderBrush="Black" BorderThickness="2">
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="2">
                     <Viewport3D x:Name="mainViewport">
 
                     </Viewport3D>
 
                 </Border>
-
             </Grid>
 
-
+            <GridSplitter Grid.Column="1"
+                          HorizontalAlignment="Left"
+                          Background="Gray"
+                          Width="4"/>
+            <GridSplitter Grid.Column="2"
+                          HorizontalAlignment="Left"
+                          Background="Gray"
+                          Width="4"/>
         </Grid>
     </Border>
 

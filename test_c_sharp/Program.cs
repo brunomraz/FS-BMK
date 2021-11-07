@@ -12,8 +12,8 @@ namespace test_c_sharp
             psi.FileName = @"C:\ProgramData\Anaconda3\python.exe";
 
             var script = @"C:\dev\FS-BMK\Optimization\module1.py";
-            var a = "rtgf";
-            string args1 = string.Format("{0} {1} {2}", script, a, a);
+            var a = "rttfhgf";
+            string args1 = string.Format("{0}       {1} {2}       ", script, a, a);
             psi.Arguments = args1;
 
             psi.UseShellExecute = false;

@@ -1,6 +1,5 @@
 from numeric_sol import Suspension
 import numpy as np
-import formulae as f
 
 
 # popis svih mogucih constraintova
@@ -197,143 +196,143 @@ def cons_lo_tr2z(hps):
 
 
 def toe_constraint_down_lolim(hps):
-    return Suspension.outputParams_c[3] - Suspension.toe_lopos_lolim
+    return Suspension.output_params_optimisation_c[3] - Suspension.toe_lopos_lolim
 
 
 def toe_constraint_down_uplim(hps):
-    return -Suspension.outputParams_c[3] + Suspension.toe_lopos_uplim
+    return -Suspension.output_params_optimisation_c[3] + Suspension.toe_lopos_uplim
 
 
 def toe_constraint_uppos_lolim(hps):
-    return Suspension.outputParams_c[4] - Suspension.toe_uppos_lolim
+    return Suspension.output_params_optimisation_c[4] - Suspension.toe_uppos_lolim
 
 
 def toe_constraint_uppos_uplim(hps):
-    return -Suspension.outputParams_c[4] + Suspension.toe_uppos_uplim
+    return -Suspension.output_params_optimisation_c[4] + Suspension.toe_uppos_uplim
 
 
 def caster_angle_ref_pos_constraint_lolim(hps):
-    return Suspension.outputParams_c[5] - Suspension.caster_angle_lolim
+    return Suspension.output_params_optimisation_c[5] - Suspension.caster_angle_lolim
 
 
 def caster_angle_ref_pos_constraint_uplim(hps):
-    return -Suspension.outputParams_c[5] + Suspension.caster_angle_uplim
+    return -Suspension.output_params_optimisation_c[5] + Suspension.caster_angle_uplim
 
 
 def roll_centre_height_ref_pos_constraint_lolim(hps):
-    return Suspension.outputParams_c[6] - Suspension.roll_centre_height_lolim
+    return Suspension.output_params_optimisation_c[6] - Suspension.roll_centre_height_lolim
 
 
 def roll_centre_height_ref_pos_constraint_uplim(hps):
-    return -Suspension.outputParams_c[6] + Suspension.roll_centre_height_uplim
+    return -Suspension.output_params_optimisation_c[6] + Suspension.roll_centre_height_uplim
 
 
 def caster_trail_ref_pos_constraint_lolim(hps):
-    return Suspension.outputParams_c[7] - Suspension.caster_trail_lolim
+    return Suspension.output_params_optimisation_c[7] - Suspension.caster_trail_lolim
 
 
 def caster_trail_ref_pos_constraint_uplim(hps):
-    return -Suspension.outputParams_c[7] + Suspension.caster_trail_uplim
+    return -Suspension.output_params_optimisation_c[7] + Suspension.caster_trail_uplim
 
 
 def scrub_radius_ref_pos_constraint_lolim(hps):
-    return Suspension.outputParams_c[8] - Suspension.scrub_radius_lolim
+    return Suspension.output_params_optimisation_c[8] - Suspension.scrub_radius_lolim
 
 
 def scrub_radius_ref_pos_constraint_uplim(hps):
-    return -Suspension.outputParams_c[8] + Suspension.scrub_radius_uplim
+    return -Suspension.output_params_optimisation_c[8] + Suspension.scrub_radius_uplim
 
 
 def kingpin_angle_ref_pos_constraint_lolim(hps):
-    return Suspension.outputParams_c[9] - Suspension.kingpin_angle_lolim
+    return Suspension.output_params_optimisation_c[9] - Suspension.kingpin_angle_lolim
 
 
 def kingpin_angle_ref_pos_constraint_uplim(hps):
-    return -Suspension.outputParams_c[9] + Suspension.kingpin_angle_uplim
+    return -Suspension.output_params_optimisation_c[9] + Suspension.kingpin_angle_uplim
 
 
 def calc_anti_drive_lolim(hps):
     """odreduje donju vrijednost anti lift znacajke karakteristicnu za drive front susp"""
-    return Suspension.outputParams_c[10] - Suspension.anti_drive_lolim
+    return Suspension.output_params_optimisation_c[10] - Suspension.anti_drive_lolim
 
 
 def calc_anti_drive_uplim(hps):
     """odreduje gornju vrijednost anti lift znacajke karakteristicnu za drive front susp"""
-    return -Suspension.outputParams_c[10] + Suspension.anti_drive_uplim
+    return -Suspension.output_params_optimisation_c[10] + Suspension.anti_drive_uplim
 
 
 def calc_anti_brake_lolim(hps):
     """odreduje donju vrijednost anti dive znacajke karakteristicnu za brake front susp"""
-    return Suspension.outputParams_c[11] - Suspension.anti_brake_lolim
+    return Suspension.output_params_optimisation_c[11] - Suspension.anti_brake_lolim
 
 
 def calc_anti_brake_uplim(hps):
     """odreduje gornju vrijednost anti dive znacajke karakteristicnu za brake front susp"""
-    return -Suspension.outputParams_c[11] + Suspension.anti_brake_uplim
+    return -Suspension.output_params_optimisation_c[11] + Suspension.anti_brake_uplim
 
 
 def calc_half_track_change_down_lolim(hps):
-    return Suspension.outputParams_c[12] - Suspension.half_track_change_down_pos_lolim
+    return Suspension.output_params_optimisation_c[12] - Suspension.half_track_change_down_pos_lolim
 
 
 def calc_half_track_change_down_uplim(hps):
-    return -Suspension.outputParams_c[12] + Suspension.half_track_change_down_pos_uplim
+    return -Suspension.output_params_optimisation_c[12] + Suspension.half_track_change_down_pos_uplim
 
 
 def calc_wheelbase_change_down_lolim(hps):
-    return Suspension.outputParams_c[13] - Suspension.wheelbase_change_down_pos_lolim
+    return Suspension.output_params_optimisation_c[13] - Suspension.wheelbase_change_down_pos_lolim
 
 
 def calc_wheelbase_change_down_uplim(hps):
-    return -Suspension.outputParams_c[13] + Suspension.wheelbase_change_down_pos_uplim
+    return -Suspension.output_params_optimisation_c[13] + Suspension.wheelbase_change_down_pos_uplim
 
 
 def calc_half_track_change_up_lolim(hps):
-    return Suspension.outputParams_c[14] - Suspension.half_track_change_up_pos_lolim
+    return Suspension.output_params_optimisation_c[14] - Suspension.half_track_change_up_pos_lolim
 
 
 def calc_half_track_change_up_uplim(hps):
-    return -Suspension.outputParams_c[14] + Suspension.half_track_change_up_pos_uplim
+    return -Suspension.output_params_optimisation_c[14] + Suspension.half_track_change_up_pos_uplim
 
 
 def calc_wheelbase_change_up_lolim(hps):
-    return Suspension.outputParams_c[15] - Suspension.wheelbase_change_up_pos_lolim
+    return Suspension.output_params_optimisation_c[15] - Suspension.wheelbase_change_up_pos_lolim
 
 
 def calc_wheelbase_change_up_uplim(hps):
-    return -Suspension.outputParams_c[15]+ Suspension.wheelbase_change_up_pos_uplim
+    return -Suspension.output_params_optimisation_c[15]+ Suspension.wheelbase_change_up_pos_uplim
 
 
 def lca3_in_wheel_constraint_lolim(hps):
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu"""
-    return Suspension.outputParams_c[16] - Suspension.inside_wheel_free_radius_lca3_lolim
+    return Suspension.output_params_optimisation_c[16] - Suspension.inside_wheel_free_radius_lca3_lolim
 
 
 def lca3_in_wheel_constraint_uplim(hps):
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu
     zamijena za ogranicenje po z_lolim"""
-    return -Suspension.outputParams_c[16] + Suspension.inside_wheel_free_radius_lca3_uplim
+    return -Suspension.output_params_optimisation_c[16] + Suspension.inside_wheel_free_radius_lca3_uplim
 
 
 def uca3_in_wheel_constraint_lolim(hps):
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu"""
-    return Suspension.outputParams_c[17] - Suspension.inside_wheel_free_radius_uca3_lolim
+    return Suspension.output_params_optimisation_c[17] - Suspension.inside_wheel_free_radius_uca3_lolim
 
 
 def uca3_in_wheel_constraint_uplim(hps):
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu
     zamijena za ogranicenje po z_uplim"""
-    return -Suspension.outputParams_c[17] + Suspension.inside_wheel_free_radius_uca3_uplim
+    return -Suspension.output_params_optimisation_c[17] + Suspension.inside_wheel_free_radius_uca3_uplim
 
 
 def tr2_in_wheel_constraint_lolim(hps):
     """zadaje uvjet unutar kojeg cilindra se mora nalaziti uca3 tocka kako bi bili sigurni da ne
     probada felgu"""
-    return Suspension.outputParams_c[18] - Suspension.inside_wheel_free_radius_tr2_lolim
+    return Suspension.output_params_optimisation_c[18] - Suspension.inside_wheel_free_radius_tr2_lolim
 
 
 def tr2_in_wheel_constraint_uplim(hps):
@@ -341,7 +340,7 @@ def tr2_in_wheel_constraint_uplim(hps):
     probada felgu
     zamijena za ogranicenje po x_uplim ako je iza wcn
     zamijena za ogranicenje po x_lolim ako je ispred wcn"""
-    return -Suspension.outputParams_c[18] + Suspension.inside_wheel_free_radius_tr2_uplim
+    return -Suspension.output_params_optimisation_c[18] + Suspension.inside_wheel_free_radius_tr2_uplim
 
 
 def distance_between_wcn_and_lca3_lolim(hps):
@@ -351,7 +350,7 @@ def distance_between_wcn_and_lca3_lolim(hps):
     ako je lca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
     """
-    return Suspension.outputParams_c[19] - Suspension.wcn_lca3_distance_lolim
+    return Suspension.output_params_optimisation_c[19] - Suspension.wcn_lca3_distance_lolim
 
 
 def distance_between_wcn_and_lca3_uplim(hps):
@@ -361,7 +360,7 @@ def distance_between_wcn_and_lca3_uplim(hps):
     ako je lca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
     """
-    return -Suspension.outputParams_c[19] + Suspension.wcn_lca3_distance_uplim
+    return -Suspension.output_params_optimisation_c[19] + Suspension.wcn_lca3_distance_uplim
 
 
 def distance_between_wcn_and_uca3_lolim(hps):
@@ -371,7 +370,7 @@ def distance_between_wcn_and_uca3_lolim(hps):
     ako je uca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
     """
-    return Suspension.outputParams_c[20] - Suspension.wcn_uca3_distance_lolim
+    return Suspension.output_params_optimisation_c[20] - Suspension.wcn_uca3_distance_lolim
 
 
 def distance_between_wcn_and_uca3_uplim(hps):
@@ -381,7 +380,7 @@ def distance_between_wcn_and_uca3_uplim(hps):
     ako je uca3 s vanjske strane ravnine, tj ima negativniju y vrijednost od wcn tada ova funkcija
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
     """
-    return -Suspension.outputParams_c[20] + Suspension.wcn_uca3_distance_uplim
+    return -Suspension.output_params_optimisation_c[20] + Suspension.wcn_uca3_distance_uplim
 
 
 def distance_between_wcn_and_tr2_lolim(hps):
@@ -392,7 +391,7 @@ def distance_between_wcn_and_tr2_lolim(hps):
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
 
     """
-    return Suspension.outputParams_c[21] - Suspension.wcn_tr2_distance_lolim
+    return Suspension.output_params_optimisation_c[21] - Suspension.wcn_tr2_distance_lolim
 
 
 def distance_between_wcn_and_tr2_uplim(hps):
@@ -403,7 +402,7 @@ def distance_between_wcn_and_tr2_uplim(hps):
     vraca negativnu vrijednost razmaka izmedu ravnine i uca3
 
     """
-    return -Suspension.outputParams_c[21] + Suspension.wcn_tr2_distance_uplim
+    return -Suspension.output_params_optimisation_c[21] + Suspension.wcn_tr2_distance_uplim
     
 
 

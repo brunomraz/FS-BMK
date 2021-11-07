@@ -70,7 +70,7 @@ namespace FS_BMK_ui.Models
         private float[] _hardpointsMoved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
         private int _suspensionPos = 1; // front or rear suspension 0 for front, 1 for rear
         private int _drivePos = 1;  // outboard or inboard drive 0 for outboard, 1 for inboard
-        private int _brakesPos = 1; // outboard or inboard brakes 0 for outboard, 1 for inboard
+        private int _brakesPos = 0; // outboard or inboard brakes 0 for outboard, 1 for inboard
         private List<Hardpoint> _hardpoints = new List<Hardpoint> {
             new Hardpoint("LCA1", -2038.666f, -411.709f, -132.316f),  // 0
             new Hardpoint("LCA2", -2241.147f, -408.195f, -126.205f),  // 1 
