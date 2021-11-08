@@ -50,6 +50,7 @@ namespace FS_BMK_ui
         {
             // Define WPF objects.
             ModelVisual3D visual3d = new ModelVisual3D();
+            
             suspensionGroup = new Model3DGroup();
 
             lcaGroup = new Model3DGroup();
