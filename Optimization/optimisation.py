@@ -120,37 +120,7 @@ column_names = ["LCA1 X", "LCA1 Y", "LCA1 Z", "LCA2 X", "LCA2 Y", "LCA2 Z", "LCA
 
 
 if __name__ == "__main__":
-    """
-    a = sys.argv[1]
-    b = sys.argv[2]
-    #a=5
-    #b=78
-    
-    column_names = [a, b]
-    return_dict = []
-    for i in range(5000):        
-        return_dict.append([i,i-0.5])
-        print(f"succeeded ")
-    
-    pandas_container = pd.DataFrame(list(return_dict), columns=column_names)
-    print(pandas_container)
-    #time.sleep(5)
-    
-    # if file does not exist write header
-    # else it exists so append without writing the header
-    if not os.path.isfile('test.csv'):
-        pandas_container.to_csv('test.csv', header=column_names, index=False, sep=";")
-    else:
-        not_written = True
-        while not_written:
-            try:
-                pandas_container.to_csv('test.csv', mode='a', header=False, index=False, sep=";")
-                not_written = False
-            except PermissionError:
-    
-                input("not written, close and try again: ")
-    """
-    
+   
     S.lca1x_opt = float(sys.argv[1])
     S.lca1y_lo = float(sys.argv[2])
     S.lca1y_up = float(sys.argv[3])
@@ -272,7 +242,15 @@ if __name__ == "__main__":
     num_of_processes = int(sys.argv[100])  # sets how many processes will the optimisation use
     running_time = float(sys.argv[101]) # sets how long will the optimisation run
     
-    
+    if S.drive_bias!=0: # if drive bias is not zero than add anti drive constraints to the rest
+        pass  # remove front anti drive related constraints, remove rear anti drive related constraints in any case
+    if S.brake_bias==0:
+        pass  # remove front anti brake related constraints, remove rear anti brake related constraints in any case
+
+
+
+
+
     #num_of_processes = 8
     #running_time = 50
 

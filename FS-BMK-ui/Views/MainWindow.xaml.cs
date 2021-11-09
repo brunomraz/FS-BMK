@@ -824,7 +824,7 @@ namespace FS_BMK_ui
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            vm1.CalculateSuspensionMovement2();
+            vm1.CalculateSuspensionMovement2(sender);
 
             wheelAssyGroup.Children.Clear();
 

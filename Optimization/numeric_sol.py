@@ -36,8 +36,8 @@ class Suspension():
     wheel_radius = 210
     wheelbase = 1530
     cog_height = 300
-    drive_bias = 0
-    brake_bias = 0.6
+    drive_bias = 1
+    brake_bias = 0.4
     suspension_position = 1 # 0 for front, 1 for rear
     drive_position = 1 # 0 for outboard, 1 for inboard
     brake_position = 0 # 0 for outboard, 1 for inboard
@@ -294,6 +294,17 @@ class Suspension():
 	            Suspension.output_params_movement_c,
 	            Suspension.hardpoints_moved_c
                 )
+        print("SUSPENSION CLASS PARAMETERS")
+        print("wheel radius " + str(Suspension.wheel_radius_c))
+        print("wheelbase " + str(Suspension.wheelbase_c))
+        print("cog height " + str(Suspension.cog_height_c))
+        print("drive bias " + str(Suspension.drive_bias_c))
+        print("brake bias " + str(Suspension.brake_bias_c))
+        print("suspension position " + str(Suspension.suspension_position_c))
+        print("drive position " + str(Suspension.drive_position_c))
+        print("brake position " + str(Suspension.brake_position_c))
+        print("vertical movement " + str(Suspension.vertical_movement_c))
+        print("SUSPENSION CLASS PARAMETERS END")
 
 
     def printResult(self):
@@ -330,34 +341,34 @@ def call_suspension_objective(hps):
 
 
 if __name__ == "__main__":
-    print("suspension PARALLEL")
-    suspension1 = Suspension([
-        100, -500, 100,
-        -100, -500, 100,
-        0, -700, 100,
-        100, -500, -100,
-        -100, -500, -100,
-        0, -700, -100,
-        -100, -500, 0,
-        -100, -700, 0,
-        0, -700, 0,
-        0, -650, 0
-
-        ])            
-    suspension1.calculateOptimisationMovement()
-
-
-
-
-
-
-
-
-    print("suspension output parameters___________")
-    for i in range(22):
-        print(Suspension.output_params_optimisation_c[i])
-    print("suspension output parameters___________")
-    print("suspension PARALLEL done")
+    #print("suspension PARALLEL")
+    #suspension1 = Suspension([
+    #    100, -500, 100,
+    #    -100, -500, 100,
+    #    0, -700, 100,
+    #    100, -500, -100,
+    #    -100, -500, -100,
+    #    0, -700, -100,
+    #    -100, -500, 0,
+    #    -100, -700, 0,
+    #    0, -700, 0,
+    #    0, -650, 0
+    #
+    #    ])            
+    #suspension1.calculateOptimisationMovement()
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #print("suspension output parameters___________")
+    #for i in range(22):
+    #    print(Suspension.output_params_optimisation_c[i])
+    #print("suspension output parameters___________")
+    #print("suspension PARALLEL done")
 
     suspension = Suspension([
         -2038.666, -411.709, -132.316, 			# lca1 x y z
@@ -371,6 +382,30 @@ if __name__ == "__main__":
 		-2143.6, -620.5, -220.07, 						# wcn
 		-2143.6, -595.5, -219.34])
 
+    #print("SUSPENSION CLASS PARAMETERS")
+    #print("wheel radius " + str(suspension.wheel_radius)+" "+str(suspension.wheel_radius_c))
+    #print("wheelbase " + str(suspension.wheelbase)+" "+str(suspension.wheelbase_c))
+    #print("cog height "+ str(suspension.cog_height)+" "+str(suspension.cog_height_c))
+    #print("drive bias " +str(suspension.drive_bias)+" "+ str(suspension.drive_bias_c))
+    #print("brake bias "+str(suspension.brake_bias)+" "+ str(suspension.brake_bias_c))
+    #print("suspension position "+str(suspension.suspension_position)+" "+str(suspension.suspension_position_c))
+    #print("drive position " +str(suspension.drive_position)+" "+str(suspension.drive_position_c))
+    #print("brake position "+str(suspension.brake_position)+" "+str(suspension.brake_position_c))
+    #print("vertical movement "+str(suspension.vertical_movement)+" "+str(suspension.vertical_movement_c))
+    #print("SUSPENSION CLASS PARAMETERS END")
+
+#    suspension=Suspension([
+#        -2038.666,	-400.5778643,	-138.1489777,	
+#        -2241.147,	-401.5574328,	-134.3124084,
+#        -2135.589963,	-598.6191885,	-146.0517018,
+#    -2040.563,	-410.1805728,	-275.1637932,	
+#    -2241.481,	-413.2814801,	-272.3532798,	
+#    -2153.839104,	-575.0277122,	-313.9206515,
+#-2235.551122,	-414.3146073,	-193.5176559,
+#-2233.262526,	-598.111147,	-217.0196026,
+#-2143.6,	-620.5,	-220.07,
+#-2143.6,	-595.5,	-219.34
+#])
 
 
     print("done creating class")

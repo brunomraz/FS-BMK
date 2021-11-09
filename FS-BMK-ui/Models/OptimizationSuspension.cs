@@ -73,6 +73,13 @@
         private float _verticalMovement = 30f;
         private int _coreNum = 5;
         private float _optimisationDuration = 10f;
+        private float _objFunctionPeakWidth = 10f;
+
+        public float ObjFunctionPeakWidth
+        {
+            get { return _objFunctionPeakWidth; }
+            set { _objFunctionPeakWidth = value; }
+        }
 
         public float[] HardpointLimits
         {

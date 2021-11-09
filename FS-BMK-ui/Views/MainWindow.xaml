@@ -507,6 +507,24 @@
                                 <TextBlock Grid.ColumnSpan="6" Grid.Row="0" Grid.Column="0" Text="Vertical movement from reference position"/>
                                 <TextBox Text="{Binding OptimizationSuspension.VerticalMovement}" Grid.Row="1" Grid.Column="0"  Style="{StaticResource NormalTextBoxStyle}"/>
                             </Grid>
+                            <!-- Objective function peak width parameter -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.ColumnSpan="6" Grid.Row="0" Grid.Column="0" Text="Objective function peak width parameter"/>
+                                <TextBox Text="{Binding OptimizationSuspension.ObjFunctionPeakWidth}" Grid.Row="1" Grid.Column="0"  Style="{StaticResource NormalTextBoxStyle}"/>
+                            </Grid>
+
                             <!-- number of processes to use -->
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -697,7 +715,7 @@
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Front brake bias"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Rear brake bias"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="Rear brake bias"/>
                                     <TextBox Style="{StaticResource NormalTextBoxStyle}" Text="{Binding CurrentSuspension.FrontBrakeBias}" Grid.Row="1" Grid.Column="0"/>
                                     <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" Text="{Binding CurrentSuspension.RearBrakeBias}" Grid.Row="1" Grid.Column="1"/>
                                 </Grid>
@@ -846,7 +864,7 @@
                                         <RowDefinition Height="20"/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="Wheelbase Change"/>
+                                    <TextBlock Grid.Row="0" Text="Half track Change"/>
                                     <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
                                         Text="{Binding CurrentSuspension.SuspensionCharacteristics[9].Value, StringFormat={}{0:#,0.00}}" 
                                              Grid.Row="1"/>
@@ -856,7 +874,7 @@
                                         <RowDefinition Height="20"/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="Half track Change"/>
+                                    <TextBlock Grid.Row="0" Text="Wheelbase Change"/>
                                     <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
                                         Text="{Binding CurrentSuspension.SuspensionCharacteristics[10].Value, StringFormat={}{0:#,0.00}}" 
                                              Grid.Row="1"/>

@@ -137,7 +137,17 @@
                 OptimizationSuspension.CoreNum.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
                 OptimizationSuspension.OptimisationDuration.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-
+            MessageBox.Show(
+                    $"CurrentSuspension.WheelRadius {OptimizationSuspension.WheelRadius}\n" +
+    $"CurrentSuspension.Wheelbase {OptimizationSuspension.Wheelbase}\n" +
+    $"CurrentSuspension.CoGHeight {OptimizationSuspension.CoGHeight}\n" +
+    $"CurrentSuspension.RearDriveBias {OptimizationSuspension.RearDriveBias}\n" +
+    $"CurrentSuspension.RearBrakeBias {OptimizationSuspension.RearBrakeBias}\n" +
+    $"CurrentSuspension.SuspensionPos {OptimizationSuspension.SuspensionPos}\n" +
+    $"CurrentSuspension.DrivePos {OptimizationSuspension.DrivePos}\n" +
+    $"CurrentSuspension.BrakesPos {OptimizationSuspension.BrakesPos}\n" +
+    $"CurrentSuspension.VerticalMovement {OptimizationSuspension.VerticalMovement}"
+                );
 
 
             argumentsString = script + hardpointsString + featuresString + generalSetupString;

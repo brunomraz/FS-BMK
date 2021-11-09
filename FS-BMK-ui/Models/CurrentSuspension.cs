@@ -86,17 +86,17 @@ namespace FS_BMK_ui.Models
         };
         private List<WPFFloat> _suspensionCharacteristics = new List<WPFFloat>
         {
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat(),
-            new WPFFloat()
+            new WPFFloat(),   // Camber angle
+            new WPFFloat(),   // toe angle
+            new WPFFloat(),   // caster angle
+            new WPFFloat(),   // RC height
+            new WPFFloat(),   // caster trail
+            new WPFFloat(),   // scrub radius
+            new WPFFloat(),   // kingpin angle
+            new WPFFloat(),   // anti drive
+            new WPFFloat(),   // anti brake
+            new WPFFloat(),   // half track change
+            new WPFFloat()    // wheelbase change
         };
 
         public int SuspensionPos

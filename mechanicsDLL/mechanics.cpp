@@ -46,11 +46,9 @@ private:
 
 	float wheelbase;
 	float cogHeight;
-	float frontDriveBias;
-	float rearDriveBias{ 1.0f - frontDriveBias };
+	float driveBias;
 
-	float frontBrakeBias;
-	float rearBrakeBias{ 1.0f - frontBrakeBias };
+	float brakeBias;
 
 	int suspPos;      // front or rear suspension 0 for front, 1 for rear	
 	int drivePos;     // outboard or inboard drive 0 for outboard, 1 for inboard	
@@ -77,8 +75,8 @@ public:
 	Suspension(
 		float* hps,
 		float wRadiusin,
-		float wheelbasein, float cogHeightin, float frontDriveBiasin,
-		float frontBrakeBiasin, int suspPosin, int drivePosin, int brakePosin,
+		float wheelbasein, float cogHeightin, float driveBiasin,
+		float brakeBiasin, int suspPosin, int drivePosin, int brakePosin,
 		float wVertin, float wSteerin,
 		int vertIncrin, int steerIncrin, float precisionin) :
 		lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3),
@@ -103,11 +101,9 @@ public:
 
 		wheelbase = wheelbasein;
 		cogHeight = cogHeightin;
-		frontDriveBias = frontDriveBiasin;
-		rearDriveBias = 1.0f - frontDriveBias;
+		driveBias = driveBiasin;
 
-		frontBrakeBias = frontBrakeBiasin;
-		rearBrakeBias = 1.0f - frontBrakeBias;
+		brakeBias = brakeBiasin;
 
 		suspPos = suspPosin;
 		drivePos = drivePosin;
@@ -665,7 +661,7 @@ public:
 
 		// CALCULATE LEFT SIDE
 		// case if LEFT LCA and UCA are parallel
-		if (abs(aLCAL - aUCAL) < slopePrecision)
+		if (abs(aLCAL - aUCAL)/abs(aLCAL) < precision)
 		{
 			aICL = aLCAL;
 			bICL = cpL(2) - aLCAL * cpL(1);
@@ -682,7 +678,7 @@ public:
 
 		// CALCULATE RIGHT SIDE
 		// case if RIGHT LCA and UCA are parallel
-		if (abs(aLCAR - aUCAR) < slopePrecision)
+		if (abs(aLCAR - aUCAR)/abs(aLCAR) < precision)
 		{
 			aICR = aLCAR;
 			bICR = cpR(2) - aLCAR * cpR(1);
@@ -699,7 +695,7 @@ public:
 
 		
 		// instantenous centre lines are parallel
-		if (abs((aICR - aICL)) < precision)
+		if (abs(aICR - aICL)/abs(aICR) < precision)
 		{
 
 			rollCentreHeight = 0;
@@ -969,7 +965,7 @@ public:
 		float tanThetaInboard;
 
 		// if resulting lines are parallel
-		if (abs(aLCA - aUCA) < precision)
+		if (abs(aLCA - aUCA)/abs(aLCA) < precision)
 		{
 			tanThetaInboard = aLCA;
 			tanThetaOutboard = aLCA;
@@ -983,37 +979,43 @@ public:
 			tanThetaOutboard = (ICPtz - wcn[2]) / (ICPtx - wcn[0]);
 			tanThetaInboard = (ICPtz - cp[2]) / (ICPtx - cp[0]);
 		}
-
-		// front suspension
-		if (suspPos == 0)
+				
+		if (suspPos == 0)  // front suspension
 		{
-			if (drivePos == 0)     // outboard drive
-				antiDrive = tanThetaOutboard * wheelbase / cogHeight * frontDriveBias * 100;
+			if (drivePos == 0)                        // outboard drive
+				antiDrive = tanThetaOutboard * wheelbase / cogHeight * driveBias * 100;
 
-			else                   // inboard drive
-				antiDrive = tanThetaInboard * wheelbase / cogHeight / frontDriveBias * 100;
+			else if (driveBias == 0)                  // inboard drive
+				antiDrive = 0;
+			else
+				antiDrive = tanThetaInboard * wheelbase / cogHeight / driveBias * 100;
 
+			if (brakePos == 0)                        // outboard brakes
+				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * brakeBias * 100;
 
-			if (brakePos == 0)       // outboard brakes
-				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * frontBrakeBias * 100;
-
-			else                   // inboard brakes
-				antiBrakes = tanThetaInboard * wheelbase / cogHeight / frontBrakeBias * 100;
+			else if (brakeBias == 0)                  // inboard brakes
+				antiBrakes = 0;
+			else
+				antiBrakes = tanThetaInboard * wheelbase / cogHeight / brakeBias * 100;
 		}
-		// rear suspension
-		else
+		
+		else  // rear suspension
 		{
-			if (drivePos == 0)     // outboard drive
-				antiDrive = -tanThetaOutboard * wheelbase / cogHeight * rearDriveBias * 100;
+			if (drivePos == 0)                        // outboard drive
+				antiDrive = -tanThetaOutboard * wheelbase / cogHeight * driveBias * 100;
 
-			else                   // inboard drive
-				antiDrive = -tanThetaInboard * wheelbase / cogHeight / rearDriveBias * 100;
+			else if (driveBias == 0)                  // inboard drive
+				antiDrive = 0;
+			else
+				antiDrive = -tanThetaInboard * wheelbase / cogHeight / driveBias * 100;
 
-			if (brakePos == 0)     // outboard brakes
-				antiBrakes = -tanThetaOutboard * wheelbase / cogHeight * rearBrakeBias * 100;
+			if (brakePos == 0)                        // outboard brakes
+				antiBrakes = -tanThetaOutboard * wheelbase / cogHeight * brakeBias * 100;
 
-			else                   // inboard brakes
-				antiBrakes = -tanThetaInboard * wheelbase / cogHeight / rearBrakeBias * 100;
+			else if (brakeBias == 0)                  // inboard brakes
+				antiBrakes = 0;
+			else
+				antiBrakes = -tanThetaInboard * wheelbase / cogHeight / brakeBias * 100;
 
 		}
 	}

@@ -468,9 +468,8 @@ slsqp_cobyla_common_constraints = [
     {'type': 'ineq', 'fun': calc_anti_drive_lolim},  # anti drive ref pos lower bound
     {'type': 'ineq', 'fun': calc_anti_brake_uplim},  # anti brake ref pos upper bound
     {'type': 'ineq', 'fun': calc_anti_brake_lolim},  # anti brake ref pos lower bound
-
-
 ]
+
 
 # za metode: COBYLA
 hps_coordinate_components_constraints = [
