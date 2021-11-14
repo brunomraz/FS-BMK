@@ -8,6 +8,7 @@ using FS_BMK_ui.Commands;
 using System.Windows.Input;
 using System.Windows;
 using System.Runtime.InteropServices;
+using FS_BMK_ui.HelperClasses;
 
 namespace FS_BMK_ui.ViewModels
 {
@@ -23,10 +24,12 @@ namespace FS_BMK_ui.ViewModels
 
         // private members
         private CurrentSuspension _currentSuspension;
+        private SuspensionVisualization _suspensionVisualization;
 
         public CurrentSuspensionViewModel()
         {
             _currentSuspension = new CurrentSuspension();
+            _suspensionVisualization = new SuspensionVisualization(_currentSuspension);
         }
 
         public CurrentSuspension CurrentSuspension
@@ -35,6 +38,11 @@ namespace FS_BMK_ui.ViewModels
             {
                 return _currentSuspension;
             }
+        }
+
+        public SuspensionVisualization SuspensionVisualization 
+        {
+            get { return _suspensionVisualization; }
         }
 
 
@@ -56,16 +64,16 @@ namespace FS_BMK_ui.ViewModels
         {
             float[] _suspChars = new float[11];
             float[] hardpoints = {
-                CurrentSuspension.Hardpoints[0].XVal, CurrentSuspension.Hardpoints[0].YVal, CurrentSuspension.Hardpoints[0].ZVal,
-                CurrentSuspension.Hardpoints[1].XVal, CurrentSuspension.Hardpoints[1].YVal, CurrentSuspension.Hardpoints[1].ZVal,
-                CurrentSuspension.Hardpoints[2].XVal, CurrentSuspension.Hardpoints[2].YVal, CurrentSuspension.Hardpoints[2].ZVal,
-                CurrentSuspension.Hardpoints[3].XVal, CurrentSuspension.Hardpoints[3].YVal, CurrentSuspension.Hardpoints[3].ZVal,
-                CurrentSuspension.Hardpoints[4].XVal, CurrentSuspension.Hardpoints[4].YVal, CurrentSuspension.Hardpoints[4].ZVal,
-                CurrentSuspension.Hardpoints[5].XVal, CurrentSuspension.Hardpoints[5].YVal, CurrentSuspension.Hardpoints[5].ZVal,
-                CurrentSuspension.Hardpoints[6].XVal, CurrentSuspension.Hardpoints[6].YVal, CurrentSuspension.Hardpoints[6].ZVal,
-                CurrentSuspension.Hardpoints[7].XVal, CurrentSuspension.Hardpoints[7].YVal, CurrentSuspension.Hardpoints[7].ZVal,
-                CurrentSuspension.Hardpoints[8].XVal, CurrentSuspension.Hardpoints[8].YVal, CurrentSuspension.Hardpoints[8].ZVal,
-                CurrentSuspension.Hardpoints[9].XVal, CurrentSuspension.Hardpoints[9].YVal, CurrentSuspension.Hardpoints[9].ZVal
+                CurrentSuspension.Hardpoints[0].X, CurrentSuspension.Hardpoints[0].Y, CurrentSuspension.Hardpoints[0].Z,
+                CurrentSuspension.Hardpoints[1].X, CurrentSuspension.Hardpoints[1].Y, CurrentSuspension.Hardpoints[1].Z,
+                CurrentSuspension.Hardpoints[2].X, CurrentSuspension.Hardpoints[2].Y, CurrentSuspension.Hardpoints[2].Z,
+                CurrentSuspension.Hardpoints[3].X, CurrentSuspension.Hardpoints[3].Y, CurrentSuspension.Hardpoints[3].Z,
+                CurrentSuspension.Hardpoints[4].X, CurrentSuspension.Hardpoints[4].Y, CurrentSuspension.Hardpoints[4].Z,
+                CurrentSuspension.Hardpoints[5].X, CurrentSuspension.Hardpoints[5].Y, CurrentSuspension.Hardpoints[5].Z,
+                CurrentSuspension.Hardpoints[6].X, CurrentSuspension.Hardpoints[6].Y, CurrentSuspension.Hardpoints[6].Z,
+                CurrentSuspension.Hardpoints[7].X, CurrentSuspension.Hardpoints[7].Y, CurrentSuspension.Hardpoints[7].Z,
+                CurrentSuspension.Hardpoints[8].X, CurrentSuspension.Hardpoints[8].Y, CurrentSuspension.Hardpoints[8].Z,
+                CurrentSuspension.Hardpoints[9].X, CurrentSuspension.Hardpoints[9].Y, CurrentSuspension.Hardpoints[9].Z
             };
 
             float driveBias;
@@ -99,19 +107,7 @@ namespace FS_BMK_ui.ViewModels
                 _suspChars,
                 CurrentSuspension.HardpointsMoved);
 
-            MessageBox.Show(
-    $"CurrentSuspension.WheelRadius {CurrentSuspension.WheelRadius}\n" +
-    $"CurrentSuspension.Wheelbase {CurrentSuspension.Wheelbase}\n" +
-    $"CurrentSuspension.CoGHeight {CurrentSuspension.CoGHeight}\n" +
-    $"DriveBias {driveBias}\n" +
-    $"BrakeBias {brakeBias}\n" +
-    $"CurrentSuspension.SuspensionPos {CurrentSuspension.SuspensionPos}\n" +
-    $"CurrentSuspension.DrivePos {CurrentSuspension.DrivePos}\n" +
-    $"CurrentSuspension.BrakesPos {CurrentSuspension.BrakesPos}\n" +
-    $"CurrentSuspension.VerticalMovement {CurrentSuspension.VerticalMovement}"
-
-
-    );
+            _suspensionVisualization.UpdateModels();
 
             CurrentSuspension.SuspensionCharacteristics[0].Value = _suspChars[0];
             CurrentSuspension.SuspensionCharacteristics[1].Value = _suspChars[1];

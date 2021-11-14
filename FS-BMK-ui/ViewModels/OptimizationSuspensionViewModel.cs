@@ -80,7 +80,7 @@
 
             psi.FileName = PythonEnvironmentPath;//@"C:\ProgramData\Anaconda3\python.exe";
 
-            foreach (var hp in OptimizationSuspension.Hardpoints)
+            foreach (var hp in OptimizationSuspension.HardpointsLimits)
             {
                 if (hp.XIsEditable)
                 {
@@ -137,24 +137,24 @@
                 OptimizationSuspension.CoreNum.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
                 OptimizationSuspension.OptimisationDuration.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-            MessageBox.Show(
-                    $"CurrentSuspension.WheelRadius {OptimizationSuspension.WheelRadius}\n" +
-    $"CurrentSuspension.Wheelbase {OptimizationSuspension.Wheelbase}\n" +
-    $"CurrentSuspension.CoGHeight {OptimizationSuspension.CoGHeight}\n" +
-    $"CurrentSuspension.RearDriveBias {OptimizationSuspension.RearDriveBias}\n" +
-    $"CurrentSuspension.RearBrakeBias {OptimizationSuspension.RearBrakeBias}\n" +
-    $"CurrentSuspension.SuspensionPos {OptimizationSuspension.SuspensionPos}\n" +
-    $"CurrentSuspension.DrivePos {OptimizationSuspension.DrivePos}\n" +
-    $"CurrentSuspension.BrakesPos {OptimizationSuspension.BrakesPos}\n" +
-    $"CurrentSuspension.VerticalMovement {OptimizationSuspension.VerticalMovement}"
-                );
+    //        MessageBox.Show(
+    //                $"CurrentSuspension.WheelRadius {OptimizationSuspension.WheelRadius}\n" +
+    //$"CurrentSuspension.Wheelbase {OptimizationSuspension.Wheelbase}\n" +
+    //$"CurrentSuspension.CoGHeight {OptimizationSuspension.CoGHeight}\n" +
+    //$"CurrentSuspension.RearDriveBias {OptimizationSuspension.RearDriveBias}\n" +
+    //$"CurrentSuspension.RearBrakeBias {OptimizationSuspension.RearBrakeBias}\n" +
+    //$"CurrentSuspension.SuspensionPos {OptimizationSuspension.SuspensionPos}\n" +
+    //$"CurrentSuspension.DrivePos {OptimizationSuspension.DrivePos}\n" +
+    //$"CurrentSuspension.BrakesPos {OptimizationSuspension.BrakesPos}\n" +
+    //$"CurrentSuspension.VerticalMovement {OptimizationSuspension.VerticalMovement}"
+    //            );
 
 
             argumentsString = script + hardpointsString + featuresString + generalSetupString;
             string path = Directory.GetCurrentDirectory();
 
             File.WriteAllText(@"C:\dev\FS-BMK\FS-BMK-ui\bin\Release\args.txt", argumentsString);
-            MessageBox.Show(argumentsString);
+            //MessageBox.Show(argumentsString);
 
             psi.Arguments = argumentsString; 
 

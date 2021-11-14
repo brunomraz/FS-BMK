@@ -5,57 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using FS_BMK_ui.HelperClasses;
 
 namespace FS_BMK_ui.Models
 {
     class CurrentSuspension : INotifyPropertyChanged
     {
-        public class Hardpoint
-        {
-            private string _hardpointName;
-            private float _xVal;
-            private float _yVal;
-            private float _zVal;
-
-
-
-
-            public Hardpoint(string hardpointName,
-                float xVal, float yVal,
-                float zVal)
-            {
-                HardpointNameClass = hardpointName;
-                XVal = xVal;
-                YVal = yVal;
-                ZVal = zVal;
-
-            }
-
-            public string HardpointNameClass
-            {
-                get { return _hardpointName; }
-                set { _hardpointName = value; }
-            }
-
-            public float XVal
-            {
-                get { return _xVal; }
-                set { _xVal = value; }
-            }
-            public float YVal
-            {
-                get { return _yVal; }
-                set { _yVal = value; }
-            }
-            public float ZVal
-            {
-                get { return _zVal; }
-                set { _zVal = value; }
-            }
-
-
-        }
-
+        
 
         private float _wheelRadius = 210f;
         private float _wheelWidth = 200f;
