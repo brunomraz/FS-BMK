@@ -83,7 +83,9 @@
     <Compile Include="Converters\RadioButtonPositionConverter.cs" />
     <Compile Include="HelperClasses\Hardpoint.cs" />
     <Compile Include="HelperClasses\HardpointLimits.cs" />
+    <Compile Include="HelperClasses\OptimisationCharacteristic.cs" />
     <Compile Include="HelperClasses\VisualizationMethods.cs" />
+    <Compile Include="HelperClasses\WPFFloat.cs" />
     <Compile Include="Models\CurrentSuspension.cs" />
     <Compile Include="Models\SuspensionVisualization.cs" />
     <Compile Include="UserControls\FeatureLimitsUserControl.xaml.cs">

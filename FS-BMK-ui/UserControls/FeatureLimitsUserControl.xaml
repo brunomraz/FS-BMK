@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FS_BMK_ui.UserControls"
-             x:Name="ucFeatureLimits"
+             Name="ucFeatureLimits"
              mc:Ignorable="d" 
              d:DesignHeight="95" d:DesignWidth="200">
     <UserControl.Resources>
@@ -51,7 +51,8 @@
                     Value="10"/>
         </Style>
     </UserControl.Resources>
-    <GroupBox Margin="2,0,2,0" Header="{Binding HeaderName, ElementName=ucFeatureLimits}" FontSize="10" Width="200" BorderThickness="1" BorderBrush="White">
+    <GroupBox Margin="2,0,2,0" Header="{Binding HeaderName, ElementName=ucFeatureLimits}" FontSize="10" 
+              Width="200" BorderThickness="1" BorderBrush="White">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60"/>
@@ -66,11 +67,11 @@
             <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Text="Lower" Style="{StaticResource TextBlockStyle}"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="Upper" Style="{StaticResource TextBlockStyle}"/>
             <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="2" Text="Target" Style="{StaticResource TextBlockStyle}"/>
-            <TextBox Text="{Binding LowerValue, ElementName=ucFeatureLimits}" Style="{StaticResource NormalTextBoxStyle}"
+            <TextBox Text="{Binding LowerValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource NormalTextBoxStyle}"
                      Grid.Row="1" Grid.Column="0" />
-            <TextBox Text="{Binding UpperValue, ElementName=ucFeatureLimits}" Style="{StaticResource NormalTextBoxStyle}"
+            <TextBox Text="{Binding UpperValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource NormalTextBoxStyle}"
                      HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1"/>
-            <TextBox Text="{Binding TargetValue, ElementName=ucFeatureLimits}" Grid.Row="1" Style="{StaticResource NormalTextBoxStyle}"
+            <TextBox Text="{Binding TargetValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Style="{StaticResource NormalTextBoxStyle}"
                      Grid.Column="2"/>
             <StackPanel Grid.Column="0" Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,2,0,0">
                 <Grid Margin="0,0,10,0">
@@ -79,7 +80,8 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Significance" Style="{StaticResource TextBlockStyle}"/>
-                    <TextBox Grid.Row="1" Text="{Binding SignificanceValue, ElementName=ucFeatureLimits}" Style="{StaticResource NormalTextBoxStyle}"/>
+                    <TextBox Grid.Row="1" Text="{Binding SignificanceValue, ElementName=ucFeatureLimits, 
+                        UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource NormalTextBoxStyle}"/>
                 </Grid>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -87,7 +89,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Weight factor" Style="{StaticResource TextBlockStyle}"/>
-                    <TextBox Grid.Row="1" Text="{Binding WeightFactorValue, ElementName=ucFeatureLimits}" Style="{StaticResource ReadOnlyTextBoxStyle}"/>
+                    <TextBox Grid.Row="1" Text="{Binding WeightFactorValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ReadOnlyTextBoxStyle}"/>
                 </Grid>
             </StackPanel>       
         </Grid>

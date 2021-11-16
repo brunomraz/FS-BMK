@@ -69,7 +69,8 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!-- Optimisation suspension parameters-->
-                <ScrollViewer DataContext="{StaticResource OptimizationSuspensionVM}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ScrollViewer DataContext="{StaticResource OptimizationSuspensionVM}" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <Grid Grid.Column="0" Width="410">
 
                         <Grid.RowDefinitions>
@@ -149,149 +150,172 @@
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[0]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[1]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[0]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[0]}"
+                                SignificanceValue="{Binding OptimizationSuspension.CamberDownSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[0]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Camber angle up position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[2]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[3]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[1]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[1]}"
+                                SignificanceValue="{Binding OptimizationSuspension.CamberUpSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[1]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Toe angle down position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[4]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[5]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[2]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[2]}"
+                                SignificanceValue="{Binding OptimizationSuspension.ToeDownSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[2]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Toe angle up position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[6]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[7]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[3]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[3]}"
+                                SignificanceValue="{Binding OptimizationSuspension.ToeUpSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[3]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Caster angle" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[8]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[9]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[4]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[4]}"
+                                SignificanceValue="{Binding OptimizationSuspension.CasterAngleSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[4]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Roll centre height" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[10]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[11]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[5]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[5]}"
+                                SignificanceValue="{Binding OptimizationSuspension.RollCentreHeightSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[5]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Caster trail" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[12]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[13]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[6]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[6]}"
+                                SignificanceValue="{Binding OptimizationSuspension.CasterTrailSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[6]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Scrub radius" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[14]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[15]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[7]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[7]}"
+                                SignificanceValue="{Binding OptimizationSuspension.ScrubRadiusSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[7]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Kingpin angle" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[16]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[17]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[8]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[8]}"
+                                SignificanceValue="{Binding OptimizationSuspension.KingpinAngleSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[8]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Anti drive" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[18]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[19]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[9]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[9]}"
+                                SignificanceValue="{Binding OptimizationSuspension.AntiDriveSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[9]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Anti brake" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[20]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[21]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[10]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[10]}"
+                                SignificanceValue="{Binding OptimizationSuspension.AntiBrakeSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[10]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Half track change down position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[22]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[23]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[11]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[11]}"
+                                SignificanceValue="{Binding OptimizationSuspension.HalftrackChangeDownSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[11]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Half track change up position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[24]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[25]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[12]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[12]}"
+                                SignificanceValue="{Binding OptimizationSuspension.HalftrackChangeUpSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[12]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Wheelbase change down position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[26]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[27]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[13]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[13]}"
+                                SignificanceValue="{Binding OptimizationSuspension.WheelbaseDownSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[13]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Wheelbase change up position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[28]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[29]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[14]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[14]}"
+                                SignificanceValue="{Binding OptimizationSuspension.WheelbaseUpSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[14]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="LCA3 inside wheel free radius" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[30]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[31]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[15]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[15]}"
+                                SignificanceValue="{Binding OptimizationSuspension.Lca3InsideWheelSpaceSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[15]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="UCA3 inside wheel free radius" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[32]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[33]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[16]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[16]}"
+                                SignificanceValue="{Binding OptimizationSuspension.Uca3InsideWheelSpaceSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[16]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="TR2 inside wheel free radius" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[34]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[35]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[17]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[17]}"
+                                SignificanceValue="{Binding OptimizationSuspension.Tr2InsideWheelSpaceSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[17]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="LCA3 distance to WCN, along wheel axis" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[36]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[37]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[18]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[18]}"
+                                SignificanceValue="{Binding OptimizationSuspension.Lca3wcnDistSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[18]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="UCA3 distance to WCN, along wheel axis" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[38]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[39]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[19]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[19]}"
+                                SignificanceValue="{Binding OptimizationSuspension.Uca3wcnDistSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[19]}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="TR2 distance to WCN, along wheel axis" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[40]}"
                                 UpperValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[41]}"
                                 TargetValue="{Binding OptimizationSuspension.TargetCharacteristicValues[20]}"
-                                SignificanceValue="{Binding OptimizationSuspension.Significance[20]}"
+                                SignificanceValue="{Binding OptimizationSuspension.Tr2wcnDistSignificance, Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged}"
                                 WeightFactorValue="{Binding OptimizationSuspension.FeaturesWeightFactors[20]}"/>
-
+                            <TextBox Text="{Binding OptimizationSuspension.SignificanceSum}" IsReadOnly="True" Width="50"/>
+                            <TextBox Text="{Binding OptimizationSuspension.CamberUpSignificance, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
+                            
                             <!-- Suspension position -->
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -502,9 +526,9 @@
                                     CanUserResizeColumns="False"
                                     CanUserSortColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="X" Binding="{Binding XVal}"/>
-                                    <DataGridTextColumn Header="Y" Binding="{Binding YVal}"/>
-                                    <DataGridTextColumn Header="Z" Binding="{Binding ZVal}"/>
+                                    <DataGridTextColumn Header="X" Binding="{Binding X}"/>
+                                    <DataGridTextColumn Header="Y" Binding="{Binding Y}"/>
+                                    <DataGridTextColumn Header="Z" Binding="{Binding Z}"/>
                                 </DataGrid.Columns>
                                 <DataGrid.RowHeaderTemplate>
                                     <DataTemplate>
