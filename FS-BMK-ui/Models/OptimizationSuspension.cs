@@ -48,54 +48,55 @@
         };
 
         private float[] _targetCharacteristicValues = { //new float[21];
-            -2.65f,          // 0, 1,     camber angle down pos, low high lim
-            -0.95f,            // 2, 3,     camber angle up pos, low high lim
-            -0f,            // 4, 5,     toe angle down pos low high lim
-            0f,             // 6, 7,     toe angle up pos low high lim
-            7f,                // 8, 9,     caster angle low high lim
-            50f,              // 10, 11,   roll centre height low lim high lim
-            15f,              // 12, 13,   caster trail low high lim
-            -7f,             // 14, 15,   scrub radius low high lim
-            4f,                // 16, 17,   kingpin angle low high lim
-            18f,              // 18, 19,   anti drive low high lim
-            10f,               // 20, 21,   anti brake low high lim
-            0f,              // 22, 23,   half track change down pos low high lim
-            0f,                // 24, 25,   half track change up pos low high lim
-            0f,           // 26, 27,   wheelbase change down pos low high lim
-            0f,           // 28, 29,   wheelbase change up pos low high lim
-            100f,             // 30, 31,   inside wheel free radius LCA3 low high lim
-            100f,             // 32, 33,   inside wheel free radius UCA3 low high lim
-            100f,             // 34, 35,   inside wheel free radius TR2 low high lim
-            -20f,           // 36, 37,   distance from LCA3 to plane defined by WCN and line WCN-SPN
-            -20f,           // 38, 39    distance from UCA3 to plane defined by WCN and line WCN-SPN
-            -20f           // 40, 41    distance from TR2 to plane defined by WCN and line WCN-SPN
-        };
-        private float[] _featuresWeightFactors = new float[22];
-        private float[] _significance = {    // new float[22];
-            100f,          // 0, 1,     camber angle down pos, low high lim
-            100f,            // 2, 3,     camber angle up pos, low high lim
-            5f,            // 4, 5,     toe angle down pos low high lim
-            5f,             // 6, 7,     toe angle up pos low high lim
-            5f,                // 8, 9,     caster angle low high lim
-            2f,              // 10, 11,   roll centre height low lim high lim
-            5f,              // 12, 13,   caster trail low high lim
-            2f,             // 14, 15,   scrub radius low high lim
-            5f,                // 16, 17,   kingpin angle low high lim
-            2f,              // 18, 19,   anti drive low high lim
-            2f,               // 20, 21,   anti brake low high lim
-            2f,              // 22, 23,   half track change down pos low high lim
-            2f,                // 24, 25,   half track change up pos low high lim
-            2f,           // 26, 27,   wheelbase change down pos low high lim
-            2f,           // 28, 29,   wheelbase change up pos low high lim
-            2f,             // 30, 31,   inside wheel free radius LCA3 low high lim
-            2f,             // 32, 33,   inside wheel free radius UCA3 low high lim
-            2f,             // 34, 35,   inside wheel free radius TR2 low high lim
-            0f,           // 36, 37,   distance from LCA3 to plane defined by WCN and line WCN-SPN
-            0f,           // 38, 39    distance from UCA3 to plane defined by WCN and line WCN-SPN
-            0f           // 40, 41    distance from TR2 to plane defined by WCN and line WCN-SPN
+            -2.65f,             // 0,     camber angle down pos, low high lim
+            -0.95f,             // 1,     camber angle up pos, low high lim
+            -0f,                // 2,     toe angle down pos low high lim
+            0f,                 // 3,     toe angle up pos low high lim
+            7f,                 // 4,     caster angle low high lim
+            50f,                // 5,     roll centre height low lim high lim
+            15f,                // 6,     caster trail low high lim
+            -7f,                // 7,     scrub radius low high lim
+            4f,                 // 8,     kingpin angle low high lim
+            18f,                // 9,     anti drive low high lim
+            10f,                // 10,    anti brake low high lim
+            0f,                 // 11,    half track change down pos low high lim
+            0f,                 // 12,    half track change up pos low high lim
+            0f,                 // 13,    wheelbase change down pos low high lim
+            0f,                 // 14,    wheelbase change up pos low high lim
+            100f,               // 15,    inside wheel free radius LCA3 low high lim
+            100f,               // 16,    inside wheel free radius UCA3 low high lim
+            100f,               // 17,    inside wheel free radius TR2 low high lim
+            -20f,               // 18,    distance from LCA3 to plane defined by WCN and line WCN-SPN
+            -20f,               // 19,    distance from UCA3 to plane defined by WCN and line WCN-SPN
+            -20f                // 20     distance from TR2 to plane defined by WCN and line WCN-SPN
         };
 
+        private float[] _significance =
+        {
+            100f,               // 0,     camber angle down pos, low high lim
+            100f,               // 1,     camber angle up pos, low high lim
+            5f,                 // 2,     toe angle down pos low high lim
+            5f,                 // 3,     toe angle up pos low high lim
+            3f,                 // 4,     caster angle low high lim
+            2f,                 // 5,     roll centre height low lim high lim
+            5f,                 // 6,     caster trail low high lim
+            2f,                 // 7,     scrub radius low high lim
+            2f,                 // 8,     kingpin angle low high lim
+            2f,                 // 9,     anti drive low high lim
+            2f,                 // 10,    anti brake low high lim
+            2f,                 // 11,    half track change down pos low high lim
+            2f,                 // 12,    half track change up pos low high lim
+            2f,                 // 13,    wheelbase change down pos low high lim
+            2f,                 // 14,    wheelbase change up pos low high lim
+            2f,                 // 15,    inside wheel free radius LCA3 low high lim
+            2f,                 // 16,    inside wheel free radius UCA3 low high lim
+            2f,                 // 17,    inside wheel free radius TR2 low high lim
+            2f,                 // 18,    distance from LCA3 to plane defined by WCN and line WCN-SPN
+            2f,                 // 19,    distance from UCA3 to plane defined by WCN and line WCN-SPN
+            2f                  // 20     distance from TR2 to plane defined by WCN and line WCN-SPN
+        };
 
+        private float[] _weightFactors = new float[21];
         private float _wheelRadius = 210f;
         private float _wheelbase = 1530f;
         private float _cogHeight = 300f;
@@ -110,266 +111,116 @@
         private int _coreNum = 5;
         private float _optimisationDuration = 10f;
         private float _objFunctionPeakWidth = 10f;
+        private float _significanceSum;
 
-        private float _camberDownSignificance = 100f;
-        private float _camberUpSignificance = 100f;
-        private float _toeDownSignificance = 5f;
-        private float _toeUpSignificance = 5f;
-        private float _casterAngleSignificance = 3f;
-        private float _rollCentreHeightSignificance = 2f;
-        private float _casterTrailSignificance = 5f;
-        private float _scrubRadiusSignificance = 2f;
-        private float _kingpinAngleSignificance = 2f;
-        private float _antiDriveSignificance = 2f;
-        private float _antiBrakeSignificance = 2f;
-        private float _halftrackChangeDownSignificance = 2f;
-        private float _halftrackChangeUpSignificance = 2f;
-        private float _wheelbaseDownSignificance = 2f;
-        private float _wheelbaseUpSignificance = 2f;
-        private float _lca3InsideWheelSpaceSignificance = 2f;
-        private float _uca3InsideWheelSpaceSignificance = 2f;
-        private float _tr2InsideWheelSpaceSignificance = 2f;
-        private float _lca3wcnDistSignificance = 2f;
-        private float _uca3wcnDistSignificance = 2f;
-        private float _tr2wcnDistSignificance = 2f;
-
-        private float _camberDownWeightFactor;
-        private float _camberUpWeightFactor;
-        private float _toeDownWeightFactor;
-        private float _toeUpWeightFactor;
-        private float _casterAngleWeightFactor;
-        private float _rollCentreHeightWeightFactor;
-        private float _casterTrailWeightFactor;
-        private float _scrubRadiusWeightFactor;
-        private float _kingpinAngleWeightFactor;
-        private float _antiDriveWeightFactor;
-        private float _antiBrakeWeightFactor;
-        private float _halftrackChangeDownWeightFactor;
-        private float _halftrackChangeUpWeightFactor;
-        private float _wheelbaseDownWeightFactor;
-        private float _wheelbaseUpWeightFactor;
-        private float _lca3InsideWheelSpaceWeightFactor;
-        private float _uca3InsideWheelSpaceWeightFactor;
-        private float _tr2InsideWheelSpaceWeightFactor;
-        private float _lca3wcnDistWeightFactor;
-        private float _uca3wcnDistWeightFactor;
-        private float _tr2wcnDistWeightFactor;
+        public float[] WeightFactors { get { return _weightFactors; } }
+        public float[] TargetCharacteristicValues { get { return _targetCharacteristicValues; } }
 
         #region Optimisation characteristics significance properties
         public float CamberDownSignificance
         {
-            get { return _camberDownSignificance; }
-            set { _camberDownSignificance = value;
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("CamberDownSignificance");
-                OnPropertyChanged("CamberDownWeightFactor");
-                _camberDownWeightFactor = _camberDownSignificance / _significanceSum;
-            }
+            get { return _significance[0]; }
+            set { _significance[0] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float CamberUpSignificance
         {
-            get { return _camberUpSignificance; }
-            set { _camberUpSignificance = value; 
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("CamberUpSignificance");
-                OnPropertyChanged("CamberUpWeightFactor");
-                _camberUpWeightFactor = _camberUpSignificance / _significanceSum;
-            }
+            get { return _significance[1]; }
+            set { _significance[1] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float ToeDownSignificance
         {
-            get { return _toeDownSignificance; }
-            set { _toeDownSignificance = value; 
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("ToeDownSignificance");
-                OnPropertyChanged("ToeDownWeightFactor");
-                _toeDownWeightFactor = _toeDownSignificance / _significanceSum;
-            }
+            get { return _significance[2]; }
+            set { _significance[2] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float ToeUpSignificance
         {
-            get { return _toeUpSignificance; }
-            set { _toeUpSignificance = value;
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("ToeUpSignificance");
-                OnPropertyChanged("ToeUpWeightFactor");
-                _toeUpWeightFactor = _toeUpSignificance / _significanceSum;
-            }
+            get { return _significance[3]; }
+            set { _significance[3] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float CasterAngleSignificance
         {
-            get { return _casterAngleSignificance; }
-            set { _casterAngleSignificance = value; 
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("CasterAngleSignificance");
-                OnPropertyChanged("CasterAngleWeightFactor");
-                _casterAngleWeightFactor = _casterAngleSignificance / _significanceSum;
-            }
+            get { return _significance[4]; }
+            set { _significance[4] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float RollCentreHeightSignificance
         {
-            get { return _rollCentreHeightSignificance; }
-            set { _rollCentreHeightSignificance = value;
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("RollCentreHeightSignificance"); 
-                OnPropertyChanged("RollCentreHeightWeightFactor");
-                _rollCentreHeightWeightFactor = _rollCentreHeightSignificance / _significanceSum;
-            }
+            get { return _significance[5]; }
+            set { _significance[5] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float CasterTrailSignificance
         {
-            get { return _casterTrailSignificance; }
-            set { _casterTrailSignificance = value; 
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("CasterTrailSignificance"); 
-                OnPropertyChanged("CasterTrailWeightFactor");
-                _casterTrailWeightFactor = _casterTrailSignificance / _significanceSum;
-            }
+            get { return _significance[6]; }
+            set { _significance[6] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float ScrubRadiusSignificance
         {
-            get { return _scrubRadiusSignificance; }
-            set { _scrubRadiusSignificance = value; 
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("ScrubRadiusSignificance"); 
-                OnPropertyChanged("ScrubRadiusWeightFactor");
-                _scrubRadiusWeightFactor = _scrubRadiusSignificance / _significanceSum;
-            }
+            get { return _significance[7]; }
+            set { _significance[7] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float KingpinAngleSignificance
         {
-            get { return _kingpinAngleSignificance; }
-            set { _kingpinAngleSignificance = value; 
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("KingpinAngleSignificance"); 
-                OnPropertyChanged("KingpinAngleWeightFactor");
-                _kingpinAngleWeightFactor = _kingpinAngleSignificance / _significanceSum;
-            }
+            get { return _significance[8]; }
+            set { _significance[8] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float AntiDriveSignificance
         {
-            get { return _antiDriveSignificance; }
-            set { _antiDriveSignificance = value;
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("AntiDriveSignificance");
-                OnPropertyChanged("AntiDriveWeightFactor");
-                _antiDriveWeightFactor = _antiDriveSignificance / _significanceSum;
-            }
+            get { return _significance[9]; }
+            set { _significance[9] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float AntiBrakeSignificance
         {
-            get { return _antiBrakeSignificance; }
-            set { _antiBrakeSignificance = value; 
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("AntiBrakeSignificance"); 
-                OnPropertyChanged("AntiBrakeWeightFactor");
-                _antiBrakeWeightFactor = _antiBrakeSignificance / _significanceSum;
-            }
+            get { return _significance[10]; }
+            set { _significance[10] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float HalftrackChangeDownSignificance
         {
-            get { return _halftrackChangeDownSignificance; }
-            set { _halftrackChangeDownSignificance = value;
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("HalftrackChangeDownSignificance");
-                OnPropertyChanged("HalftrackChangeDownWeightFactor");
-                _halftrackChangeDownWeightFactor = _halftrackChangeDownSignificance / _significanceSum;
-            }
+            get { return _significance[11]; }
+            set { _significance[11] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float HalftrackChangeUpSignificance
         {
-            get { return _halftrackChangeUpSignificance; }
-            set { _halftrackChangeUpSignificance = value; 
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("HalftrackChangeUpSignificance"); 
-                OnPropertyChanged("HalftrackChangeUpWeightFactor");
-                _halftrackChangeUpWeightFactor = _halftrackChangeUpSignificance / _significanceSum;
-            }
+            get { return _significance[12]; }
+            set { _significance[12] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float WheelbaseDownSignificance
         {
-            get { return _wheelbaseDownSignificance; }
-            set { _wheelbaseDownSignificance = value; 
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("WheelbaseDownSignificance");
-                OnPropertyChanged("WheelbaseDownWeightFactor");
-                _wheelbaseDownWeightFactor = _wheelbaseDownSignificance / _significanceSum;
-            }
+            get { return _significance[13]; }
+            set { _significance[13] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float WheelbaseUpSignificance
         {
-            get { return _wheelbaseUpSignificance; }
-            set { _wheelbaseUpSignificance = value; 
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("WheelbaseUpSignificance");
-                OnPropertyChanged("WheelbaseUpWeightFactor");
-                _wheelbaseUpWeightFactor = _wheelbaseUpSignificance / _significanceSum;
-            }
+            get { return _significance[14]; }
+            set { _significance[14] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float Lca3InsideWheelSpaceSignificance
         {
-            get { return _lca3InsideWheelSpaceSignificance; }
-            set { _lca3InsideWheelSpaceSignificance = value;
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("Lca3InsideWheelSpaceSignificance"); 
-                OnPropertyChanged("Lca3InsideWheelSpaceWeightFactor");
-                _lca3InsideWheelSpaceWeightFactor = _lca3InsideWheelSpaceSignificance / _significanceSum;
-            }
+            get { return _significance[15]; }
+            set { _significance[15] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float Uca3InsideWheelSpaceSignificance
         {
-            get { return _uca3InsideWheelSpaceSignificance; }
-            set { _uca3InsideWheelSpaceSignificance = value;
-               OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("Uca3InsideWheelSpaceSignificance");
-                OnPropertyChanged("Uca3InsideWheelSpaceWeightFactor");
-                _uca3InsideWheelSpaceWeightFactor = _uca3InsideWheelSpaceSignificance / _significanceSum;
-            }
+            get { return _significance[16]; }
+            set { _significance[16] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float Tr2InsideWheelSpaceSignificance
         {
-            get { return _tr2InsideWheelSpaceSignificance; }
-            set { _tr2InsideWheelSpaceSignificance = value;
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("Tr2InsideWheelSpaceSignificance");
-                OnPropertyChanged("Tr2InsideWheelSpaceWeightFactor");
-                _tr2InsideWheelSpaceWeightFactor = _tr2InsideWheelSpaceSignificance / _significanceSum;
-            }
+            get { return _significance[17]; }
+            set { _significance[17] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float Lca3wcnDistSignificance
         {
-            get { return _lca3wcnDistSignificance; }
-            set { _lca3wcnDistSignificance = value; 
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("Lca3wcnDistSignificance");
-                OnPropertyChanged("Lca3wcnDiseWeightFactor");
-                _lca3wcnDistWeightFactor = _lca3wcnDistSignificance / _significanceSum;
-            }
+            get { return _significance[18]; }
+            set { _significance[18] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float Uca3wcnDistSignificance
         {
-            get { return _uca3wcnDistSignificance; }
-            set { _uca3wcnDistSignificance = value; 
-                OnPropertyChanged("SignificanceSum"); 
-                OnPropertyChanged("Uca3wcnDistSignificance");
-                OnPropertyChanged("Uca3wcnDiseWeightFactor");
-                _uca3wcnDistWeightFactor=_uca3wcnDistSignificance / _significanceSum;
-            }
+            get { return _significance[19]; }
+            set { _significance[19] = value; OnPropertyChanged("SignificanceSum"); }
         }
         public float Tr2wcnDistSignificance
         {
-            get
-            {
-                //_tr2wcnDistWeightFactor = _tr2wcnDistSignificance/ SumAllSignificances();
-                return _tr2wcnDistSignificance; 
-            }
-            set { _tr2wcnDistSignificance = value;
-                OnPropertyChanged("Tr2wcnDistSignificance");
-                OnPropertyChanged("Tr2wcnDiseWeightFactor");
-                OnPropertyChanged("SignificanceSum");
-                _tr2wcnDistWeightFactor = _tr2wcnDistSignificance / _significanceSum;
-                //MessageBox.Show($"camber WF {_tr2wcnDistWeightFactor}");
-            }
+            get { return _significance[20]; }
+            set { _significance[20] = value; OnPropertyChanged("SignificanceSum"); }
         }
         #endregion
 
@@ -377,140 +228,121 @@
         #region Optimisation characteristics weight factor properties
         public float CamberDownWeightFactor
         {
-            get { return _camberDownSignificance / _significanceSum; }
-            set { _camberDownWeightFactor = value; OnPropertyChanged("CamberDownWeightFactor"); }
+            get { return _weightFactors[0] = _significance[0] / _significanceSum; }
+            set { _weightFactors[0] = value; }
         }
         public float CamberUpWeightFactor
         {
-            get { return _camberUpSignificance / _significanceSum; }
-            set { _camberUpWeightFactor = value; OnPropertyChanged("CamberUpWeightFactor"); }
+            get { return _weightFactors[1] = _significance[1] / _significanceSum; }
+            set { _weightFactors[1] = value; }
         }
         public float ToeDownWeightFactor
         {
-            get { return _toeDownSignificance / _significanceSum; }
-            set { _toeDownWeightFactor = value; OnPropertyChanged("ToeDownWeightFactor"); }
+            get { return _weightFactors[2] = _significance[2] / _significanceSum; }
+            set { _weightFactors[2] = value; }
         }
         public float ToeUpWeightFactor
         {
-            get { return _toeUpSignificance / _significanceSum; }
-            set { _toeUpWeightFactor = value; OnPropertyChanged("ToeUpWeightFactor"); }
+            get { return _weightFactors[3] = _significance[3] / _significanceSum; }
+            set { _weightFactors[3] = value; }
         }
         public float CasterAngleWeightFactor
         {
-            get { return _casterAngleSignificance / _significanceSum; }
-            set { _casterAngleWeightFactor = value; OnPropertyChanged("CasterAngleWeightFactor"); }
+            get { return _weightFactors[4] = _significance[4] / _significanceSum; }
+            set { _weightFactors[4] = value; }
         }
         public float RollCentreHeightWeightFactor
         {
-            get { return _rollCentreHeightSignificance / _significanceSum; }
-            set { _rollCentreHeightWeightFactor = value; OnPropertyChanged("RollCentreHeightWeightFactor"); }
+            get { return _weightFactors[5] = _significance[5] / _significanceSum; }
+            set { _weightFactors[5] = value; }
         }
         public float CasterTrailWeightFactor
         {
-            get { return _casterTrailSignificance / _significanceSum; }
-            set { _casterTrailWeightFactor = value; OnPropertyChanged("CasterTrailWeightFactor"); }
+            get { return _weightFactors[6] = _significance[6] / _significanceSum; }
+            set { _weightFactors[6] = value; }
         }
         public float ScrubRadiusWeightFactor
         {
-            get { return _scrubRadiusSignificance / _significanceSum; }
-            set { _scrubRadiusWeightFactor = value; OnPropertyChanged("ScrubRadiusWeightFactor"); }
+            get { return _weightFactors[7] = _significance[7] / _significanceSum; }
+            set { _weightFactors[7] = value; }
         }
         public float KingpinAngleWeightFactor
         {
-            get { return _kingpinAngleSignificance / _significanceSum; }
-            set { _kingpinAngleWeightFactor = value; OnPropertyChanged("KingpinAngleWeightFactor"); }
+            get { return _weightFactors[8] = _significance[8] / _significanceSum; }
+            set { _weightFactors[8] = value; }
         }
         public float AntiDriveWeightFactor
         {
-            get { return _antiDriveSignificance / _significanceSum; }
-            set { _antiDriveWeightFactor = value; OnPropertyChanged("AntiDriveWeightFactor"); }
+            get { return _weightFactors[9] = _significance[9] / _significanceSum; }
+            set { _weightFactors[9] = value; }
         }
         public float AntiBrakeWeightFactor
         {
-            get { return _antiBrakeSignificance / _significanceSum; }
-            set { _antiBrakeWeightFactor = value; OnPropertyChanged("AntiBrakeWeightFactor"); }
+            get { return _weightFactors[10] = _significance[10] / _significanceSum; }
+            set { _weightFactors[10] = value; }
         }
         public float HalftrackChangeDownWeightFactor
         {
-            get { return _halftrackChangeDownSignificance / _significanceSum; }
-            set { _halftrackChangeDownWeightFactor = value; OnPropertyChanged("HalftrackChangeDownWeightFactor"); }
+            get { return _weightFactors[11] = _significance[11] / _significanceSum; }
+            set { _weightFactors[11] = value; }
         }
         public float HalftrackChangeUpWeightFactor
         {
-            get { return _halftrackChangeUpSignificance / _significanceSum; }
-            set { _halftrackChangeUpWeightFactor = value; OnPropertyChanged("HalftrackChangeUpWeightFactor"); }
+            get { return _weightFactors[12] = _significance[12] / _significanceSum; }
+            set { _weightFactors[12] = value; }
         }
         public float WheelbaseDownWeightFactor
         {
-            get { return _wheelbaseDownSignificance / _significanceSum; }
-            set { _wheelbaseDownWeightFactor = value; OnPropertyChanged("WheelbaseDownWeightFactor"); }
+            get { return _weightFactors[13] = _significance[13] / _significanceSum; }
+            set { _weightFactors[13] = value; }
         }
         public float WheelbaseUpWeightFactor
         {
-            get { return _wheelbaseUpSignificance / _significanceSum; }
-            set { _wheelbaseUpWeightFactor = value; OnPropertyChanged("WheelbaseUpWeightFactor"); }
+            get { return _weightFactors[14] = _significance[14] / _significanceSum; }
+            set { _weightFactors[14] = value; }
         }
         public float Lca3InsideWheelSpaceWeightFactor
         {
-            get { return _lca3InsideWheelSpaceSignificance / _significanceSum; }
-            set { _lca3InsideWheelSpaceWeightFactor = value; OnPropertyChanged("Lca3InsideWheelSpaceWeightFactor"); }
+            get { return _weightFactors[15] = _significance[15] / _significanceSum; }
+            set { _weightFactors[15] = value; }
         }
         public float Uca3InsideWheelSpaceWeightFactor
         {
-            get { return _uca3InsideWheelSpaceSignificance / _significanceSum; }
-            set { _uca3InsideWheelSpaceWeightFactor = value; OnPropertyChanged("Uca3InsideWheelSpaceWeightFactor"); }
+            get { return _weightFactors[16] = _significance[16] / _significanceSum; }
+            set { _weightFactors[16] = value; }
         }
         public float Tr2InsideWheelSpaceWeightFactor
         {
-            get { return _tr2InsideWheelSpaceSignificance / _significanceSum; }
-            set { _tr2InsideWheelSpaceWeightFactor = value; OnPropertyChanged("Tr2InsideWheelSpaceWeightFactor"); }
+            get { return _weightFactors[17] = _significance[17] / _significanceSum; }
+            set { _weightFactors[17] = value; }
         }
         public float Lca3wcnDistWeightFactor
         {
-            get { return _lca3wcnDistSignificance / _significanceSum; }
-            set { _lca3wcnDistWeightFactor = value; OnPropertyChanged("Lca3wcnDistWeightFactor"); }
+            get { return _weightFactors[18] = _significance[18] / _significanceSum; }
+            set { _weightFactors[18] = value; }
         }
         public float Uca3wcnDistWeightFactor
         {
-            get { return _uca3wcnDistSignificance / _significanceSum; }
-            set { _uca3wcnDistWeightFactor = value; OnPropertyChanged("Uca3wcnDistWeightFactor"); }
+            get { return _weightFactors[19] = _significance[19] / _significanceSum; }
+            set { _weightFactors[19] = value; }
         }
         public float Tr2wcnDistWeightFactor
         {
-            get { return _tr2wcnDistSignificance / _significanceSum; }// SumAllSignificances(); }
-            set { _tr2wcnDistWeightFactor = value; OnPropertyChanged("Tr2wcnDistWeightFactor");
-                MessageBox.Show("called from tr2 WF");
-            }
+            get { return _weightFactors[20] = _significance[20] / _significanceSum; }
+            set { _weightFactors[20] = value; }
         }
         #endregion
 
-
-        private float SumAllSignificances()
-        {
-            float sum = _camberDownSignificance + _camberUpSignificance + _toeDownSignificance + _toeUpSignificance +
-                    _casterAngleSignificance + _rollCentreHeightSignificance + _casterTrailSignificance + _scrubRadiusSignificance +
-                    _kingpinAngleSignificance + _antiDriveSignificance + _antiBrakeSignificance + _halftrackChangeDownSignificance +
-                    _halftrackChangeUpSignificance + _wheelbaseDownSignificance + _wheelbaseUpSignificance +
-                    _lca3InsideWheelSpaceSignificance + _uca3InsideWheelSpaceSignificance + _tr2InsideWheelSpaceSignificance +
-                    _lca3wcnDistSignificance + _uca3wcnDistSignificance + _tr2wcnDistSignificance;
-            //MessageBox.Show($"sum {sum}\n tr2wcn dist WF {_tr2wcnDistWeightFactor}\n tr2wcn dist SIG {_tr2wcnDistSignificance}");
-            return sum;
-        }
-
-
-        private float _significanceSum;//=248;
         public float SignificanceSum
         {
             get
             {
-                _significanceSum =
-                    _camberDownSignificance + _camberUpSignificance + _toeDownSignificance + _toeUpSignificance +
-                    _casterAngleSignificance + _rollCentreHeightSignificance + _casterTrailSignificance + _scrubRadiusSignificance +
-                    _kingpinAngleSignificance + _antiDriveSignificance + _antiBrakeSignificance + _halftrackChangeDownSignificance +
-                    _halftrackChangeUpSignificance + _wheelbaseDownSignificance + _wheelbaseUpSignificance +
-                    _lca3InsideWheelSpaceSignificance + _uca3InsideWheelSpaceSignificance + _tr2InsideWheelSpaceSignificance +
-                    _lca3wcnDistSignificance + _uca3wcnDistSignificance + _tr2wcnDistSignificance;
-                //MessageBox.Show("called signifsum getter");
+                _significanceSum = 0;
+
+                foreach (float significance in _significance)
+                {
+                    _significanceSum += significance;
+                }
                 OnPropertyChanged("CamberDownWeightFactor");
                 OnPropertyChanged("CamberUpWeightFactor");
                 OnPropertyChanged("ToeDownWeightFactor");
@@ -535,83 +367,20 @@
 
                 return _significanceSum;
             }
-            set
-            {
-                OnPropertyChanged("SignificanceSum2");
-                OnPropertyChanged("SignificanceSum");
-                OnPropertyChanged("Tr2wcnDistWeightFactor");
-
-                MessageBox.Show("called signifsum setter");
-                _significanceSum = value;
-            }
         }
-        
-        public float[] TargetCharacteristicValues { get { return _targetCharacteristicValues; } }
-
         public float ObjFunctionPeakWidth { get { return _objFunctionPeakWidth; } set { _objFunctionPeakWidth = value; } }
         public int CoreNum { get { return _coreNum; } set { _coreNum = value; } }
         public float OptimisationDuration { get { return _optimisationDuration; } set { _optimisationDuration = value; } }
-        public int SuspensionPos
-        {
-            get { return _suspensionPos; }
-            set
-            {
-                _suspensionPos = value;
-                OnPropertyChanged("SuspensionPos");
-            }
-        }
-        public int DrivePos
-        {
-            get { return _drivePos; }
-            set
-            {
-                _drivePos = value;
-                OnPropertyChanged("DrivePos");
-            }
-        }
-        public int BrakesPos
-        {
-            get { return _brakesPos; }
-            set
-            {
-                _brakesPos = value;
-                OnPropertyChanged("BrakesPos");
-            }
-        }
-
-
+        public int SuspensionPos { get { return _suspensionPos; } set { _suspensionPos = value; OnPropertyChanged("SuspensionPos"); } }
+        public int DrivePos { get { return _drivePos; } set { _drivePos = value; OnPropertyChanged("DrivePos"); } }
+        public int BrakesPos { get { return _brakesPos; } set { _brakesPos = value; OnPropertyChanged("BrakesPos"); } }
         public float WheelRadius { get { return _wheelRadius; } set { _wheelRadius = value; } }
-
         public float Wheelbase { get { return _wheelbase; } set { _wheelbase = value; } }
         public float CoGHeight { get { return _cogHeight; } set { _cogHeight = value; } }
-        public float FrontDriveBias
-        {
-            get { return _frontDriveBias; }
-            set
-            {
-                _frontDriveBias = value;
-                OnPropertyChanged("RearDriveBias");
-            }
-        }
-        public float FrontBrakeBias
-        {
-            get { return _frontBrakeBias; }
-            set
-            {
-                _frontBrakeBias = value;
-                OnPropertyChanged("RearBrakeBias");
-            }
-        }
-        public float RearDriveBias
-        {
-            get { return _rearDriveBias = 1 - _frontDriveBias; }
-            set { _rearDriveBias = value; }
-        }
-        public float RearBrakeBias
-        {
-            get { return _rearBrakeBias = 1 - _frontBrakeBias; }
-            set { _rearBrakeBias = value; }
-        }
+        public float FrontDriveBias { get { return _frontDriveBias; } set { _frontDriveBias = value; OnPropertyChanged("RearDriveBias"); } }
+        public float FrontBrakeBias { get { return _frontBrakeBias; } set { _frontBrakeBias = value; OnPropertyChanged("RearBrakeBias"); } }
+        public float RearDriveBias { get { return _rearDriveBias = 1 - _frontDriveBias; } set { _rearDriveBias = value; } }
+        public float RearBrakeBias { get { return _rearBrakeBias = 1 - _frontBrakeBias; } set { _rearBrakeBias = value; } }
         public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
         public HardpointLimits[] HardpointsLimits { get { return _hardpointsLimits; } }
         public List<float> SuspensionFeatureLimits { get { return _suspensionFeatureLimits; } }
@@ -625,6 +394,16 @@
         {
             _rearDriveBias = 1 - _frontDriveBias;
             _rearBrakeBias = 1 - _frontBrakeBias;
+            foreach (float significance in _significance)
+            {
+                _significanceSum += significance;
+            }
+            for (int i = 0; i < _significance.Length; i++)
+            {
+                _weightFactors[i] = _significance[i] / _significanceSum;
+            }
+
+
         }
 
 

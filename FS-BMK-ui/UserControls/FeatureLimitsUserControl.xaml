@@ -67,8 +67,8 @@
             <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Text="Lower" Style="{StaticResource TextBlockStyle}"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="Upper" Style="{StaticResource TextBlockStyle}"/>
             <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="2" Text="Target" Style="{StaticResource TextBlockStyle}"/>
-            <TextBox Text="{Binding LowerValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource NormalTextBoxStyle}"
-                     Grid.Row="1" Grid.Column="0" />
+            <TextBox Text="{Binding LowerValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" 
+                     Style="{StaticResource NormalTextBoxStyle}"          Grid.Row="1" Grid.Column="0" />
             <TextBox Text="{Binding UpperValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource NormalTextBoxStyle}"
                      HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1"/>
             <TextBox Text="{Binding TargetValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Style="{StaticResource NormalTextBoxStyle}"
@@ -89,7 +89,8 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Weight factor" Style="{StaticResource TextBlockStyle}"/>
-                    <TextBox Grid.Row="1" Text="{Binding WeightFactorValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ReadOnlyTextBoxStyle}"/>
+                    <TextBox Grid.Row="1" Text="{Binding WeightFactorValue, ElementName=ucFeatureLimits, 
+                        UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:#,0.000}}" Style="{StaticResource ReadOnlyTextBoxStyle}"/>
                 </Grid>
             </StackPanel>       
         </Grid>
