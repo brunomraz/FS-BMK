@@ -52,7 +52,13 @@ namespace FS_BMK_ui.Models
             new WPFFloat(),   // anti drive
             new WPFFloat(),   // anti brake
             new WPFFloat(),   // half track change
-            new WPFFloat()    // wheelbase change
+            new WPFFloat(),    // wheelbase change
+            new WPFFloat(),    // LCA3 free radius
+            new WPFFloat(),    // UCA3 free radius
+            new WPFFloat(),    // TR2 free radius
+            new WPFFloat(),    // LCA3 - WCN distance
+            new WPFFloat(),    // UCA3 - WCN distance
+            new WPFFloat()    // TR2 - WCN distance
         };
 
         public int SuspensionPos

@@ -3,18 +3,18 @@ import ctypes as c
 import os
 
 # output params :
-# 0  objective function
-# 1  camber angle down
-# 2 			    up
-# 3  toe angle down
-# 4 		     up
-# 5  caster angle
-# 6  roll centre height
-# 7  caster trail
-# 8  scrub radius
-# 9  kingpin angle
+# 0 objective function
+# 1 camber angle down
+# 2 up
+# 3 toe angle down
+# 4 up
+# 5 caster angle
+# 6 roll centre height
+# 7 caster trail
+# 8 scrub radius
+# 9 kingpin angle
 # 10 anti squat / anti dive drive
-# 11 anti rise / anti lift  brake
+# 11 anti rise / anti lift brake
 # 12 half track change down
 # 13 wheelbase change down
 # 14 half track change up
@@ -24,11 +24,10 @@ import os
 # 18 distance tr2 to wcn-spn line
 # 19 distance lca3 to plane with wcn-spn normal through wcn point
 # 20 distance uca3 to plane with wcn-spn normal through wcn point
-# 21 distance tr2 to plane with wcn-spn normal through wcn point 
+# 21 distance tr2 to plane with wcn-spn normal through wcn point
 
-# wheel travel from rebound to bump, from downmost position w.r.t. chassis to upmost
-
-
+# wheel travel from rebound to bump, from downmost position w.r.t.  chassis to
+# upmost
 class Suspension():
     """creates quarter suspension defined by XYZ cs where X points front, Y to the right side and Z down"""
 
@@ -49,273 +48,322 @@ class Suspension():
        
     # OUTPUT PARAMETERS
     # optimisation output parameters
-    output_params_optimisation =[]
-    output_params_optimisation_c = (c.c_float * 22)(*output_params_optimisation)
+    output_params_optimisation = []
+    output_params_optimisation_c = (c.c_float * 21)(*output_params_optimisation)
 
     # suspension movement output parameters
-    output_params_movement =[]
+    output_params_movement = []
     output_params_movement_c = (c.c_float * 11)(*output_params_movement)
 
-
-    # INPUT VALUES FOR OPTIMIZATION
-
-        #-2038.666, -411.709, -132.316, 			# lca1 x y z
-		#-2241.147, -408.195, -126.205, 					# lca2
-		#-2135, -600, -140, 								# lca3
-		#-2040.563, -416.249, -275.203, 					# uca1
-		#-2241.481, -417.314, -270.739, 					# uca2
-		#-2153, -578, -315, 								# uca3
-		#-2234.8, -411.45, -194.6, 						# tr1
-		#-2225, -582, -220,								# tr2
-		#-2143.6, -620.5, -220.07, 						# wcn
-		#-2143.6, -595.5, -219.34])
-
-
-
-    # boundaries
-    lca1x_opt, lca1y_lo, lca1y_up, lca1z_lo, lca1z_up = -2038.666,-490,-335,-180,-80
-    lca2x_opt, lca2y_lo, lca2y_up, lca2z_lo, lca2z_up = -2241.147,-490,-335,-180,-80
-    lca3x_lo, lca3x_up, lca3y_lo, lca3y_up, lca3z_lo, lca3z_up = -2160,-2100,-630,-570,-170,-110
-
-    uca1x_opt, uca1y_lo, uca1y_up, uca1z_lo, uca1z_up = -2040.563,-490,-335,-325,-225
-    uca2x_opt, uca2y_lo, uca2y_up, uca2z_lo, uca2z_up = -2241.481,-490,-335,-325,-225
-    uca3x_lo, uca3x_up, uca3y_lo, uca3y_up, uca3z_lo, uca3z_up = -2180,-2120,-610,-550,-345,-285
-
-    tr1x_lo, tr1x_up, tr1y_lo, tr1y_up, tr1z_lo, tr1z_up = -2280,-2190,-485,-335,-245,-145
-    tr2x_lo, tr2x_up, tr2y_lo, tr2y_up, tr2z_lo, tr2z_up = -2270,-2180,-610,-550,-280,-160
-
-    wcnx_opt, wcny_opt, wcnz_opt = -2143.6, -620.5, -220.07
-    spnx_opt, spny_opt, spnz_opt = -2143.6, -595.5, -219.34
-
-
-    # odreduju za koju vrijednost cambera se dobiju najbolje ocjene
-    # zapravo se koristi samo _wantedCamberUp_uplim za gornju poziciju kotaca jer se to optimizira -2.65 , -0.97
-    camber_down_pos = -2.7  # wanted camber for wheel in top position
-    camber_up_pos = -1  # wanted camber for wheel in top position
-
-    # granice toe anglea u gornjoj i donjoj poziciji kotaca -0.074, 0.048
-    toe_lopos_lolim = -0.08
-    toe_lopos_uplim = 0
-    toe_uppos_lolim = 0
-    toe_uppos_uplim = 0.05
-
-    # wanted caster angle in ref pos (in degrees) 5.87
-    caster_angle_lolim = 4
-    caster_angle_uplim = 15
-
-    # wanted roll centre height in ref pos 55.96
-    roll_centre_height_lolim = 50
-    roll_centre_height_uplim = 65
-
-    # wanted caster trail in ref pos (in mm) 21.95
-    caster_trail_lolim = 10
-    caster_trail_uplim = 25
-
-    # wanted scrub radius in ref pos (in mm) -10.3
-    scrub_radius_lolim = -15
-    scrub_radius_uplim = 8
+    # hps boundaries
+    hps_boundaries = [-2038.666,-490,-335,-180,-80,     # 0 lca1x_opt, 1 lca1y_lo, 2 lca1y_up, 3 lca1z_lo, 4 lca1z_up
+        -2241.147,-490,-335,-180,-80,     # 5 lca2x_opt, 6 lca2y_lo, 7 lca2y_up, 8 lca2z_lo, 9 lca2z_up
+        -2160,-2100,-630,-570,-170,-110,  # 10 lca3x_lo, 11 lca3x_up, 12 lca3y_lo, 13 lca3y_up, 14 lca3z_lo, 15
+                                          # lca3z_up
+                                           
+        -2040.563,-490,-335,-325,-225,    # 16 uca1x_opt, 17 uca1y_lo, 18 uca1y_up, 19 uca1z_lo, 20 uca1z_up
+        -2241.481,-490,-335,-325,-225,    # 21 uca2x_opt, 22 uca2y_lo, 23 uca2y_up, 24 uca2z_lo, 25 uca2z_up
+        -2180,-2120,-610,-550,-345,-285,  # 26 uca3x_lo, 27 uca3x_up, 28 uca3y_lo, 29 uca3y_up, 30 uca3z_lo, 31
+                                          # uca3z_up
+                                           
+        -2280,-2190,-485,-335,-245,-145,  # 32 tr1x_lo, 33 tr1x_up, 34 tr1y_lo, 35 tr1y_up, 36 tr1z_lo, 37 tr1z_up
+        -2270,-2180,-610,-550,-280,-160,  # 38 tr2x_lo, 39 tr2x_up, 40 tr2y_lo, 41 tr2y_up, 42 tr2z_lo, 43 tr2z_up
+                                          
+        -2143.6, -620.5, -220.07,         # indices: 44, 45, 46, # wcnx_opt, wcny_opt, wcnz_opt
+        -2143.6, -595.5, -219.34          # indices: 47, 48, 49 # spnx_opt, spny_opt, spnz_opt
+        ]
     
-    # wanted kingpin angle in ref pos (in degrees)  7.165
-    kingpin_angle_lolim = 3
-    kingpin_angle_uplim = 8
+    # INPUT FOR OPTIMISATION.PY
+    # derived suspension characteristics boundaries
+    characteristics_boundaries = [-2.7, -2.6,        # indices: 0, 1, # camber down pos lo hi lim
+        -1, -0.9,          # indices: 2, 3, # camber up pos lo hi lim
+        -0.08, 0,          # indices: 4, 5, # toe down pos lo hi lim
+        0, 0.05,           # indices: 6, 7, # toe up pos lo hi lim
+        4, 15,             # indices: 8, 9, # caster angle lo hi lim
+        50, 65,            # indices: 10, 11, # roll centre height lo hi lim
+        10, 25,            # indices: 12, 13, # caster trail lo hi lim
+        -15, 8,            # indices: 14, 15, # scrub radius lo hi lim
+        3, 8,              # indices: 16, 17, # kingpin angle lo hi lim
+        10, 18,            # indices: 18, 19, # anti drive lo hi lim
+        0, 20,             # indices: 20, 21, # anti brake lo hi lim
+        -10, 0,            # indices: 22, 23, # half track change down pos lo hi lim
+        0, 3,              # indices: 24, 25, # half track change up pos lo hi lim
+        -1.5, 1.5,         # indices: 26, 27, # wheelbase change down pos lo hi lim
+        -1.5, 1.5,         # indices: 28, 29, # wheelbase change up pos lo hi lim
+        60, 100,           # indices: 30, 31, # inside wheel free radius LCA3 lo hi lim
+        60,100,            # indices: 32, 33, # inside wheel free radius UCA3 lo hi lim
+        60,100,            # indices: 34, 35, # inside wheel free radius TR2 lo hi lim
+       -100,-20,           # indices: 36, 37, # minimum distance between plane defined by wcn
+                           # and line wcn-spn and LCA3 (mm) lo hi lim
+       -100,-20,           # indices: 38, 39, # minimum distance between plane defined by wcn
+                           # and line wcn-spn and UCA3 (mm) lo hi lim
+       -100,-20,           # indices: 40, 41 # minimum distance between plane defined by wcn
+                           # and line wcn-spn and TR2 (mm) lo hi lim
+        ]
+
+        # determines objective function shape
+    peak_width_values = [
+        #10, 10, 10, 10, 10, 10, 10, 10, 10,10,10,10, 10, 10, 10,10, 10,10, 10, 10, 10 
+        0.10000000149011612 ,
+        0.10000000149011612 ,
+        10,
+        10,
+        0.10000000149011612 ,
+        10,
+        200000,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+        ]
     
-    # wanted anti drive feature- in percent 16.904
-    anti_drive_lolim = 10
-    anti_drive_uplim = 18
+    peak_flatness_values = [
+        #2, 2, 2, 2, 6, 2, 6, 2, 2,2,2,2, 2, 2, 2,2, 2,2, 2, 2, 2 
+        2,
+        2,
+        2,
+        2,
+        3,
+        2,
+        6,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
 
-    # wanted anti brake feature- in percent 5.47
-    anti_brake_lolim = 0
-    anti_brake_uplim = 20
+        
+        ]
+        # INPUT FOR DLL FILE OBJECTIVE FUNCTION
+    characteristics_target_values = [
+        #-2.65, -0.95, 0, 0, 4, 50, 10, -15, 3, 10, 10, 0, 0, 0, 0, 70, 70, 70, -80, -80, -80
+        -2.6500000953674316 ,
+        -0.949999988079071 ,
+        0,
+        0,
+        7,
+        50,
+        15,
+        -7,
+        4,
+        18,
+        10,
+        0,
+        0,
+        0,
+        0,
+        100,
+        100,
+        100,
+        -20,
+        -20,
+        -20
 
-    # half track change lower position -4.93
-    half_track_change_down_pos_lolim = -10
-    half_track_change_down_pos_uplim = 0
+        ]
+    # INPUT FOR DLL FILE OBJECTIVE FUNCTION
+    characteristics_weight_factors = [
+        #1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        0.4032258093357086 ,
+        0.4032258093357086 ,
+        0.02016128972172737 ,
+        0.02016128972172737 ,
+        0.012096770107746124 ,
+        0.008064515888690948 ,
+        0.02016128972172737 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948 ,
+        0.008064515888690948
 
-    # wheelbase change lower position 0.77
-    wheelbase_change_down_pos_lolim = -1.5
-    wheelbase_change_down_pos_uplim = 1.5
-
-    # half track change upper position 0.75
-    half_track_change_up_pos_lolim = 0
-    half_track_change_up_pos_uplim = 3
-     
-    # wheelbase change upper position -0.738
-    wheelbase_change_up_pos_lolim = -1.5
-    wheelbase_change_up_pos_uplim = 1.5
-
-    # radijus koji definira slobodno mjesto unutar kotaca, tj sluzi za sprjecavanje kolizije lca3 sa felgom (mm) 79.9
-    inside_wheel_free_radius_lca3_lolim = 60
-    inside_wheel_free_radius_lca3_uplim = 100
-
-    # radijus koji definira slobodno mjesto unutar kotaca, tj sluzi za sprjecavanje kolizije uca3 sa felgom (mm)
-    # lca3,  i tr2 96.58
-    inside_wheel_free_radius_uca3_lolim = 60
-    inside_wheel_free_radius_uca3_uplim = 100
-
-    # radijus koji definira slobodno mjesto unutar kotaca, tj sluzi za sprjecavanje kolizije tr2 sa felgom (mm) 81.41
-    inside_wheel_free_radius_tr2_lolim = 60
-    inside_wheel_free_radius_tr2_uplim = 100
-
-    # wanted minimum distance between plane defined by wcn and line wcn-spn and lca3 (mm) -22.828
-    wcn_lca3_distance_lolim = -100
-    wcn_lca3_distance_uplim = -20
-
-    # wanted minimum distance between plane defined by wcn and line wcn-spn and uca3 (mm) -39.711
-    wcn_uca3_distance_lolim = -100
-    wcn_uca3_distance_uplim = -20
-
-    # wanted minimum distance between plane defined by wcn and line wcn-spn and tr2 (mm) -38.485
-    wcn_tr2_distance_lolim = -100
-    wcn_tr2_distance_uplim = -20
-
-    # determines objective function shape
-    peak_width = 10
-    # determines weight factor for objective function parameters, camber up and down
-    # not implemented
-    _upWeightFactor = 0.5
-    _downWeightFactor = 0.5
+    ]
 
 
+
+
+
+
+
+    obj_func_res = 0
+
+    obj_func_res_c = c.c_float(obj_func_res)
+
+    suspension_position_c = c.c_int(suspension_position) 
     wheel_radius_c = c.c_float(wheel_radius)
     wheelbase_c = c.c_float(wheelbase)
     cog_height_c = c.c_float(cog_height)
     drive_bias_c = c.c_float(drive_bias)
     brake_bias_c = c.c_float(brake_bias)
-    suspension_position_c = c.c_int(suspension_position) 
     drive_position_c = c.c_int(drive_position)
     brake_position_c = c.c_int(brake_position)
     vertical_movement_c = c.c_float(vertical_movement)
+    
+    
     steering_movement_c = c.c_float(steering_movement)
     vertical_increments_c = c.c_int(vertical_increments)
     steering_increments_c = c.c_int(steering_increments)
-    camber_down_pos_c = c.c_float(camber_down_pos)
-    camber_up_pos_c = c.c_float(camber_up_pos)
-    peak_width_c = c.c_float(peak_width)
+
     precision_c = c.c_float(precision)
 
-    #path = os.path.abspath("../bin/x64/Release/mechanicsDLL.dll")
-    path = os.path.abspath(r"C:\dev\FS-BMK\bin\x64\Release\mechanicsDLL.dll")
-    #path = os.path.abspath("../bin/x64/Debug/mechanicsDLL.dll")
-
-
-    mydll = c.cdll.LoadLibrary(path)
-
-    mydll.optimisation_obj_res.argtypes = [
-	c.POINTER(c.c_float), 
-	type(wheel_radius_c), 
-    type(wheelbase_c), 
-    type(cog_height_c),
-    type(drive_bias_c), 
-    type(brake_bias_c),
-	type(suspension_position_c), 
-    type(drive_position_c), 
-    type(brake_position_c),
-    type(vertical_movement_c), 
-    type(steering_movement_c), 
-    type(vertical_increments_c), 
-    type(steering_increments_c),
-	type(precision_c),
-    type(camber_down_pos_c),
-    type(camber_up_pos_c),
-    type(peak_width_c),
-	c.POINTER(c.c_float)]
-
-    mydll.suspension_movement.argtypes = [
-	c.POINTER(c.c_float), 
-    type(wheel_radius_c), 
-    type(wheelbase_c), 
-    type(cog_height_c), 
-    type(drive_bias_c), 
-    type(brake_bias_c),
-	type(suspension_position_c), 
-    type(drive_position_c), 
-    type(brake_position_c),
-    type(vertical_movement_c), 
-    type(steering_movement_c), 
-    type(vertical_increments_c), 
-    type(steering_increments_c),
-	type(precision_c),
-	c.POINTER(c.c_float),
-	c.POINTER(c.c_float)
-    ]
 
     hardpoints_moved = []															
     hardpoints_moved_c = (c.c_float * 15)(*hardpoints_moved)
 
     hardpoints = []															
     hardpoints_c = c.c_float * 30
+    
+    characteristics_target_values_c = (c.c_float * 21)(*characteristics_target_values)
+    characteristics_weight_factors_c = (c.c_float * 21)(*characteristics_weight_factors)
+    peak_width_values_c = (c.c_float * 21)(*peak_width_values)
+    peak_flatness_values_c = (c.c_float * 21)(*peak_flatness_values)
 
-        
-    def __init__(self, hps):  # hps is a list of hardpoints in order lca1, lca2, lca3, uca1, uca2, uca3, tr1, tr2, wcn, spn
+
+    # path to dll for calculating kinematics and parameters
+    path = os.path.abspath(r"C:\dev\FS-BMK\bin\x64\Release\mechanicsDLL.dll")
+
+    mydll = c.cdll.LoadLibrary(path)
+
+    mydll.optimisation_obj_res.argtypes = [c.POINTER(c.c_float),
+	    type(suspension_position_c), 
+        type(wheel_radius_c), 
+        type(wheelbase_c), 
+        type(cog_height_c),
+        type(drive_bias_c), 
+        type(brake_bias_c),
+        type(drive_position_c), 
+        type(brake_position_c),
+        type(vertical_movement_c), 
+        type(peak_width_values_c),
+        type(peak_flatness_values_c),
+        type(steering_movement_c), 
+        type(vertical_increments_c), 
+        type(steering_increments_c),
+	    type(precision_c),
+        type(characteristics_target_values_c),
+        type(characteristics_weight_factors_c),
+        c.POINTER(type(obj_func_res_c)),
+	    c.POINTER(type(output_params_optimisation_c))]
+
+    mydll.suspension_movement.argtypes = [c.POINTER(c.c_float),
+        type(wheel_radius_c), 
+        type(wheelbase_c), 
+        type(cog_height_c), 
+        type(drive_bias_c), 
+        type(brake_bias_c),
+	    type(suspension_position_c), 
+        type(drive_position_c), 
+        type(brake_position_c),
+        type(vertical_movement_c), 
+        type(steering_movement_c), 
+        type(vertical_increments_c), 
+        type(steering_increments_c),
+	    type(precision_c),
+	    c.POINTER(type(output_params_movement_c)),#c.POINTER(c.c_float),
+	    c.POINTER(type(hardpoints_moved_c))#c.POINTER(c.c_float)
+    ]
+
+    def __init__(self, hps):  # hps is a list of hardpoints in order lca1, lca2, lca3, uca1, uca2, uca3,
+                              # tr1, tr2, wcn, spn
         Suspension.hardpoints = hps
 
 
     def calculateOptimisationMovement(self):
         hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
         Suspension.mydll.optimisation_obj_res(
-	            hardpoints_c_arr,
-	            Suspension.wheel_radius_c,
-	            Suspension.wheelbase_c,
-	            Suspension.cog_height_c,
-	            Suspension.drive_bias_c,
-	            Suspension.brake_bias_c,
-	            Suspension.suspension_position_c,
-	            Suspension.drive_position_c,
-	            Suspension.brake_position_c,
-	            Suspension.vertical_movement_c ,
-	            Suspension.steering_movement_c ,
-	            Suspension.vertical_increments_c,
-	            Suspension.steering_increments_c,
-	            Suspension.precision_c,
-	            Suspension.camber_down_pos_c,
-	            Suspension.camber_up_pos_c,
-	            Suspension.peak_width_c,
-	            Suspension.output_params_optimisation_c
-                )
+            #Suspension.hardpoints_c(*Suspension.hardpoints),
+            hardpoints_c_arr,
+	        Suspension.suspension_position_c,
+	        Suspension.wheel_radius_c,
+	        Suspension.wheelbase_c,
+	        Suspension.cog_height_c,
+	        Suspension.drive_bias_c,
+	        Suspension.brake_bias_c,
+	        Suspension.drive_position_c,
+	        Suspension.brake_position_c,
+	        Suspension.vertical_movement_c ,
+	        Suspension.peak_width_values_c,
+	        Suspension.peak_flatness_values_c,
+	        Suspension.steering_movement_c ,
+	        Suspension.vertical_increments_c,
+	        Suspension.steering_increments_c,
+	        Suspension.precision_c,
+	        Suspension.characteristics_target_values_c,
+	        Suspension.characteristics_weight_factors_c,
+            Suspension.obj_func_res_c,
+	        Suspension.output_params_optimisation_c)
 
     def calculateMovement(self):
-        hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
+        # hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
 
-        Suspension.mydll.suspension_movement(
-	            hardpoints_c_arr,
-	            Suspension.wheel_radius_c,
-	            Suspension.wheelbase_c,
-	            Suspension.cog_height_c,
-	            Suspension.drive_bias_c,
-	            Suspension.brake_bias_c,
-	            Suspension.suspension_position_c,
-	            Suspension.drive_position_c,
-	            Suspension.brake_position_c,
-	            Suspension.vertical_movement_c ,
-	            Suspension.steering_movement_c ,
-	            Suspension.vertical_increments_c,
-	            Suspension.steering_increments_c ,
-	            Suspension.precision_c,
-	            Suspension.output_params_movement_c,
-	            Suspension.hardpoints_moved_c
-                )
-        print("SUSPENSION CLASS PARAMETERS")
-        print("wheel radius " + str(Suspension.wheel_radius_c))
-        print("wheelbase " + str(Suspension.wheelbase_c))
-        print("cog height " + str(Suspension.cog_height_c))
-        print("drive bias " + str(Suspension.drive_bias_c))
-        print("brake bias " + str(Suspension.brake_bias_c))
-        print("suspension position " + str(Suspension.suspension_position_c))
-        print("drive position " + str(Suspension.drive_position_c))
-        print("brake position " + str(Suspension.brake_position_c))
-        print("vertical movement " + str(Suspension.vertical_movement_c))
-        print("SUSPENSION CLASS PARAMETERS END")
+        Suspension.mydll.suspension_movement(Suspension.hardpoints_c(*Suspension.hardpoints),
+            # hardpoints_c_arr,
+	        Suspension.wheel_radius_c,
+	        Suspension.wheelbase_c,
+	        Suspension.cog_height_c,
+	        Suspension.drive_bias_c,
+	        Suspension.brake_bias_c,
+	        Suspension.suspension_position_c,
+	        Suspension.drive_position_c,
+	        Suspension.brake_position_c,
+	        Suspension.vertical_movement_c ,
+	        Suspension.steering_movement_c ,
+	        Suspension.vertical_increments_c,
+	        Suspension.steering_increments_c ,
+	        Suspension.precision_c,
+	        Suspension.output_params_movement_c,
+	        Suspension.hardpoints_moved_c)
+        # print("SUSPENSION CLASS PARAMETERS")
+        # print("wheel radius " + str(Suspension.wheel_radius_c))
+        # print("wheelbase " + str(Suspension.wheelbase_c))
+        # print("cog height " + str(Suspension.cog_height_c))
+        # print("drive bias " + str(Suspension.drive_bias_c))
+        # print("brake bias " + str(Suspension.brake_bias_c))
+        # print("suspension position " + str(Suspension.suspension_position_c))
+        # print("drive position " + str(Suspension.drive_position_c))
+        # print("brake position " + str(Suspension.brake_position_c))
+        # print("vertical movement " + str(Suspension.vertical_movement_c))
+        # print("SUSPENSION CLASS PARAMETERS END")
 
 
     def printResult(self):
         # OUTPUT PARAMETERS
-        for i in range (17):
+        for i in range(17):
             #print(hardpoints_c[i])
             print(Suspension.output_params_optimisation_c[i])
 
     @classmethod
     def return_hps_and_parameters(cls):
-        return Suspension.hardpoints + Suspension.output_params_optimisation_c[0:16]
+        # return Suspension.hardpoints +
+        # Suspension.output_params_optimisation_c[0:16]
+        return Suspension.hardpoints + Suspension.output_params_optimisation_c[:]
 
 
 def call_suspension_objective(hps):
@@ -325,17 +373,16 @@ def call_suspension_objective(hps):
     0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
     10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
 
-    s = Suspension([
-        Suspension.lca1x_opt, hps[0], hps[1],
-        Suspension.lca2x_opt, hps[2], hps[3],
+    s = Suspension([Suspension.hps_boundaries[0], hps[0], hps[1],
+        Suspension.hps_boundaries[5], hps[2], hps[3],
         hps[4], hps[5], hps[6],
-        Suspension.uca1x_opt, hps[7], hps[8],
-        Suspension.uca2x_opt, hps[9], hps[10],
+        Suspension.hps_boundaries[16], hps[7], hps[8],
+        Suspension.hps_boundaries[21], hps[9], hps[10],
         hps[11], hps[12], hps[13],
         hps[14], hps[15], hps[16],
         hps[17], hps[18], hps[19],
-        Suspension.wcnx_opt, Suspension.wcny_opt, Suspension.wcnz_opt,
-        Suspension.spnx_opt, Suspension.spny_opt, Suspension.spnz_opt])
+        Suspension.hps_boundaries[44], Suspension.hps_boundaries[45], Suspension.hps_boundaries[46],
+        Suspension.hps_boundaries[47], Suspension.hps_boundaries[48], Suspension.hps_boundaries[49]])
     s.calculateOptimisationMovement()
     return Suspension.output_params_optimisation_c[0]
 
@@ -354,76 +401,54 @@ if __name__ == "__main__":
     #    0, -700, 0,
     #    0, -650, 0
     #
-    #    ])            
+    #    ])
     #suspension1.calculateOptimisationMovement()
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
+    
     #print("suspension output parameters___________")
     #for i in range(22):
     #    print(Suspension.output_params_optimisation_c[i])
     #print("suspension output parameters___________")
     #print("suspension PARALLEL done")
 
+    #suspension = Suspension([-2038.666, -411.709, -132.316, 			# lca1 x y z
+	#	-2241.147, -408.195, -126.205, 					# lca2
+	#	-2135, -600, -140, 								# lca3
+	#	-2040.563, -416.249, -275.203, 					# uca1
+	#	-2241.481, -417.314, -270.739, 					# uca2
+	#	-2153, -578, -315, 								# uca3
+	#	-2234.8, -411.45, -194.6, 						# tr1
+	#	-2225, -582, -220,								# tr2
+	#	-2143.6, -620.5, -220.07, 						# wcn
+	#	-2143.6, -595.5, -219.34])
+
+
+    
     suspension = Suspension([
-        -2038.666, -411.709, -132.316, 			# lca1 x y z
-		-2241.147, -408.195, -126.205, 					# lca2
-		-2135, -600, -140, 								# lca3
-		-2040.563, -416.249, -275.203, 					# uca1
-		-2241.481, -417.314, -270.739, 					# uca2
-		-2153, -578, -315, 								# uca3
-		-2234.8, -411.45, -194.6, 						# tr1
-		-2225, -582, -220,								# tr2
-		-2143.6, -620.5, -220.07, 						# wcn
-		-2143.6, -595.5, -219.34])
-
-    #print("SUSPENSION CLASS PARAMETERS")
-    #print("wheel radius " + str(suspension.wheel_radius)+" "+str(suspension.wheel_radius_c))
-    #print("wheelbase " + str(suspension.wheelbase)+" "+str(suspension.wheelbase_c))
-    #print("cog height "+ str(suspension.cog_height)+" "+str(suspension.cog_height_c))
-    #print("drive bias " +str(suspension.drive_bias)+" "+ str(suspension.drive_bias_c))
-    #print("brake bias "+str(suspension.brake_bias)+" "+ str(suspension.brake_bias_c))
-    #print("suspension position "+str(suspension.suspension_position)+" "+str(suspension.suspension_position_c))
-    #print("drive position " +str(suspension.drive_position)+" "+str(suspension.drive_position_c))
-    #print("brake position "+str(suspension.brake_position)+" "+str(suspension.brake_position_c))
-    #print("vertical movement "+str(suspension.vertical_movement)+" "+str(suspension.vertical_movement_c))
-    #print("SUSPENSION CLASS PARAMETERS END")
-
-#    suspension=Suspension([
-#        -2038.666,	-400.5778643,	-138.1489777,	
-#        -2241.147,	-401.5574328,	-134.3124084,
-#        -2135.589963,	-598.6191885,	-146.0517018,
-#    -2040.563,	-410.1805728,	-275.1637932,	
-#    -2241.481,	-413.2814801,	-272.3532798,	
-#    -2153.839104,	-575.0277122,	-313.9206515,
-#-2235.551122,	-414.3146073,	-193.5176559,
-#-2233.262526,	-598.111147,	-217.0196026,
-#-2143.6,	-620.5,	-220.07,
-#-2143.6,	-595.5,	-219.34
-#])
-
-
+        -2038.666,	-406.4665946,	-134.35686, 			# lca1 x y z
+		-2241.147,	-403.0632268,	-130.5371139, 					# lca2
+		-2134.704006	,-601.2135125	,-140.7087408, 								# lca3
+		-2040.563,	-415.3619422,	-278.3807264, 					# uca1
+		-2241.481,	-404.539224,	-272.8708173, 					# uca2
+		-2148.348713,	-578.1801535,	-310.5335043, 								# uca3
+		-2230.657617,	-411.7765453,	-195.9166227, 						# tr1
+		-2213.317115,	-590.0430222,	-216.5053897,								# tr2
+		-2143.6,	-620.5,	-220.07, 						# wcn
+		-2143.6,	-595.5,	-219.34])
     print("done creating class")
     suspension.calculateOptimisationMovement()
     print("done calculating movement")
 
-    print("suspension normal output parameters___________")
-    for i in range(22):
+    print("Suspension optimisation output parameters:")
+    for i in range(21):
         print(Suspension.output_params_optimisation_c[i])
-    print("suspension output parameters___________")
-    print("suspension normal done")
 
-    print("suspension normal output parameters___________22222222222")
+    print("obj func result:")
+    print(Suspension.obj_func_res_c)
+
+    print("suspension movement output parameters:")
     suspension.calculateMovement()
  
     for i in range(11):
         print(Suspension.output_params_movement_c[i])
-    print("suspension output parameters___________")
-    print("suspension normal done")
 
     input("numeric_sol program finished, press any key")

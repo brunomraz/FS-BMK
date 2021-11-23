@@ -482,20 +482,20 @@ public:
 		std::cout << "spn\n " << spnGlob << "\n";
 	}
 
-	float GetObjCamberScore(float peakWidth, float wantedCamberDown, float wantedCamberUp)
+	float ObjFuncModule(float peakWidth, float flatness, float variable, float target)
 	{
-		float camberScore;
-		float camberUp;
-		float camberDown;
-		camberUp = GetCamberAngle(2);
-		camberDown = GetCamberAngle(0);
-		//float wantedCamberUp = -0.978327f;
-		//float wantedCamberDown = -2.65318f;
-		float camberUpObj{ (float)exp(-peakWidth * pow(camberUp - wantedCamberUp,2)) * 0.5f };
-		float camberDownObj{ (float)exp(-peakWidth * pow(camberDown - wantedCamberDown,2)) * 0.5f };
+		return (float)exp(-1 / peakWidth * pow(abs(variable - target), flatness));
+	}
 
-		camberScore = 1 - camberUpObj - camberDownObj;
-		return camberScore;
+	float GetObjFuncScore(float* peakWidth, float* flatness, float* variables, float* targets, float* weightFactors)
+	{
+
+		float objFuncScore = 1.0f;
+
+		for (int i = 0; i < 21; i++)
+			objFuncScore -= weightFactors[i] * ObjFuncModule(peakWidth[i], flatness[i], variables[i], targets[i]);
+
+		return objFuncScore;
 	}
 
 	float GetCamberAngle(int position)
@@ -519,7 +519,7 @@ public:
 		};
 
 
-		
+
 		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
 
 		float temp1_wcnpr =
@@ -657,11 +657,11 @@ public:
 		float bICL;
 		float bICR;
 
-		
+
 
 		// CALCULATE LEFT SIDE
 		// case if LEFT LCA and UCA are parallel
-		if (abs(aLCAL - aUCAL)/abs(aLCAL) < precision)
+		if (abs(aLCAL - aUCAL) / abs(aLCAL) < precision)
 		{
 			aICL = aLCAL;
 			bICL = cpL(2) - aLCAL * cpL(1);
@@ -678,7 +678,7 @@ public:
 
 		// CALCULATE RIGHT SIDE
 		// case if RIGHT LCA and UCA are parallel
-		if (abs(aLCAR - aUCAR)/abs(aLCAR) < precision)
+		if (abs(aLCAR - aUCAR) / abs(aLCAR) < precision)
 		{
 			aICR = aLCAR;
 			bICR = cpR(2) - aLCAR * cpR(1);
@@ -693,9 +693,9 @@ public:
 			bICR = -cpR(1) * aICR + cpR(2);
 		}
 
-		
+
 		// instantenous centre lines are parallel
-		if (abs(aICR - aICL)/abs(aICR) < precision)
+		if (abs(aICR - aICL) / abs(aICR) < precision)
 		{
 
 			rollCentreHeight = 0;
@@ -926,8 +926,9 @@ public:
 		}
 	}
 
-	void GetAntiFeatures(float& antiDrive, float& antiBrakes, int position)
+	float GetAntiDrive(int position)
 	{
+		float antiDrive;
 		int L = position;
 
 		Eigen::Vector3f lca3{ lca3Glob.row(L) };
@@ -965,7 +966,7 @@ public:
 		float tanThetaInboard;
 
 		// if resulting lines are parallel
-		if (abs(aLCA - aUCA)/abs(aLCA) < precision)
+		if (abs(aLCA - aUCA) / abs(aLCA) < precision)
 		{
 			tanThetaInboard = aLCA;
 			tanThetaOutboard = aLCA;
@@ -979,7 +980,7 @@ public:
 			tanThetaOutboard = (ICPtz - wcn[2]) / (ICPtx - wcn[0]);
 			tanThetaInboard = (ICPtz - cp[2]) / (ICPtx - cp[0]);
 		}
-				
+
 		if (suspPos == 0)  // front suspension
 		{
 			if (drivePos == 0)                        // outboard drive
@@ -989,16 +990,8 @@ public:
 				antiDrive = 0;
 			else
 				antiDrive = tanThetaInboard * wheelbase / cogHeight / driveBias * 100;
-
-			if (brakePos == 0)                        // outboard brakes
-				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * brakeBias * 100;
-
-			else if (brakeBias == 0)                  // inboard brakes
-				antiBrakes = 0;
-			else
-				antiBrakes = tanThetaInboard * wheelbase / cogHeight / brakeBias * 100;
 		}
-		
+
 		else  // rear suspension
 		{
 			if (drivePos == 0)                        // outboard drive
@@ -1008,7 +1001,80 @@ public:
 				antiDrive = 0;
 			else
 				antiDrive = -tanThetaInboard * wheelbase / cogHeight / driveBias * 100;
+		}
 
+		return antiDrive;
+	}
+
+	float GetAntiBrake(int position)
+	{
+		float antiBrakes;
+
+		int L = position;
+
+		Eigen::Vector3f lca3{ lca3Glob.row(L) };
+		Eigen::Vector3f uca3{ uca3Glob.row(L) };
+		Eigen::Vector3f cp{ cpGlob.row(position) };
+		Eigen::Vector3f wcn{ wcnGlob.row(position) };
+
+		float aLCA;
+		float aUCA;
+
+		float bLCA;
+		float bUCA;
+
+		// LCA and UCA plane intersection with plane parallel to YZ plane with x coord CPR/2+CPL/2
+		// lambda function that defines first point of intersection line
+		auto intersectionLineCalc = [cp](float& aCa, float& bCa, const Eigen::Vector3f& ca1, const Eigen::Vector3f& ca2, const Eigen::Vector3f& ca3)
+		{
+			// plane coefficients Ax + By + Cz + D = 0, plane defined by control arm
+			float A = (-ca1[1] + ca2[1]) * (-ca1[2] + ca3[2]) - (-ca1[1] + ca3[1]) * (-ca1[2] + ca2[2]);
+			float B = -(-ca1[0] + ca2[0]) * (-ca1[2] + ca3[2]) + (-ca1[0] + ca3[0]) * (-ca1[2] + ca2[2]);
+			float C = (-ca1[0] + ca2[0]) * (-ca1[1] + ca3[1]) - (-ca1[0] + ca3[0]) * (-ca1[1] + ca2[1]);
+			float D = -ca1[0] * A - ca1[1] * B - ca1[2] * C;
+
+			// intersection plane defined  as x + D2 = 0
+			float D2 = -cp[1];
+
+			aCa = -A / C;
+			bCa = (B * D2 - D) / C;
+		};
+
+		intersectionLineCalc(aLCA, bLCA, lca1ref, lca2ref, lca3);
+		intersectionLineCalc(aUCA, bUCA, uca1ref, uca2ref, uca3);
+
+		float tanThetaOutboard;
+		float tanThetaInboard;
+
+		// if resulting lines are parallel
+		if (abs(aLCA - aUCA) / abs(aLCA) < precision)
+		{
+			tanThetaInboard = aLCA;
+			tanThetaOutboard = aLCA;
+		}
+		// if resulting lines are not parallel
+		else
+		{
+			float ICPtx = (bLCA - bUCA) / (aUCA - aLCA);
+			float ICPtz = aLCA * ICPtx + bLCA;
+
+			tanThetaOutboard = (ICPtz - wcn[2]) / (ICPtx - wcn[0]);
+			tanThetaInboard = (ICPtz - cp[2]) / (ICPtx - cp[0]);
+		}
+
+		if (suspPos == 0)  // front suspension
+		{
+			if (brakePos == 0)                        // outboard brakes
+				antiBrakes = tanThetaOutboard * wheelbase / cogHeight * brakeBias * 100;
+
+			else if (brakeBias == 0)                  // inboard brakes
+				antiBrakes = 0;
+			else
+				antiBrakes = tanThetaInboard * wheelbase / cogHeight / brakeBias * 100;
+		}
+
+		else  // rear suspension
+		{
 			if (brakePos == 0)                        // outboard brakes
 				antiBrakes = -tanThetaOutboard * wheelbase / cogHeight * brakeBias * 100;
 
@@ -1018,13 +1084,23 @@ public:
 				antiBrakes = -tanThetaInboard * wheelbase / cogHeight / brakeBias * 100;
 
 		}
+		return antiBrakes;
 	}
 
-	void GetHalfTrackAndWheelbaseChange(float& halfTrackChange, float& wheelbaseChange, int position)
+	float GetHalfTrackChange(int position)
 	{
+		float halfTrackChange;
 		// if current wheelbase or half track is smaller than reference than negative sign, otherwise positive
 		halfTrackChange = cpGlob.row(cpGlob.rows() / 2)[1] - cpGlob.row(position)[1];
+		return halfTrackChange;
+	}
+
+	float GetWheelbaseChange(int position)
+	{
+		float wheelbaseChange;
+		// if current wheelbase or half track is smaller than reference than negative sign, otherwise positive
 		wheelbaseChange = -cpGlob.row(cpGlob.rows() / 2)[0] + cpGlob.row(position)[0];
+		return wheelbaseChange;
 	}
 
 	float GetLca3DistanceFromWheelAxis()
@@ -1080,58 +1156,74 @@ public:
 		return distance;
 	}
 
+	void GetOptimisationCharacteristicsArray(float* characteristicsArray)
+	{
+
+		characteristicsArray[0] = GetCamberAngle(0);
+		characteristicsArray[1] = GetCamberAngle(2);
+		characteristicsArray[2] = GetToeAngle(0);
+		characteristicsArray[3] = GetToeAngle(2);
+		characteristicsArray[4] = GetCasterAngle(1);
+		characteristicsArray[5] = GetRollCentreHeight(1);
+		characteristicsArray[6] = GetCasterTrail(1);
+		characteristicsArray[7] = GetScrubRadius(1);
+		characteristicsArray[8] = GetKingpinAngle(1);
+		characteristicsArray[9] = GetAntiDrive(1);
+		characteristicsArray[10] = GetAntiBrake(1);
+		characteristicsArray[11] = GetHalfTrackChange(0);
+		characteristicsArray[12] = GetHalfTrackChange(2);
+		characteristicsArray[13] = GetWheelbaseChange(0);
+		characteristicsArray[14] = GetWheelbaseChange(2);
+		characteristicsArray[15] = GetLca3DistanceFromWheelAxis();
+		characteristicsArray[16] = GetUca3DistanceFromWheelAxis();
+		characteristicsArray[17] = GetTr2DistanceFromWheelAxis();
+		characteristicsArray[18] = GetLca3DistanceToWheelCentrePlane();
+		characteristicsArray[19] = GetUca3DistanceToWheelCentrePlane();
+		characteristicsArray[20] = GetTr2DistanceToWheelCentrePlane();
+
+	}
+
 	void GetMovedHardpoints(float* movedHardpoints) {
-		movedHardpoints[0] = lca3Glob.row(0)(0), movedHardpoints[1] = lca3Glob.row(0)(1), movedHardpoints[2] = lca3Glob.row(0)(2);
-		movedHardpoints[3] = uca3Glob.row(0)(0), movedHardpoints[4] = uca3Glob.row(0)(1), movedHardpoints[5] = uca3Glob.row(0)(2);
-		movedHardpoints[6] = tr2Glob.row(0)(0), movedHardpoints[7] = tr2Glob.row(0)(1), movedHardpoints[8] = tr2Glob.row(0)(2);
-		movedHardpoints[9] = wcnGlob.row(0)(0), movedHardpoints[10] = wcnGlob.row(0)(1), movedHardpoints[11] = wcnGlob.row(0)(2);
-		movedHardpoints[12] = spnGlob.row(0)(0), movedHardpoints[13] = spnGlob.row(0)(1), movedHardpoints[14] = spnGlob.row(0)(2);
+		movedHardpoints[0] = lca3Glob.row(0)(0);
+		movedHardpoints[1] = lca3Glob.row(0)(1);
+		movedHardpoints[2] = lca3Glob.row(0)(2);
+		movedHardpoints[3] = uca3Glob.row(0)(0);
+		movedHardpoints[4] = uca3Glob.row(0)(1);
+		movedHardpoints[5] = uca3Glob.row(0)(2);
+		movedHardpoints[6] = tr2Glob.row(0)(0);
+		movedHardpoints[7] = tr2Glob.row(0)(1);
+		movedHardpoints[8] = tr2Glob.row(0)(2);
+		movedHardpoints[9] = wcnGlob.row(0)(0);
+		movedHardpoints[10] = wcnGlob.row(0)(1);
+		movedHardpoints[11] = wcnGlob.row(0)(2);
+		movedHardpoints[12] = spnGlob.row(0)(0);
+		movedHardpoints[13] = spnGlob.row(0)(1);
+		movedHardpoints[14] = spnGlob.row(0)(2);
 	}
 
 };
 
 
-float optimisation_obj_res(float* hardpoints, float wRadiusin,
-	float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
-	int suspPos, int drivePos, int brakePos,
-	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float camberDown,
-	float camberUp, float peakWidth, float* outputParams)
+void optimisation_obj_res(float* hardpoints, int suspPos, float wRadius,
+	float wheelbase, float cogHeight, float driveBias, float brakeBias,
+	int drivePos, int brakePos,
+	float wVert, float* peakWidth, float* flatness, float wSteer, int vertIncr, int steerIncr, float precision, float* targetValues,
+	float* weightFactors, float& obj_func_res, float* outputParams)
 {
-
 	Suspension susp{
 
 		hardpoints,
-		wRadiusin,
-		wheelbase, cogHeight, frontDriveBias, frontBrakeBias,
+		wRadius,
+		wheelbase, cogHeight, driveBias, brakeBias,
 		suspPos, drivePos, brakePos,
-		wVertin, wSteerin,
-		vertIncrin, steerIncrin, precisionin
+		wVert, wSteer,
+		vertIncr, steerIncr, precision
 	};
 	susp.CalculateMovement();
 
-	outputParams[0] = susp.GetObjCamberScore(peakWidth, camberDown, camberUp);
-	outputParams[1] = susp.GetCamberAngle(0);
-	outputParams[2] = susp.GetCamberAngle(2);
-	outputParams[3] = susp.GetToeAngle(0);
-	outputParams[4] = susp.GetToeAngle(2);
-	outputParams[5] = susp.GetCasterAngle(1);
-	outputParams[6] = susp.GetRollCentreHeight(1);
-	outputParams[7] = susp.GetCasterTrail(1);
-	outputParams[8] = susp.GetScrubRadius(1);
-	outputParams[9] = susp.GetKingpinAngle(1);
-	susp.GetAntiFeatures(outputParams[10], outputParams[11], 1);
-	susp.GetHalfTrackAndWheelbaseChange(outputParams[12], outputParams[13], 0);
-	susp.GetHalfTrackAndWheelbaseChange(outputParams[14], outputParams[15], 2);
-	// for constraints inside wheel
-	outputParams[16] = susp.GetLca3DistanceFromWheelAxis();
-	outputParams[17] = susp.GetUca3DistanceFromWheelAxis();
-	outputParams[18] = susp.GetTr2DistanceFromWheelAxis();
+	susp.GetOptimisationCharacteristicsArray(outputParams);
+	obj_func_res = susp.GetObjFuncScore(peakWidth, flatness, outputParams, targetValues, weightFactors);
 
-	outputParams[19] = susp.GetLca3DistanceToWheelCentrePlane();
-	outputParams[20] = susp.GetUca3DistanceToWheelCentrePlane();
-	outputParams[21] = susp.GetTr2DistanceToWheelCentrePlane();
-
-	return 1.0f;
 }
 
 
@@ -1162,8 +1254,16 @@ void suspension_movement(float* hardpoints, float wRadiusin,
 	outputParams[4] = susp.GetCasterTrail(0);
 	outputParams[5] = susp.GetScrubRadius(0);
 	outputParams[6] = susp.GetKingpinAngle(0);
-	susp.GetAntiFeatures(outputParams[7], outputParams[8], 0);
-	susp.GetHalfTrackAndWheelbaseChange(outputParams[9], outputParams[10], 0);
+	outputParams[7] = susp.GetAntiDrive(0);
+	outputParams[8] = susp.GetAntiBrake(0);
+	outputParams[9] = susp.GetHalfTrackChange(0);
+	outputParams[10] = susp.GetWheelbaseChange(0);
+	outputParams[11] = susp.GetLca3DistanceFromWheelAxis();
+	outputParams[12] = susp.GetUca3DistanceFromWheelAxis();
+	outputParams[13] = susp.GetTr2DistanceFromWheelAxis();
+	outputParams[14] = susp.GetLca3DistanceToWheelCentrePlane();
+	outputParams[15] = susp.GetUca3DistanceToWheelCentrePlane();
+	outputParams[16] = susp.GetTr2DistanceToWheelCentrePlane();
 
 
 }

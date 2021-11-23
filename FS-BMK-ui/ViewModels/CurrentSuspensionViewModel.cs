@@ -62,7 +62,7 @@ namespace FS_BMK_ui.ViewModels
 
         public void CalculateSuspensionMovement2(object parameter)
         {
-            float[] _suspChars = new float[11];
+            float[] _suspChars = new float[17];
             float[] hardpoints = {
                 CurrentSuspension.Hardpoints[0].X, CurrentSuspension.Hardpoints[0].Y, CurrentSuspension.Hardpoints[0].Z,
                 CurrentSuspension.Hardpoints[1].X, CurrentSuspension.Hardpoints[1].Y, CurrentSuspension.Hardpoints[1].Z,
@@ -120,6 +120,12 @@ namespace FS_BMK_ui.ViewModels
             CurrentSuspension.SuspensionCharacteristics[8].Value = _suspChars[8];
             CurrentSuspension.SuspensionCharacteristics[9].Value = _suspChars[9];
             CurrentSuspension.SuspensionCharacteristics[10].Value = _suspChars[10];
+            CurrentSuspension.SuspensionCharacteristics[11].Value = _suspChars[11];
+            CurrentSuspension.SuspensionCharacteristics[12].Value = _suspChars[12];
+            CurrentSuspension.SuspensionCharacteristics[13].Value = _suspChars[13];
+            CurrentSuspension.SuspensionCharacteristics[14].Value = _suspChars[14];
+            CurrentSuspension.SuspensionCharacteristics[15].Value = _suspChars[15];
+            CurrentSuspension.SuspensionCharacteristics[16].Value = _suspChars[16];
         }
 
 

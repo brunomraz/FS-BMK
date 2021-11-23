@@ -72,13 +72,13 @@
         private void ExecProcess()
         {
             var psi = new ProcessStartInfo();
-            string script = PythonFilesPath; //@"C:\dev\FS-BMK\Optimization\optimisation.py";
+            string script = PythonFilesPath; 
             string hardpointsString = " ";
             string featuresString = "";
             string generalSetupString;
             string argumentsString;
 
-            psi.FileName = PythonEnvironmentPath; //@"C:\ProgramData\Anaconda3\python.exe";
+            psi.FileName = PythonEnvironmentPath; 
 
             foreach (var hp in OptimizationSuspension.HardpointsLimits)
             {
@@ -113,12 +113,11 @@
                 featuresString += 
                     OptimizationSuspension.SuspensionFeatureLimits[2 * i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
                     OptimizationSuspension.SuspensionFeatureLimits[2 * i + 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
-                //feature.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
                 featuresString += OptimizationSuspension.TargetCharacteristicValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
                 featuresString += OptimizationSuspension.WeightFactors[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                featuresString += OptimizationSuspension.PeakWidthValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                featuresString += OptimizationSuspension.PeakFlatnessValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
             }
-
-            MessageBox.Show(featuresString);
 
             float DriveBias;
             float BrakeBias;
@@ -146,23 +145,11 @@
                 OptimizationSuspension.CoreNum.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
                 OptimizationSuspension.OptimisationDuration.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-            //        MessageBox.Show(
-            //                $"CurrentSuspension.WheelRadius {OptimizationSuspension.WheelRadius}\n" +
-            //$"CurrentSuspension.Wheelbase {OptimizationSuspension.Wheelbase}\n" +
-            //$"CurrentSuspension.CoGHeight {OptimizationSuspension.CoGHeight}\n" +
-            //$"CurrentSuspension.RearDriveBias {OptimizationSuspension.RearDriveBias}\n" +
-            //$"CurrentSuspension.RearBrakeBias {OptimizationSuspension.RearBrakeBias}\n" +
-            //$"CurrentSuspension.SuspensionPos {OptimizationSuspension.SuspensionPos}\n" +
-            //$"CurrentSuspension.DrivePos {OptimizationSuspension.DrivePos}\n" +
-            //$"CurrentSuspension.BrakesPos {OptimizationSuspension.BrakesPos}\n" +
-            //$"CurrentSuspension.VerticalMovement {OptimizationSuspension.VerticalMovement}"
-            //            );
-
 
             argumentsString = script + hardpointsString + featuresString + generalSetupString;
             string path = Directory.GetCurrentDirectory();
 
-            File.WriteAllText(@"C:\dev\FS-BMK\FS-BMK-ui\bin\Release\args.txt", argumentsString);
+            File.WriteAllText(@"args.txt", argumentsString);
             MessageBox.Show(argumentsString);
 
             psi.Arguments = argumentsString;

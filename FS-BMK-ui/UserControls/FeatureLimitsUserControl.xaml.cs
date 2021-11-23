@@ -37,8 +37,7 @@ namespace FS_BMK_ui.UserControls
             set { SetValue(LowerValueProperty, value); }
         }
         public static readonly DependencyProperty LowerValueProperty =
-            DependencyProperty.Register("LowerValue", typeof(float), typeof(FeatureLimitsUserControl),
-                new PropertyMetadata(0f));
+            DependencyProperty.Register("LowerValue", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
 
 
         public float UpperValue
@@ -76,6 +75,28 @@ namespace FS_BMK_ui.UserControls
         }
         public static readonly DependencyProperty WeightFactorValueProperty =
             DependencyProperty.Register("WeightFactorValue", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
+
+
+        public float PeakWidth
+        {
+            get { return (float)GetValue(PeakWidthProperty); }
+            set { SetValue(PeakWidthProperty, value); }
+        }
+
+        public static readonly DependencyProperty PeakWidthProperty =
+            DependencyProperty.Register("PeakWidth", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
+
+
+        public float PeakFlatness
+        {
+            get { return (float)GetValue(FlatnessProperty); }
+            set { SetValue(FlatnessProperty, value); }
+        }
+
+        public static readonly DependencyProperty FlatnessProperty =
+            DependencyProperty.Register("PeakFlatness", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
+
+
 
 
 

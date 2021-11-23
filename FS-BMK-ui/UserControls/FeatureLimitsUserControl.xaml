@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FS_BMK_ui.UserControls"
              Name="ucFeatureLimits"
              mc:Ignorable="d" 
-             d:DesignHeight="95" d:DesignWidth="200">
+             d:DesignHeight="146" d:DesignWidth="200">
     <UserControl.Resources>
         <Style x:Key="ReadOnlyTextBoxStyle" 
                TargetType="{x:Type TextBox}">
@@ -63,15 +63,16 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Text="Lower" Style="{StaticResource TextBlockStyle}"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="Upper" Style="{StaticResource TextBlockStyle}"/>
             <TextBlock HorizontalAlignment="Left" Grid.Row="0" Grid.Column="2" Text="Target" Style="{StaticResource TextBlockStyle}"/>
-            <TextBox Text="{Binding LowerValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" 
+            <TextBox Text="{Binding LowerValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=LostFocus}" 
                      Style="{StaticResource NormalTextBoxStyle}"          Grid.Row="1" Grid.Column="0" />
-            <TextBox Text="{Binding UpperValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource NormalTextBoxStyle}"
+            <TextBox Text="{Binding UpperValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" Style="{StaticResource NormalTextBoxStyle}"
                      HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1"/>
-            <TextBox Text="{Binding TargetValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Style="{StaticResource NormalTextBoxStyle}"
+            <TextBox Text="{Binding TargetValue, ElementName=ucFeatureLimits, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" Grid.Row="1" Style="{StaticResource NormalTextBoxStyle}"
                      Grid.Column="2"/>
             <StackPanel Grid.Column="0" Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,2,0,0">
                 <Grid Margin="0,0,10,0">
@@ -81,7 +82,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Significance" Style="{StaticResource TextBlockStyle}"/>
                     <TextBox Grid.Row="1" Text="{Binding SignificanceValue, ElementName=ucFeatureLimits, 
-                        UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource NormalTextBoxStyle}"/>
+                        UpdateSourceTrigger=LostFocus}" Style="{StaticResource NormalTextBoxStyle}"/>
                 </Grid>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -90,9 +91,29 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Weight factor" Style="{StaticResource TextBlockStyle}"/>
                     <TextBox Grid.Row="1" Text="{Binding WeightFactorValue, ElementName=ucFeatureLimits, 
-                        UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:#,0.000}}" Style="{StaticResource ReadOnlyTextBoxStyle}"/>
+                        UpdateSourceTrigger=LostFocus, Mode=OneWay, StringFormat={}{0:#,0.000}}" Style="{StaticResource ReadOnlyTextBoxStyle}"/>
                 </Grid>
-            </StackPanel>       
+            </StackPanel>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="3" Margin="0,2,0,0">
+                <Grid Margin="0,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Peak Width" Style="{StaticResource TextBlockStyle}"/>
+                    <TextBox Grid.Row="1" Text="{Binding PeakWidth, ElementName=ucFeatureLimits, 
+                        UpdateSourceTrigger=LostFocus}" Style="{StaticResource NormalTextBoxStyle}"/>
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Peak Flatness" Style="{StaticResource TextBlockStyle}"/>
+                    <TextBox Grid.Row="1" Text="{Binding PeakFlatness, ElementName=ucFeatureLimits, 
+                        UpdateSourceTrigger=LostFocus}" Style="{StaticResource NormalTextBoxStyle}"/>
+                </Grid>
+            </StackPanel>
         </Grid>
     </GroupBox>
 </UserControl>
