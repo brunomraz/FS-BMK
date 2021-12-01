@@ -54,8 +54,24 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ScottPlot, Version=4.1.27.0, Culture=neutral, PublicKeyToken=86698dc10387c39e, processorArchitecture=MSIL">
+      <HintPath>..\packages\ScottPlot.4.1.27\lib\net461\ScottPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="ScottPlot.WPF, Version=4.1.27.0, Culture=neutral, PublicKeyToken=e53b06131e34a3aa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ScottPlot.WPF.4.1.27\lib\net461\ScottPlot.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.6.1\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -86,11 +102,13 @@
     <Compile Include="HelperClasses\OptimisationCharacteristic.cs" />
     <Compile Include="HelperClasses\VisualizationMethods.cs" />
     <Compile Include="HelperClasses\WPFFloat.cs" />
+    <Compile Include="Interfaces\IDialog.cs" />
     <Compile Include="Models\CurrentSuspension.cs" />
     <Compile Include="Models\SuspensionVisualization.cs" />
     <Compile Include="UserControls\FeatureLimitsUserControl.xaml.cs">
       <DependentUpon>FeatureLimitsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\GraphWindowViewModel.cs" />
     <Compile Include="ViewModels\OptimizationSuspensionViewModel.cs" />
     <Compile Include="ViewModels\CurrentSuspensionViewModel.cs" />
     <Compile Include="Views\GraphWindow.xaml.cs">
@@ -119,6 +137,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

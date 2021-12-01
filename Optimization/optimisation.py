@@ -67,11 +67,12 @@ column_names = ["Objective function 0 is best",
     "Kingpin angle (deg)", 
     "Anti drive feature(%)", "Anti brake feature(%)",
     "Half track change down (mm)",
+    "Half track change up (mm)",
     "Wheelbase change down (mm)",
-    "Half track change up (mm)", "Wheelbase change up (mm)",
+    "Wheelbase change up (mm)",
     "LCA3 free radius (mm)", "UCA3 free radius (mm)", "TR2 free radius (mm)",
     "LCA3 WCN distance (mm)", "UCA3 WCN distance (mm)", "TR2 WCN distance (mm)",
-
+    
     "Method", "Execution time(s)"]
 
 

@@ -6,6 +6,7 @@
     using System.Windows.Input;
     using System.Collections.Generic;
     using FS_BMK_ui.Commands;
+    using FS_BMK_ui.Views;
     using System.Windows;
     using System.ComponentModel;
     using System.Threading.Tasks;
@@ -107,7 +108,6 @@
                     hardpointsString += hp.ZValLow.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
             }
 
-
             for (int i = 0; i < 21; i++)
             {
                 featuresString += 
@@ -169,10 +169,7 @@
 
         }
 
-
-
         private ICommand _OptimiseCommand;
-
 
         public ICommand OptimiseCommand
         {
@@ -188,10 +185,8 @@
 
         private void OptimiseExecute(object parameter)
         {
-
             AsyncCallTest();
             ExecProcess();
-
         }
 
         private bool CanOptimiseExecute(object parameter)
@@ -204,6 +199,38 @@
             {
                 return false;
             }
+        }
+
+        private void OpenGraphWindow(object parameter)
+        {
+            var viewModel = new GraphWindowViewModel();
+            var view = new GraphWindow { DataContext = viewModel };
+
+            bool? result = view.ShowDialog();
+        }
+
+        private ICommand _openGraphWindowCommand;
+
+        public ICommand OpenGraphWindowCommand
+        {
+            get
+            {
+                if (_openGraphWindowCommand == null)
+                {
+                    _openGraphWindowCommand = new RelayCommand(OpenGraphWindowExecute, CanOpenGraphWindowExecute, false);
+                }
+                return _openGraphWindowCommand;
+            }
+        }
+
+        private void OpenGraphWindowExecute(object parameter)
+        {
+            OpenGraphWindow(parameter);
+        }
+
+        private bool CanOpenGraphWindowExecute(object parameter)
+        {
+            return true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

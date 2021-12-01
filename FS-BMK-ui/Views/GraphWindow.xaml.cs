@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ScottPlot;
+using FS_BMK_ui.ViewModels;
 
 namespace FS_BMK_ui.Views
 {
@@ -22,6 +24,9 @@ namespace FS_BMK_ui.Views
         public GraphWindow()
         {
             InitializeComponent();
+
+
+
         }
     }
 }

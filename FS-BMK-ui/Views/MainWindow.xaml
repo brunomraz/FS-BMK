@@ -153,7 +153,8 @@
                                 SignificanceValue="{Binding OptimizationSuspension.CamberDownSignificance, Mode=TwoWay}"
                                 WeightFactorValue="{Binding OptimizationSuspension.CamberDownWeightFactor, Mode=OneWay}"
                                 PeakWidth="{Binding OptimizationSuspension.PeakWidthValues[0], Mode=TwoWay}"
-                                PeakFlatness="{Binding OptimizationSuspension.PeakFlatnessValues[0], Mode=TwoWay}"/>
+                                PeakFlatness="{Binding OptimizationSuspension.PeakFlatnessValues[0], Mode=TwoWay}"
+                                PlotCommand="{Binding OpenGraphWindowCommand}"/>
                             <UserControls:FeatureLimitsUserControl 
                                 HeaderName="Camber angle up position" 
                                 LowerValue="{Binding OptimizationSuspension.SuspensionFeatureLimits[2], Mode=TwoWay}"

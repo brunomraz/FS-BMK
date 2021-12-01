@@ -7,6 +7,23 @@
         mc:Ignorable="d"
         Title="GraphWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label VerticalAlignment="Center" HorizontalAlignment="Center"
+                Content="{Binding XValues[0]}"/>
         
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Text="Width" />
+            <TextBox Width="50"/>
+            <TextBlock Text="Flatness" />
+            <TextBox Width="50"/>
+            <TextBlock Text="Target" />
+            <TextBox Width="50"/>
+        </StackPanel>
+        <ContentControl Content="{Binding Graph}">
+            
+        </ContentControl>
     </Grid>
 </Window>
