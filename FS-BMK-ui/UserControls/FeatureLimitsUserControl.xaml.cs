@@ -21,7 +21,7 @@ namespace FS_BMK_ui.UserControls
     public partial class FeatureLimitsUserControl : UserControl
     {
 
-
+        #region HeaderName
         public string HeaderName
         {
             get { return (string)GetValue(HeaderNameProperty); }
@@ -29,8 +29,8 @@ namespace FS_BMK_ui.UserControls
         }
         public static readonly DependencyProperty HeaderNameProperty =
             DependencyProperty.Register("HeaderName", typeof(string), typeof(FeatureLimitsUserControl), new PropertyMetadata(""));
-
-
+        #endregion
+        #region LowerValue
         public float LowerValue
         {
             get { return (float)GetValue(LowerValueProperty); }
@@ -38,8 +38,8 @@ namespace FS_BMK_ui.UserControls
         }
         public static readonly DependencyProperty LowerValueProperty =
             DependencyProperty.Register("LowerValue", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
-
-
+        #endregion
+        #region UpperValue
         public float UpperValue
         {
             get { return (float)GetValue(UpperValueProperty); }
@@ -47,8 +47,8 @@ namespace FS_BMK_ui.UserControls
         }
         public static readonly DependencyProperty UpperValueProperty =
             DependencyProperty.Register("UpperValue", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
-
-
+        #endregion
+        #region TargetValue
         public float TargetValue
         {
             get { return (float)GetValue(TargetValueProperty); }
@@ -56,8 +56,8 @@ namespace FS_BMK_ui.UserControls
         }
         public static readonly DependencyProperty TargetValueProperty =
             DependencyProperty.Register("TargetValue", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
-
-
+        #endregion
+        #region SignificanceValue
         public float SignificanceValue
         {
             get { return (float)GetValue(SignificanceValueProperty); }
@@ -66,8 +66,8 @@ namespace FS_BMK_ui.UserControls
 
         public static readonly DependencyProperty SignificanceValueProperty =
             DependencyProperty.Register("SignificanceValue", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
-
-
+        #endregion
+        #region WeightFactorValue
         public float WeightFactorValue
         {
             get { return (float)GetValue(WeightFactorValueProperty); }
@@ -75,8 +75,8 @@ namespace FS_BMK_ui.UserControls
         }
         public static readonly DependencyProperty WeightFactorValueProperty =
             DependencyProperty.Register("WeightFactorValue", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
-
-
+        #endregion
+        #region PeakWidth
         public float PeakWidth
         {
             get { return (float)GetValue(PeakWidthProperty); }
@@ -85,8 +85,8 @@ namespace FS_BMK_ui.UserControls
 
         public static readonly DependencyProperty PeakWidthProperty =
             DependencyProperty.Register("PeakWidth", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
-
-
+        #endregion
+        #region PeakFlatness
         public float PeakFlatness
         {
             get { return (float)GetValue(FlatnessProperty); }
@@ -95,9 +95,28 @@ namespace FS_BMK_ui.UserControls
 
         public static readonly DependencyProperty FlatnessProperty =
             DependencyProperty.Register("PeakFlatness", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
+        #endregion
+        #region PlotCommand
+        public ICommand PlotCommand
+        {
+            get { return (ICommand)GetValue(PlotCommandProperty); }
+            set { SetValue(PlotCommandProperty, value); }
+        }
 
-
-
+        // Using a DependencyProperty as the backing store for PlotCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PlotCommandProperty =
+            DependencyProperty.Register("PlotCommand", typeof(ICommand), typeof(FeatureLimitsUserControl), 
+                new PropertyMetadata(null));
+        #endregion
+        #region PlotCommandParameters
+        public object PlotCommandParameters
+        {
+            get { return (object)GetValue(PlotCommandParametersProperty); }
+            set { SetValue(PlotCommandParametersProperty, value); }
+        }
+        public static readonly DependencyProperty PlotCommandParametersProperty =
+            DependencyProperty.Register("PlotCommandParameters", typeof(object), typeof(FeatureLimitsUserControl), new PropertyMetadata(null));
+        #endregion
 
 
         public FeatureLimitsUserControl()

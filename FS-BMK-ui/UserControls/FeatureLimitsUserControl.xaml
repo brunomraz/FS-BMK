@@ -114,6 +114,9 @@
                         UpdateSourceTrigger=LostFocus}" Style="{StaticResource NormalTextBoxStyle}"/>
                 </Grid>
             </StackPanel>
+            <Button Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Content="Plot" Width="30" Command="{Binding PlotCommand, ElementName=ucFeatureLimits}"
+                    />
         </Grid>
     </GroupBox>
 </UserControl>
