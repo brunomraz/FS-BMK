@@ -15,16 +15,5 @@ namespace FS_BMK_ui
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            IDialogService dialogService = new DialogService(MainWindow);
-
-            dialogService.Register<GraphWindowViewModel, GraphWindow>();
-
-            var viewModel = new OptimizationSuspensionViewModel();
-            var view = new MainWindow { DataContext = viewModel };
-
-            view.ShowDialog();
-        }
     }
 }

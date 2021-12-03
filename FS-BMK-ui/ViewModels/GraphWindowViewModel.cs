@@ -1,9 +1,10 @@
 ﻿using ScottPlot;
 using System;
+using System.Windows.Input;
 
 namespace FS_BMK_ui.ViewModels
 {
-    internal class GraphWindowViewModel:IDialogRequestClose
+    internal class GraphWindowViewModel
     {
         private float[] _xValues = new float[] { 1, 2, 3 };
         private WpfPlot _graph = new WpfPlot();
@@ -13,9 +14,11 @@ namespace FS_BMK_ui.ViewModels
 
         private string _xLabel = "Variables";
 
-        public event EventHandler<DialogCloseRequestedEventArgs> CloseRequested;
 
         public string XLabel { get { return _xLabel; } set { _xLabel = value; } }
+
+        //public ICommand OkCommand { get; }
+        //public ICommand CancelCommand { get; }
 
         public GraphWindowViewModel()
         {

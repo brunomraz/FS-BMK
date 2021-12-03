@@ -22,6 +22,11 @@
         private string _pythonFilesPath = @"C:\dev\FS-BMK\Optimization\optimisation.py";
         private string _pythonEnvironmentPath = @"C:\ProgramData\Anaconda3\python.exe";
 
+        public OptimizationSuspensionViewModel( )
+        {
+            _optimizationSuspension = new OptimizationSuspension();
+        }
+
         public string PythonFilesPath
         {
             get { return _pythonFilesPath; }
@@ -47,10 +52,7 @@
                 OnPropertyChanged("CanPressOptimizeButton");
             }
         }
-        public OptimizationSuspensionViewModel()
-        {
-            _optimizationSuspension = new OptimizationSuspension();
-        }
+        
 
         public OptimizationSuspension OptimizationSuspension
         {
@@ -205,8 +207,7 @@
         {
             var viewModel = new GraphWindowViewModel();
             var view = new GraphWindow { DataContext = viewModel };
-
-            bool? result = view.ShowDialog();
+            view.Show();
         }
 
         private ICommand _openGraphWindowCommand;
