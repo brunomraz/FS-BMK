@@ -282,4 +282,43 @@ if __name__ == "__main__":
     print(f"started on: {started_on}")
     print(f"ended on: {datetime.datetime.now()}")
     # print(pd.read_csv("filename.csv", sep=";"))
+
+
+
+if False:
+    
+    initial_hps = random_initial_susp()
+
+    # slsqp
+    #sol = minimize(call_suspension_objective, random_initial_susp(),
+    #constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, #method='SLSQP',
+    #options={"maxiter":200,"disp":True})
+
+
+    print(f"call obj: {call_suspension_objective(initial_hps)}")
+
+    start_time=time.time()
+     # cobyla
+    sol = minimize(fun=call_suspension_objective, 
+                   x0=initial_hps,
+                   constraints=hps_constraints_cobyla,
+                   method='COBYLA',
+                   options={"maxiter":2000,"disp":True})
+
+    print(sol)
+    time.sleep(0.1)
+    if sol.success==False:
+        print("nije constrint")
+
+    if sol.success==True:
+        print("uspjelo constrint")
+        print(sol.x)
+        print(S.return_hps_and_parameters())
+        print(f"call obj: {call_suspension_objective(sol.x)}")
+        for i in range(21):
+            print(Suspension.output_params_optimisation_c[i])
+
+
+    print(f"trajalo je {time.time()-start_time-0.1}")
+
     
