@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using FS_BMK_ui.Commands;
     using FS_BMK_ui.Views;
+    using FS_BMK_ui.HelperClasses;
     using System.Windows;
     using System.ComponentModel;
     using System.Threading.Tasks;
@@ -112,13 +113,22 @@
 
             for (int i = 0; i < 21; i++)
             {
-                featuresString += 
-                    OptimizationSuspension.SuspensionFeatureLimits[2 * i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
-                    OptimizationSuspension.SuspensionFeatureLimits[2 * i + 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
-                featuresString += OptimizationSuspension.TargetCharacteristicValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                //featuresString += 
+                //    OptimizationSuspension.SuspensionFeatureLimits[2 * i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
+                //    OptimizationSuspension.SuspensionFeatureLimits[2 * i + 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                //featuresString += OptimizationSuspension.TargetCharacteristicValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                //featuresString += OptimizationSuspension.WeightFactors[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                //featuresString += OptimizationSuspension.PeakWidthValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                //featuresString += OptimizationSuspension.PeakFlatnessValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+
+                featuresString +=
+                    OptimizationSuspension.OptimisationCharacteristics[i].Lower.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    OptimizationSuspension.OptimisationCharacteristics[i].Upper.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                featuresString += OptimizationSuspension.OptimisationCharacteristics[i].Target.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
                 featuresString += OptimizationSuspension.WeightFactors[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
-                featuresString += OptimizationSuspension.PeakWidthValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
-                featuresString += OptimizationSuspension.PeakFlatnessValues[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                featuresString += OptimizationSuspension.OptimisationCharacteristics[i].PeakWidth.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                featuresString += OptimizationSuspension.OptimisationCharacteristics[i].PeakFlatness.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+
             }
 
             float DriveBias;
@@ -205,7 +215,13 @@
 
         private void OpenGraphWindow(object parameter)
         {
-            var viewModel = new GraphWindowViewModel();
+            MessageBox.Show(((OptimisationCharacteristic)parameter).Name);
+            var viewModel = new GraphWindowViewModel(
+                ((OptimisationCharacteristic)parameter).Target, 
+                ((OptimisationCharacteristic)parameter).PeakWidth, 
+                ((OptimisationCharacteristic)parameter).PeakFlatness,
+                ((OptimisationCharacteristic)parameter).Name
+                );
             var view = new GraphWindow { DataContext = viewModel };
             view.Show();
         }

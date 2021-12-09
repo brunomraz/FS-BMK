@@ -116,6 +116,7 @@
             </StackPanel>
             <Button Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"
                     Content="Plot" Width="30" Command="{Binding PlotCommand, ElementName=ucFeatureLimits}"
+                    CommandParameter="{Binding PlotCommandParameters, ElementName=ucFeatureLimits}"
                     />
         </Grid>
     </GroupBox>

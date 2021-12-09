@@ -89,11 +89,11 @@ namespace FS_BMK_ui.UserControls
         #region PeakFlatness
         public float PeakFlatness
         {
-            get { return (float)GetValue(FlatnessProperty); }
-            set { SetValue(FlatnessProperty, value); }
+            get { return (float)GetValue(PeakFlatnessProperty); }
+            set { SetValue(PeakFlatnessProperty, value); }
         }
 
-        public static readonly DependencyProperty FlatnessProperty =
+        public static readonly DependencyProperty PeakFlatnessProperty =
             DependencyProperty.Register("PeakFlatness", typeof(float), typeof(FeatureLimitsUserControl), new PropertyMetadata(0f));
         #endregion
         #region PlotCommand

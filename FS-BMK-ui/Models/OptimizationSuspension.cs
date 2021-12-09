@@ -22,102 +22,38 @@
         };
 
 
-        private List<float> _suspensionFeatureLimits = new List<float>
+        private OptimisationCharacteristic[] _optimisationCharacteristics = new OptimisationCharacteristic[]
         {
-            -2.7f, -2.6f,          // 0, 1,     camber angle down pos, low high lim
-            -1f, -0.9f,            // 2, 3,     camber angle up pos, low high lim
-            -0.08f, 0f,            // 4, 5,     toe angle down pos low high lim
-            0f, 0.05f,             // 6, 7,     toe angle up pos low high lim
-            4f, 20f,                // 8, 9,     caster angle low high lim
-            50f, 65f,              // 10, 11,   roll centre height low lim high lim
-            5f, 25f,              // 12, 13,   caster trail low high lim
-            -15f, -7f,             // 14, 15,   scrub radius low high lim
-            4f, 8f,                // 16, 17,   kingpin angle low high lim
-            10f, 18f,              // 18, 19,   anti drive low high lim
-            0f, 10f,               // 20, 21,   anti brake low high lim
-            -10f, 0f,              // 22, 23,   half track change down pos low high lim
-            0f, 3f,                // 24, 25,   half track change up pos low high lim
-            -1.5f, 1.5f,           // 26, 27,   wheelbase change down pos low high lim
-            -1.5f, 1.5f,           // 28, 29,   wheelbase change up pos low high lim
-            60f, 100f,             // 30, 31,   inside wheel free radius LCA3 low high lim
-            60f, 100f,             // 32, 33,   inside wheel free radius UCA3 low high lim
-            60f, 100f,             // 34, 35,   inside wheel free radius TR2 low high lim
-            -100f, -20f,           // 36, 37,   distance from LCA3 to plane defined by WCN and line WCN-SPN
-            -100f, -20f,           // 38, 39    distance from UCA3 to plane defined by WCN and line WCN-SPN
-            -100f, -20f,           // 40, 41    distance from TR2 to plane defined by WCN and line WCN-SPN
+            //new OptimisationCharacteristic(string name, float target, float peakWidth, float peakFlatness, float lower, float upper),
+            new OptimisationCharacteristic("camber down pos", -2.65f, 0.5f, 1f, -2.7f, -2.6f),
+            new OptimisationCharacteristic("camber up pos", -0.95f, 0.8f, 1f, -1f, -0.9f),
+            new OptimisationCharacteristic("toe down pos", 0f, 0.1f, 2f, -0.08f, 0f),
+            new OptimisationCharacteristic("toe up pos", 0f, 0.1f, 2f, 0f, 0.05f),
+            new OptimisationCharacteristic("caster angle", 8f, 2f, 5f, 4f, 20f),
+            new OptimisationCharacteristic("roll centre height", 50f, 100f, 3f, 50f, 65f),
+            new OptimisationCharacteristic("csater trail", 11f, 10_000f, 4f, 5f, 25f),
+            new OptimisationCharacteristic("scrub radius", -7f, 10f, 2f, -15f, -7f),
+            new OptimisationCharacteristic("kingpin angle", 4f, 10f, 2f, 4f, 8f),
+            new OptimisationCharacteristic("anti drive", 18f, 100f, 2f, 10f, 18f),
+            new OptimisationCharacteristic("anti brake", 10f, 100f, 2f, 0f, 10f),
+            new OptimisationCharacteristic("half track change down pos", 0f, 100f, 2f, -10f, 0f),
+            new OptimisationCharacteristic("half track change up pos", 0f, 100f, 2f, 0f, 3f),
+            new OptimisationCharacteristic("wheelbase change down pos", 0f, 100f, 2f, -1.5f, 1.5f),
+            new OptimisationCharacteristic("wheelbase change up pos", 0f, 100f, 2f, -1.5f, 1.5f),
+            new OptimisationCharacteristic("LCA3 free radius", 80f, 10f, 2f, 60f, 100f),
+            new OptimisationCharacteristic("UCA3 free radius", 96f, 10f, 2f, 60f, 100f),
+            new OptimisationCharacteristic("TR2 free radius", 80f, 10f, 2f, 60f, 100f),
+            new OptimisationCharacteristic("LCA3 WCN distance", -20f, 10f, 2f, -100f, -20f),
+            new OptimisationCharacteristic("UCA3 WCN distance", -40f, 10f, 2f, -100f, -20f),
+            new OptimisationCharacteristic("TR2 WCN distance", -40f, 10f, 2f, -100f, -20f),
+
+
         };
 
-        private float[] _targetCharacteristicValues = { //new float[21];
-            -2.65f,             // 0,     camber angle down pos, low high lim
-            -0.95f,             // 1,     camber angle up pos, low high lim
-            0f,                // 2,     toe angle down pos low high lim
-            0f,                 // 3,     toe angle up pos low high lim
-            8f,                 // 4,     caster angle low high lim
-            50f,                // 5,     roll centre height low lim high lim
-            11f,                // 6,     caster trail low high lim
-            -7f,                // 7,     scrub radius low high lim
-            4f,                 // 8,     kingpin angle low high lim
-            18f,                // 9,     anti drive low high lim
-            10f,                // 10,    anti brake low high lim
-            0f,                 // 11,    half track change down pos low high lim
-            0f,                 // 12,    half track change up pos low high lim
-            0f,                 // 13,    wheelbase change down pos low high lim
-            0f,                 // 14,    wheelbase change up pos low high lim
-            80,               // 15,    inside wheel free radius LCA3 low high lim
-            96,               // 16,    inside wheel free radius UCA3 low high lim
-            80,               // 17,    inside wheel free radius TR2 low high lim
-            -20f,               // 18,    distance from LCA3 to plane defined by WCN and line WCN-SPN
-            -40f,               // 19,    distance from UCA3 to plane defined by WCN and line WCN-SPN
-            -40f                // 20     distance from TR2 to plane defined by WCN and line WCN-SPN
-        };
+        public OptimisationCharacteristic[] OptimisationCharacteristics { get { return _optimisationCharacteristics; } }
 
-        private float[] _peakWidthValues = { //new float[21];
-            0.5f,             // 0,     camber angle down pos, low high lim
-            0.8f,             // 1,     camber angle up pos, low high lim
-            0.1f,                // 2,     toe angle down pos low high lim
-            0.1f,                 // 3,     toe angle up pos low high lim
-            2f,                 // 4,     caster angle low high lim
-            100f,                // 5,     roll centre height low lim high lim
-            10_000f,                // 6,     caster trail low high lim
-            10f,                // 7,     scrub radius low high lim
-            10f,                 // 8,     kingpin angle low high lim
-            100f,                // 9,     anti drive low high lim
-            100f,                // 10,    anti brake low high lim
-            100f,                 // 11,    half track change down pos low high lim
-            100f,                 // 12,    half track change up pos low high lim
-            100f,                 // 13,    wheelbase change down pos low high lim
-            100f,                 // 14,    wheelbase change up pos low high lim
-            10f,               // 15,    inside wheel free radius LCA3 low high lim
-            10f,               // 16,    inside wheel free radius UCA3 low high lim
-            10f,               // 17,    inside wheel free radius TR2 low high lim
-            10f,               // 18,    distance from LCA3 to plane defined by WCN and line WCN-SPN
-            10f,               // 19,    distance from UCA3 to plane defined by WCN and line WCN-SPN
-            10f                // 20     distance from TR2 to plane defined by WCN and line WCN-SPN
-        };
 
-        private float[] _peakFlatnessValues = { //new float[21];
-            1f,             // 0,     camber angle down pos, low high lim
-            1f,             // 1,     camber angle up pos, low high lim
-            2f,                // 2,     toe angle down pos low high lim
-            2f,                 // 3,     toe angle up pos low high lim
-            5f,                 // 4,     caster angle low high lim
-            3f,                // 5,     roll centre height low lim high lim
-            4f,                // 6,     caster trail low high lim
-            2f,                // 7,     scrub radius low high lim
-            2f,                 // 8,     kingpin angle low high lim
-            2f,                // 9,     anti drive low high lim
-            2f,                // 10,    anti brake low high lim
-            2f,                 // 11,    half track change down pos low high lim
-            2f,                 // 12,    half track change up pos low high lim
-            2f,                 // 13,    wheelbase change down pos low high lim
-            2f,                 // 14,    wheelbase change up pos low high lim
-            2f,               // 15,    inside wheel free radius LCA3 low high lim
-            2f,               // 16,    inside wheel free radius UCA3 low high lim
-            2f,               // 17,    inside wheel free radius TR2 low high lim
-            2f,               // 18,    distance from LCA3 to plane defined by WCN and line WCN-SPN
-            2f,               // 19,    distance from UCA3 to plane defined by WCN and line WCN-SPN
-            2f                // 20     distance from TR2 to plane defined by WCN and line WCN-SPN
-        };
+
 
         private float[] _significance =
         {
@@ -161,7 +97,6 @@
         private float _significanceSum;
 
         public float[] WeightFactors { get { return _weightFactors; } }
-        public float[] TargetCharacteristicValues { get { return _targetCharacteristicValues; } }
 
         #region Optimisation characteristics significance properties
         public float CamberDownSignificance
@@ -426,11 +361,8 @@
         public float RearDriveBias { get { return _rearDriveBias = 1 - _frontDriveBias; } set { _rearDriveBias = value; } }
         public float RearBrakeBias { get { return _rearBrakeBias = 1 - _frontBrakeBias; } set { _rearBrakeBias = value; } }
         public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
-        public float[] PeakWidthValues { get { return _peakWidthValues; } }
-        public float[] PeakFlatnessValues { get { return _peakFlatnessValues; } }
 
         public HardpointLimits[] HardpointsLimits { get { return _hardpointsLimits; } }
-        public List<float> SuspensionFeatureLimits { get { return _suspensionFeatureLimits; } }
         public int CoreNum { get { return _coreNum; } set { _coreNum = value; } }
         public float OptimisationDuration { get { return _optimisationDuration; } set { _optimisationDuration = value; } }
 
@@ -469,9 +401,9 @@
             }
 
             // checks if all other suspension chracteristics limits are correctly written, lower value really is lower
-            for (int i = 0; i < SuspensionFeatureLimits.Count / 2; i++)
+            for (int i = 0; i < OptimisationCharacteristics.Length / 2; i++)
             {
-                if (SuspensionFeatureLimits[2 * i] > SuspensionFeatureLimits[2 * i + 1])
+                if (OptimisationCharacteristics[i].Lower > OptimisationCharacteristics[i].Upper)
                     return false;
             }
             return true;
