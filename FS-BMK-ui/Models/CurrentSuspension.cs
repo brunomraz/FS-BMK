@@ -11,7 +11,7 @@ namespace FS_BMK_ui.Models
 {
     class CurrentSuspension : INotifyPropertyChanged
     {
-        
+
 
         private float _wheelRadius = 210f;
         private float _wheelWidth = 200f;
@@ -23,7 +23,36 @@ namespace FS_BMK_ui.Models
         private float _rearDriveBias;
         private float _rearBrakeBias;
         private float _verticalMovement = 0f;
-        private float[] _hardpointsMoved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float _steeringMovement = 0f;
+        private int _vertIncr = 1;
+        private int _steerIncr = 0;
+        private int _vertPosMin;
+        private int _vertPosMax;
+        private int _vertPos;
+        private int _steerPosMin;
+        private int _steerPosMax;
+        private int _steerPos;
+
+        private float[] _camberAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _toeAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _casterAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _rcHeight = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _casterTrail = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _scrubRadius = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _kingpinAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _antiDrive = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _antiBrake = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _halfTrackChange = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _wheelbaseChange = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _constOutputParams = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+
+        private float[] _lca3Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _uca3Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _tr1Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _tr2Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _wcnMoved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _spnMoved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+
         private int _suspensionPos = 1; // front or rear suspension 0 for front, 1 for rear
         private int _drivePos = 1;  // outboard or inboard drive 0 for outboard, 1 for inboard
         private int _brakesPos = 0; // outboard or inboard brakes 0 for outboard, 1 for inboard
@@ -38,7 +67,6 @@ namespace FS_BMK_ui.Models
             new Hardpoint("TR2",  -2225f, -582f, -220f),              // 7
             new Hardpoint("WCN",  -2143.6f, -620.5f, -220.07f),       // 8
             new Hardpoint("SPN",  -2143.6f, -595.5f, -219.34f)        // 9
-
         };
         private List<WPFFloat> _suspensionCharacteristics = new List<WPFFloat>
         {
@@ -61,111 +89,76 @@ namespace FS_BMK_ui.Models
             new WPFFloat()    // TR2 - WCN distance
         };
 
-        public int SuspensionPos
+        public int VertPos
         {
-            get { return _suspensionPos; }
+            get { return _vertPos; }
             set
             {
-                _suspensionPos = value;
-                OnPropertyChanged("SuspensionPos");
+                if (_vertPos != value)
+                {
+                    _vertPos = value;
+                    OnPropertyChanged("VertPos");
+                }
             }
         }
-        public int DrivePos
+        public int SteerPos
         {
-            get { return _drivePos; }
+            get { return _steerPos; }
             set
             {
-                _drivePos = value;
-                OnPropertyChanged("DrivePos");
+                if (_steerPos != value)
+                {
+                    _steerPos = value;
+                    OnPropertyChanged("SteerPos");
+                }
             }
         }
-        public int BrakesPos
-        {
-            get { return _brakesPos; }
-            set
-            {
-                _brakesPos = value;
-                OnPropertyChanged("BrakesPos");
-            }
-        }
-        public float[] HardpointsMoved
-        {
-            get
-            {
-                return _hardpointsMoved;
-            }
-            set
-            {
-                _hardpointsMoved = value;
-            }
-        }
-        public List<WPFFloat> SuspensionCharacteristics
-        {
-            get
-            {
-                return _suspensionCharacteristics;
-            }
-            set
-            {
-                _suspensionCharacteristics = value;
-            }
-        }
-        public List<Hardpoint> Hardpoints
-        {
-            get { return _hardpoints; }
-        }
-        public float WheelRadius
-        {
-            get { return _wheelRadius; }
-            set { _wheelRadius = value; }
-        }
+
+        public int VertIncr { get { return _vertIncr; } set { _vertIncr = value; OnPropertyChanged("VertPosMin"); OnPropertyChanged("VertPosMax"); } }
+        public int VertPosMin { get { return _vertPosMin = -VertIncr; } set { _vertPosMin = value; } }
+        public int VertPosMax { get { return _vertPosMax = VertIncr; } set { _vertPosMax = value; } }
+        public int SteerIncr { get { return _steerIncr; } set { _steerIncr = value; OnPropertyChanged("SteerPosMin"); OnPropertyChanged("SteerPosMax"); } }
+        public int SteerPosMin { get { return _steerPosMin = -SteerIncr; } set { _steerPosMin = value; } }
+        public int SteerPosMax { get { return _steerPosMax = SteerIncr; } set { _steerPosMax = value; } }
+
+        public int SuspensionPos { get { return _suspensionPos; } set { _suspensionPos = value; OnPropertyChanged("SuspensionPos"); } }
+        public int DrivePos { get { return _drivePos; } set { _drivePos = value; OnPropertyChanged("DrivePos"); } }
+        public int BrakesPos { get { return _brakesPos; } set { _brakesPos = value; OnPropertyChanged("BrakesPos"); } }
+        //public float[] HardpointsMoved { get { return _hardpointsMoved; } set { _hardpointsMoved = value; } }
+
+        public float[] CamberAngle { get { return _camberAngle; } }
+        public float[] ToeAngle { get { return _toeAngle; } }
+        public float[] CasterAngle { get { return _casterAngle; } }
+        public float[] RcHeight { get { return _rcHeight; } }
+        public float[] CasterTrail { get { return _casterTrail; } }
+        public float[] ScrubRadius { get { return _scrubRadius; } }
+        public float[] KingpinAngle { get { return _kingpinAngle; } }
+        public float[] AntiDrive { get { return _antiDrive; } }
+        public float[] AntiBrake { get { return _antiBrake; } }
+        public float[] HalfTrackChange { get { return _halfTrackChange; } }
+        public float[] WheelbaseChange { get { return _wheelbaseChange; } }
+        public float[] ConstOutputParams { get { return _constOutputParams; } }
+
+        public float[] Lca3Moved { get { return _lca3Moved; } }
+        public float[] Uca3Moved { get { return _uca3Moved; } }
+        public float[] Tr1Moved { get { return _tr1Moved; } }
+        public float[] Tr2Moved { get { return _tr2Moved; } }
+        public float[] WcnMoved { get { return _wcnMoved; } }
+        public float[] SpnMoved { get { return _spnMoved; } }
+
+        public List<WPFFloat> SuspensionCharacteristics { get { return _suspensionCharacteristics; } set { _suspensionCharacteristics = value; } }
+        public List<Hardpoint> Hardpoints { get { return _hardpoints; } }
+        public float WheelRadius { get { return _wheelRadius; } set { _wheelRadius = value; } }
         public float WheelInsideRadius { get { return _wheelInsideRadius; } set { _wheelInsideRadius = value; } }
         public float WheelWidth { get { return _wheelWidth; } set { _wheelWidth = value; } }
-        public float Wheelbase
-        {
-            get { return _wheelbase; }
-            set { _wheelbase = value; }
-        }
-        public float CoGHeight
-        {
-            get { return _cogHeight; }
-            set { _cogHeight = value; }
-        }
-        public float FrontDriveBias
-        {
-            get { return _frontDriveBias; }
-            set
-            {
-                _frontDriveBias = value;
-                OnPropertyChanged("RearDriveBias");
-            }
-        }
-        public float FrontBrakeBias
-        {
-            get { return _frontBrakeBias; }
-            set
-            {
-                _frontBrakeBias = value;
-                OnPropertyChanged("RearBrakeBias");
-            }
-        }
-        public float RearDriveBias
-        {
-            get { return _rearDriveBias = 1 - _frontDriveBias; }
-            set
-            {
-                _rearDriveBias = value;
-            }
-        }
-        public float RearBrakeBias
-        {
-            get { return _rearBrakeBias = 1 - _frontBrakeBias; }
-            set
-            {
-                _rearBrakeBias = value;
-            }
-        }
+        public float Wheelbase { get { return _wheelbase; } set { _wheelbase = value; } }
+        public float CoGHeight { get { return _cogHeight; } set { _cogHeight = value; } }
+        public float FrontDriveBias { get { return _frontDriveBias; } set { _frontDriveBias = value; OnPropertyChanged("RearDriveBias"); } }
+        public float FrontBrakeBias { get { return _frontBrakeBias; } set { _frontBrakeBias = value; OnPropertyChanged("RearBrakeBias"); } }
+        public float RearDriveBias { get { return _rearDriveBias = 1 - _frontDriveBias; } set { _rearDriveBias = value; } }
+        public float RearBrakeBias { get { return _rearBrakeBias = 1 - _frontBrakeBias; } set { _rearBrakeBias = value; } }
         public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
+        public float SteeringMovement { get { return _steeringMovement; } set { _steeringMovement = value; } }
 
 
         #region INotifyPropertyChanged Members
@@ -184,5 +177,5 @@ namespace FS_BMK_ui.Models
         #endregion
     }
 
-    
+
 }

@@ -726,7 +726,7 @@
                                                 IsChecked="{Binding CurrentSuspension.BrakesPos, Converter={StaticResource ResourceKey=IntBoolConverter}, ConverterParameter=0}"/>
                                 </Grid>
                                 <!-- Vertical movement from reference position (mm) -->
-                                <TextBlock Margin="15,5,0,5" TextWrapping="Wrap" Text="Vertical movement from reference position, positive value is down w.r.t. chassis and vice versa."/>
+                                <TextBlock Margin="15,5,0,5" TextWrapping="Wrap" Text="Vertical movement from reference position and vertical increments, positive value is down w.r.t. chassis and vice versa."/>
                                 <Grid Margin="15,0,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100"/>
@@ -737,10 +737,34 @@
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <TextBox Style="{StaticResource NormalTextBoxStyle}" Text="{Binding CurrentSuspension.VerticalMovement}" Grid.Row="0" Grid.Column="0"/>
-                                    <Button Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1"
-                                        Content="Update" Command="{Binding CalculateSuspensionMovementCommand}"/>
-
+                                    <TextBox Style="{StaticResource NormalTextBoxStyle}" Text="{Binding CurrentSuspension.VertIncr}" Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
+                                <TextBlock Margin="15,5,0,5" TextWrapping="Wrap" Text="Steering movement from reference position and steering increments, positive value is movement along positive direction of Y axis and vice versa."/>
+                                <Grid Margin="15,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Style="{StaticResource NormalTextBoxStyle}" Text="{Binding CurrentSuspension.SteeringMovement}" Grid.Row="0" Grid.Column="0"/>
+                                    <TextBox Style="{StaticResource NormalTextBoxStyle}" Text="{Binding CurrentSuspension.SteerIncr}" Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                                <Button Width="60" Content="Update" Command="{Binding CalculateSuspensionMovementCommand}"/>
+                                <TextBlock Text="vertical slider"/>
+                                <TextBlock Text="{Binding CurrentSuspension.VertPos}"/>
+                                <Slider Value="{Binding CurrentSuspension.VertPos}"
+                                        Minimum="{Binding CurrentSuspension.VertPosMin}"
+                                        Maximum="{Binding CurrentSuspension.VertPosMax}"
+                                        />
+                                <TextBlock Text="steering slider"/>
+                                <TextBlock Text="{Binding CurrentSuspension.SteerPos}"/>
+                                <Slider Value="{Binding CurrentSuspension.SteerPos}" 
+                                        Minimum="{Binding CurrentSuspension.SteerPosMin}"
+                                        Maximum="{Binding CurrentSuspension.SteerPosMax}"
+                                        />
                             </StackPanel>
                             <!-- Suspension hardpoints and parameters -->
 

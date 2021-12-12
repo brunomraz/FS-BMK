@@ -170,65 +170,65 @@ namespace FS_BMK_ui.Models
         {
             // method called when a change in CurrentSuspension occurs
 
-            wheelAssyGroup.Children.Clear();
+            //wheelAssyGroup.Children.Clear();
 
-            uprightModel = VisualizationMethods.DefineUprightModel(Colors.Blue,
-                new Point3D(_currSusp.HardpointsMoved[0], _currSusp.HardpointsMoved[1], _currSusp.HardpointsMoved[2]),   // LCA3
-                new Point3D(_currSusp.HardpointsMoved[3], _currSusp.HardpointsMoved[4], _currSusp.HardpointsMoved[5]),   // UCA3
-                new Point3D(_currSusp.HardpointsMoved[9], _currSusp.HardpointsMoved[10],_currSusp.HardpointsMoved[11]), // WCN
-                new Point3D(_currSusp.HardpointsMoved[6], _currSusp.HardpointsMoved[7], _currSusp.HardpointsMoved[8]),    // TR2
-                new Point3D(_currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z)
-                );
-            wheelAssyGroup.Children.Add(uprightModel);
+            //uprightModel = VisualizationMethods.DefineUprightModel(Colors.Blue,
+            //    new Point3D(_currSusp.HardpointsMoved[0], _currSusp.HardpointsMoved[1], _currSusp.HardpointsMoved[2]),   // LCA3
+            //    new Point3D(_currSusp.HardpointsMoved[3], _currSusp.HardpointsMoved[4], _currSusp.HardpointsMoved[5]),   // UCA3
+            //    new Point3D(_currSusp.HardpointsMoved[9], _currSusp.HardpointsMoved[10],_currSusp.HardpointsMoved[11]), // WCN
+            //    new Point3D(_currSusp.HardpointsMoved[6], _currSusp.HardpointsMoved[7], _currSusp.HardpointsMoved[8]),    // TR2
+            //    new Point3D(_currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z)
+            //    );
+            //wheelAssyGroup.Children.Add(uprightModel);
 
-            wheelModel = VisualizationMethods.DefineWheelModel(Colors.Black, _currSusp.WheelWidth, _currSusp.WheelRadius, _currSusp.WheelInsideRadius);
+            //wheelModel = VisualizationMethods.DefineWheelModel(Colors.Black, _currSusp.WheelWidth, _currSusp.WheelRadius, _currSusp.WheelInsideRadius);
 
-            wheelModel.Transform = VisualizationMethods.TransformHollowCylindricalModel(
-                    _currSusp.HardpointsMoved[9], _currSusp.HardpointsMoved[10], _currSusp.HardpointsMoved[11],    // WCN
-                    _currSusp.HardpointsMoved[12],_currSusp.HardpointsMoved[13], _currSusp.HardpointsMoved[14],   // SPN
-                    _currSusp.HardpointsMoved[6], _currSusp.HardpointsMoved[7],  _currSusp.HardpointsMoved[8],       // TR2
-                    _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
+            //wheelModel.Transform = VisualizationMethods.TransformHollowCylindricalModel(
+            //        _currSusp.HardpointsMoved[9], _currSusp.HardpointsMoved[10], _currSusp.HardpointsMoved[11],    // WCN
+            //        _currSusp.HardpointsMoved[12],_currSusp.HardpointsMoved[13], _currSusp.HardpointsMoved[14],   // SPN
+            //        _currSusp.HardpointsMoved[6], _currSusp.HardpointsMoved[7],  _currSusp.HardpointsMoved[8],       // TR2
+            //        _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
 
-                );
+            //    );
 
-            wheelAssyGroup.Children.Add(wheelModel);
+            //wheelAssyGroup.Children.Add(wheelModel);
 
-            lca1Model.Transform = VisualizationMethods.TransformCylindricalModel(
-                    _currSusp.Hardpoints[0].X, _currSusp.Hardpoints[0].Y, _currSusp.Hardpoints[0].Z,   // LCA1
-                    _currSusp.HardpointsMoved[0], _currSusp.HardpointsMoved[1], _currSusp.HardpointsMoved[2],   // LCA3
-                    _currSusp.Hardpoints[1].X, _currSusp.Hardpoints[1].Y, _currSusp.Hardpoints[1].Z,   // LCA2
-                    _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
+            //lca1Model.Transform = VisualizationMethods.TransformCylindricalModel(
+            //        _currSusp.Hardpoints[0].X, _currSusp.Hardpoints[0].Y, _currSusp.Hardpoints[0].Z,   // LCA1
+            //        _currSusp.HardpointsMoved[0], _currSusp.HardpointsMoved[1], _currSusp.HardpointsMoved[2],   // LCA3
+            //        _currSusp.Hardpoints[1].X, _currSusp.Hardpoints[1].Y, _currSusp.Hardpoints[1].Z,   // LCA2
+            //        _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
 
-                );
+            //    );
 
-            lca2Model.Transform = VisualizationMethods.TransformCylindricalModel(
-                    _currSusp.Hardpoints[1].X, _currSusp.Hardpoints[1].Y, _currSusp.Hardpoints[1].Z,   // LCA2
-                    _currSusp.HardpointsMoved[0], _currSusp.HardpointsMoved[1], _currSusp.HardpointsMoved[2],   // LCA3
-                    _currSusp.Hardpoints[0].X, _currSusp.Hardpoints[0].Y, _currSusp.Hardpoints[0].Z,    // LCA1
-                    _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
-                );
+            //lca2Model.Transform = VisualizationMethods.TransformCylindricalModel(
+            //        _currSusp.Hardpoints[1].X, _currSusp.Hardpoints[1].Y, _currSusp.Hardpoints[1].Z,   // LCA2
+            //        _currSusp.HardpointsMoved[0], _currSusp.HardpointsMoved[1], _currSusp.HardpointsMoved[2],   // LCA3
+            //        _currSusp.Hardpoints[0].X, _currSusp.Hardpoints[0].Y, _currSusp.Hardpoints[0].Z,    // LCA1
+            //        _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
+            //    );
 
-            uca1Model.Transform = VisualizationMethods.TransformCylindricalModel(
-                    _currSusp.Hardpoints[3].X, _currSusp.Hardpoints[3].Y, _currSusp.Hardpoints[3].Z,   // UCA1
-                    _currSusp.HardpointsMoved[3], _currSusp.HardpointsMoved[4], _currSusp.HardpointsMoved[5],   // UCA3
-                    _currSusp.Hardpoints[4].X, _currSusp.Hardpoints[4].Y, _currSusp.Hardpoints[4].Z,   // UCA2
-                    _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
-                );
+            //uca1Model.Transform = VisualizationMethods.TransformCylindricalModel(
+            //        _currSusp.Hardpoints[3].X, _currSusp.Hardpoints[3].Y, _currSusp.Hardpoints[3].Z,   // UCA1
+            //        _currSusp.HardpointsMoved[3], _currSusp.HardpointsMoved[4], _currSusp.HardpointsMoved[5],   // UCA3
+            //        _currSusp.Hardpoints[4].X, _currSusp.Hardpoints[4].Y, _currSusp.Hardpoints[4].Z,   // UCA2
+            //        _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
+            //    );
 
-            uca2Model.Transform = VisualizationMethods.TransformCylindricalModel(
-                    _currSusp.Hardpoints[4].X, _currSusp.Hardpoints[4].Y, _currSusp.Hardpoints[4].Z,   // UCA2
-                    _currSusp.HardpointsMoved[3], _currSusp.HardpointsMoved[4], _currSusp.HardpointsMoved[5],   // UCA3
-                    _currSusp.Hardpoints[3].X, _currSusp.Hardpoints[3].Y, _currSusp.Hardpoints[3].Z,   // UCA1
-                    _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
-                );
+            //uca2Model.Transform = VisualizationMethods.TransformCylindricalModel(
+            //        _currSusp.Hardpoints[4].X, _currSusp.Hardpoints[4].Y, _currSusp.Hardpoints[4].Z,   // UCA2
+            //        _currSusp.HardpointsMoved[3], _currSusp.HardpointsMoved[4], _currSusp.HardpointsMoved[5],   // UCA3
+            //        _currSusp.Hardpoints[3].X, _currSusp.Hardpoints[3].Y, _currSusp.Hardpoints[3].Z,   // UCA1
+            //        _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
+            //    );
 
-            trModel.Transform = VisualizationMethods.TransformCylindricalModel(
-                    _currSusp.Hardpoints[6].X, _currSusp.Hardpoints[6].Y, _currSusp.Hardpoints[6].Z,   // TR1
-                    _currSusp.HardpointsMoved[6], _currSusp.HardpointsMoved[7], _currSusp.HardpointsMoved[8],   // TR2
-                    _currSusp.Hardpoints[0].X, _currSusp.Hardpoints[0].Y, _currSusp.Hardpoints[0].Z,   // LCA1
-                    _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
+            //trModel.Transform = VisualizationMethods.TransformCylindricalModel(
+            //        _currSusp.Hardpoints[6].X, _currSusp.Hardpoints[6].Y, _currSusp.Hardpoints[6].Z,   // TR1
+            //        _currSusp.HardpointsMoved[6], _currSusp.HardpointsMoved[7], _currSusp.HardpointsMoved[8],   // TR2
+            //        _currSusp.Hardpoints[0].X, _currSusp.Hardpoints[0].Y, _currSusp.Hardpoints[0].Z,   // LCA1
+            //        _currSusp.Hardpoints[8].X, _currSusp.Hardpoints[8].Y, _currSusp.Hardpoints[8].Z
 
-                );
+            //    );
         }
     }
 }

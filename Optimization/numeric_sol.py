@@ -41,9 +41,9 @@ class Suspension():
     drive_position = 1 # 0 for outboard, 1 for inboard
     brake_position = 0 # 0 for outboard, 1 for inboard
     vertical_movement = 30
-    steering_movement = 0
-    vertical_increments = 1
-    steering_increments = 0
+    steering_movement = 10
+    vert_incr = 1
+    steer_incr = 1
     precision = 0.001
        
     # OUTPUT PARAMETERS
@@ -52,8 +52,34 @@ class Suspension():
     output_params_optimisation_c = (c.c_float * 21)(*output_params_optimisation)
 
     # suspension movement output parameters
-    output_params_movement = []
-    output_params_movement_c = (c.c_float * 11)(*output_params_movement)
+
+    camberAngle = []															
+    camberAngle_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*camberAngle)
+    toeAngle = []															
+    toeAngle_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*toeAngle)
+    casterAngle = []															
+    casterAngle_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*casterAngle)
+    rcHeight = []															
+    rcHeight_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*rcHeight)
+        
+    casterTrail = []															
+    casterTrail_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*casterTrail)
+    scrubRadius = []															
+    scrubRadius_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*scrubRadius)
+    kingpinAngle = []															
+    kingpinAngle_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*kingpinAngle)
+    antiDrive = []															
+    antiDrive_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*antiDrive)
+
+    antiBrake = []															
+    antiBrake_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*antiBrake)
+    halfTrackChange = []															
+    halfTrackChange_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*halfTrackChange)
+    wheelbaseChange = []															
+    wheelbaseChange_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*wheelbaseChange)
+
+    const_output_params_movement = []
+    const_output_params_movement_c = (c.c_float * 6)(*const_output_params_movement)
 
     # hps boundaries
     hps_boundaries = [-2038.666,-490,-335,-180,-80,     # 0 lca1x_opt, 1 lca1y_lo, 2 lca1y_up, 3 lca1z_lo, 4 lca1z_up
@@ -206,12 +232,6 @@ class Suspension():
 
     ]
 
-
-
-
-
-
-
     obj_func_res = 0
 
     obj_func_res_c = c.c_float(obj_func_res)
@@ -228,14 +248,31 @@ class Suspension():
     
     
     steering_movement_c = c.c_float(steering_movement)
-    vertical_increments_c = c.c_int(vertical_increments)
-    steering_increments_c = c.c_int(steering_increments)
+    vert_incr_c = c.c_int(vert_incr)
+    steer_incr_c = c.c_int(steer_incr)
 
     precision_c = c.c_float(precision)
+    
+    
+    lca3_moved = []															
+    lca3_moved_c = (c.c_float * (vert_incr * 2 + 1))(*lca3_moved)
+    
+    uca3_moved = []															
+    uca3_moved_c = (c.c_float * (vert_incr * 2 + 1))(*uca3_moved)
+
+    tr1_moved = []															
+    tr1_moved_c = (c.c_float * (steer_incr * 2 + 1))(*tr1_moved)
+
+    tr2_moved = []															
+    tr2_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*tr2_moved)
+
+    wcn_moved = []															
+    wcn_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*wcn_moved)
+
+    spn_moved = []															
+    spn_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*spn_moved)
 
 
-    hardpoints_moved = []															
-    hardpoints_moved_c = (c.c_float * 15)(*hardpoints_moved)
 
     hardpoints = []															
     hardpoints_c = c.c_float * 30
@@ -264,8 +301,8 @@ class Suspension():
         type(peak_width_values_c),
         type(peak_flatness_values_c),
         type(steering_movement_c), 
-        type(vertical_increments_c), 
-        type(steering_increments_c),
+        type(vert_incr_c), 
+        type(steer_incr_c),
 	    type(precision_c),
         type(characteristics_target_values_c),
         type(characteristics_weight_factors_c),
@@ -283,11 +320,30 @@ class Suspension():
         type(brake_position_c),
         type(vertical_movement_c), 
         type(steering_movement_c), 
-        type(vertical_increments_c), 
-        type(steering_increments_c),
+        type(vert_incr_c), 
+        type(steer_incr_c),
 	    type(precision_c),
-	    c.POINTER(type(output_params_movement_c)),#c.POINTER(c.c_float),
-	    c.POINTER(type(hardpoints_moved_c))#c.POINTER(c.c_float)
+
+	    c.POINTER(type(camberAngle_c)),
+	    c.POINTER(type(toeAngle_c)),
+	    c.POINTER(type(casterAngle_c)),
+	    c.POINTER(type(rcHeight_c)),
+	    c.POINTER(type(casterTrail_c)),
+	    c.POINTER(type(scrubRadius_c)),
+	    c.POINTER(type(kingpinAngle_c)),
+	    c.POINTER(type(antiDrive_c)),
+	    c.POINTER(type(antiBrake_c)),
+	    c.POINTER(type(halfTrackChange_c)),
+	    c.POINTER(type(wheelbaseChange_c)),
+	    c.POINTER(type(const_output_params_movement_c)),
+
+	    c.POINTER(type(lca3_moved_c)),
+	    c.POINTER(type(uca3_moved_c)),
+	    c.POINTER(type(tr1_moved_c)),
+	    c.POINTER(type(tr2_moved_c)),
+	    c.POINTER(type(wcn_moved_c)),
+	    c.POINTER(type(spn_moved_c))
+
     ]
 
     def __init__(self, hps):  # hps is a list of hardpoints in order lca1, lca2, lca3, uca1, uca2, uca3,
@@ -298,8 +354,8 @@ class Suspension():
     def calculateOptimisationMovement(self):
         hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
         Suspension.mydll.optimisation_obj_res(
-            #Suspension.hardpoints_c(*Suspension.hardpoints),
-            hardpoints_c_arr,
+            Suspension.hardpoints_c(*Suspension.hardpoints),
+            #hardpoints_c_arr,
 	        Suspension.suspension_position_c,
 	        Suspension.wheel_radius_c,
 	        Suspension.wheelbase_c,
@@ -312,8 +368,8 @@ class Suspension():
 	        Suspension.peak_width_values_c,
 	        Suspension.peak_flatness_values_c,
 	        Suspension.steering_movement_c ,
-	        Suspension.vertical_increments_c,
-	        Suspension.steering_increments_c,
+	        Suspension.vert_incr_c,
+	        Suspension.steer_incr_c,
 	        Suspension.precision_c,
 	        Suspension.characteristics_target_values_c,
 	        Suspension.characteristics_weight_factors_c,
@@ -323,7 +379,8 @@ class Suspension():
     def calculateMovement(self):
         # hardpoints_c_arr = Suspension.hardpoints_c(*Suspension.hardpoints)
 
-        Suspension.mydll.suspension_movement(Suspension.hardpoints_c(*Suspension.hardpoints),
+        Suspension.mydll.suspension_movement(
+            Suspension.hardpoints_c(*Suspension.hardpoints),
             # hardpoints_c_arr,
 	        Suspension.wheel_radius_c,
 	        Suspension.wheelbase_c,
@@ -335,29 +392,31 @@ class Suspension():
 	        Suspension.brake_position_c,
 	        Suspension.vertical_movement_c ,
 	        Suspension.steering_movement_c ,
-	        Suspension.vertical_increments_c,
-	        Suspension.steering_increments_c ,
+	        Suspension.vert_incr_c,
+	        Suspension.steer_incr_c ,
 	        Suspension.precision_c,
-	        Suspension.output_params_movement_c,
-	        Suspension.hardpoints_moved_c)
-        # print("SUSPENSION CLASS PARAMETERS")
-        # print("wheel radius " + str(Suspension.wheel_radius_c))
-        # print("wheelbase " + str(Suspension.wheelbase_c))
-        # print("cog height " + str(Suspension.cog_height_c))
-        # print("drive bias " + str(Suspension.drive_bias_c))
-        # print("brake bias " + str(Suspension.brake_bias_c))
-        # print("suspension position " + str(Suspension.suspension_position_c))
-        # print("drive position " + str(Suspension.drive_position_c))
-        # print("brake position " + str(Suspension.brake_position_c))
-        # print("vertical movement " + str(Suspension.vertical_movement_c))
-        # print("SUSPENSION CLASS PARAMETERS END")
 
+	        Suspension.camberAngle_c,
+	        Suspension.toeAngle_c,
+	        Suspension.casterAngle_c,
+	        Suspension.rcHeight_c,
+	        Suspension.casterTrail_c,
+	        Suspension.scrubRadius_c,
+	        Suspension.kingpinAngle_c,
+	        Suspension.antiDrive_c,
+	        Suspension.antiBrake_c,
+	        Suspension.halfTrackChange_c,
+	        Suspension.wheelbaseChange_c,
+	        Suspension.const_output_params_movement_c,
 
-    def printResult(self):
-        # OUTPUT PARAMETERS
-        for i in range(17):
-            #print(hardpoints_c[i])
-            print(Suspension.output_params_optimisation_c[i])
+	        Suspension.lca3_moved_c,
+	        Suspension.uca3_moved_c,
+	        Suspension.tr1_moved_c,
+	        Suspension.tr2_moved_c,
+	        Suspension.wcn_moved_c,
+	        Suspension.spn_moved_c
+            )
+
 
     @classmethod
     def return_hps_and_parameters(cls):
@@ -367,13 +426,8 @@ class Suspension():
 
 
 def call_suspension_objective(hps):
-    """funkcija prima kao listu sve varijabilne podatke, a u njoj samoj se zadaju konstante kao
-    wcn, spn uca1x, uca2x, lca1x, lca2x
-    input sadrzi redom slijedece brojeve:
-    0-uca1y, 1-uca1z, 2-uca2y, 3-uca2z, 4-uca3x, 5-uca3y, 6-uca3z, 7-lca1y, 8-lca1z, 9-lca2y,
-    10-lca2z, 11-lca3x, 12-lca3y, 13-lca3z, 14-tr1x, 15-tr1y, 16-tr1z, 17-tr2x, 18-tr2y, 19-tr2z"""
-
-    s = Suspension([Suspension.hps_boundaries[0], hps[0], hps[1],
+    s = Suspension([
+        Suspension.hps_boundaries[0], hps[0], hps[1],
         Suspension.hps_boundaries[5], hps[2], hps[3],
         hps[4], hps[5], hps[6],
         Suspension.hps_boundaries[16], hps[7], hps[8],
@@ -384,7 +438,7 @@ def call_suspension_objective(hps):
         Suspension.hps_boundaries[44], Suspension.hps_boundaries[45], Suspension.hps_boundaries[46],
         Suspension.hps_boundaries[47], Suspension.hps_boundaries[48], Suspension.hps_boundaries[49]])
     s.calculateOptimisationMovement()
-    return Suspension.output_params_optimisation_c[0]
+    return Suspension.obj_func_res_c.value
 
 
 if __name__ == "__main__":
@@ -410,45 +464,34 @@ if __name__ == "__main__":
     #print("suspension output parameters___________")
     #print("suspension PARALLEL done")
 
-    #suspension = Suspension([-2038.666, -411.709, -132.316, 			# lca1 x y z
-	#	-2241.147, -408.195, -126.205, 					# lca2
-	#	-2135, -600, -140, 								# lca3
-	#	-2040.563, -416.249, -275.203, 					# uca1
-	#	-2241.481, -417.314, -270.739, 					# uca2
-	#	-2153, -578, -315, 								# uca3
-	#	-2234.8, -411.45, -194.6, 						# tr1
-	#	-2225, -582, -220,								# tr2
-	#	-2143.6, -620.5, -220.07, 						# wcn
-	#	-2143.6, -595.5, -219.34])
-
-
-    
     suspension = Suspension([
-        -2038.666,	-406.4665946,	-134.35686, 			# lca1 x y z
-		-2241.147,	-403.0632268,	-130.5371139, 					# lca2
-		-2134.704006	,-601.2135125	,-140.7087408, 								# lca3
-		-2040.563,	-415.3619422,	-278.3807264, 					# uca1
-		-2241.481,	-404.539224,	-272.8708173, 					# uca2
-		-2148.348713,	-578.1801535,	-310.5335043, 								# uca3
-		-2230.657617,	-411.7765453,	-195.9166227, 						# tr1
-		-2213.317115,	-590.0430222,	-216.5053897,								# tr2
-		-2143.6,	-620.5,	-220.07, 						# wcn
-		-2143.6,	-595.5,	-219.34])
+        -2038.666, -411.709, -132.316, 			# lca1 x y z
+		-2241.147, -408.195, -126.205, 					# lca2
+		-2135, -600, -140, 								# lca3
+		-2040.563, -416.249, -275.203, 					# uca1
+		-2241.481, -417.314, -270.739, 					# uca2
+		-2153, -578, -315, 								# uca3
+		-2234.8, -411.45, -194.6, 						# tr1
+		-2225, -582, -220,								# tr2
+		-2143.6, -620.5, -220.07, 						# wcn
+		-2143.6, -595.5, -219.34])
+
+
     print("done creating class")
-    suspension.calculateOptimisationMovement()
-    print("done calculating movement")
+    #suspension.calculateOptimisationMovement()
+    #print("done calculating movement")
 
-    print("Suspension optimisation output parameters:")
-    for i in range(21):
-        print(Suspension.output_params_optimisation_c[i])
+    #print("Suspension optimisation output parameters:")
+    #for i in range(21):
+    #    print(Suspension.output_params_optimisation_c[i])
 
-    print("obj func result:")
-    print(Suspension.obj_func_res_c)
+    #print("obj func result:")
+    #print(Suspension.obj_func_res_c)
 
     print("suspension movement output parameters:")
     suspension.calculateMovement()
  
-    for i in range(11):
-        print(Suspension.output_params_movement_c[i])
+    for i in range(6):
+        print(Suspension.const_output_params_movement_c[i])
 
     input("numeric_sol program finished, press any key")

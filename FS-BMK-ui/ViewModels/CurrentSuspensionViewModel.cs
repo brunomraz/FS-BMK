@@ -16,10 +16,42 @@ namespace FS_BMK_ui.ViewModels
     {
         public const string MechanicsDLL = @"MechanicsDll.dll";
         [DllImport(MechanicsDLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void suspension_movement(float[] hardpoints, float wRadiusin,
-    float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
-    int suspPos, int drivePos, int brakePos,
-    float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float[] outputParams, float[] outputHardpoints);
+        public static extern void suspension_movement(
+            float[] hardpoints, 
+            float wRadiusin,
+            float wheelbase,
+            float cogHeight, 
+            float frontDriveBias, 
+            float frontBrakeBias,
+            int suspPos, 
+            int drivePos, 
+            int brakePos,
+            float wVertin, 
+            float wSteerin, 
+            int vertIncrin, 
+            int steerIncrin, 
+            float precisionin,
+
+            float[] CamberAngle,
+            float[] ToeAngle,
+            float[] CasterAngle,
+            float[] RcHeight,
+            float[] CasterTrail,
+            float[] ScrubRadius,
+            float[] KingpinAngle,
+            float[] AntiDrive,
+            float[] AntiBrake,
+            float[] HalfTrackChange,
+            float[] WheelbaseChange,
+            float[] ConstOutputParams,
+
+            float[] Lca3Moved,
+            float[] Uca3Moved,
+            float[] Tr1Moved,
+            float[] Tr2Moved,
+            float[] WcnMoved,
+            float[] SpnMoved
+            );
 
 
         // private members
@@ -100,12 +132,33 @@ namespace FS_BMK_ui.ViewModels
                 CurrentSuspension.DrivePos,//1,//int drivePos, 
                 CurrentSuspension.BrakesPos,//0,//int brakePos,
                 CurrentSuspension.VerticalMovement,//float wVertin, 
-                0f,//30f,//float wSteerin, 
-                1,//int vertIncrin, 
-                0,//10,//int steerIncrin, 
+                CurrentSuspension.SteeringMovement,//30f,//float wSteerin, 
+                CurrentSuspension.VertIncr,//int vertIncrin, 
+                CurrentSuspension.SteerIncr,//10,//int steerIncrin, 
                 0.01f,//float precisionin,
-                _suspChars,
-                CurrentSuspension.HardpointsMoved);
+
+                CurrentSuspension.CamberAngle,
+                CurrentSuspension.ToeAngle,
+                CurrentSuspension.CasterAngle,
+                CurrentSuspension.RcHeight,
+                CurrentSuspension.CasterTrail,
+                CurrentSuspension.ScrubRadius,
+                CurrentSuspension.KingpinAngle,
+                CurrentSuspension.AntiDrive, 
+                CurrentSuspension.AntiBrake,
+                CurrentSuspension.HalfTrackChange,
+                CurrentSuspension.WheelbaseChange, 
+                CurrentSuspension.ConstOutputParams,
+
+
+                CurrentSuspension.Lca3Moved,
+                CurrentSuspension.Uca3Moved,
+                CurrentSuspension.Tr1Moved,
+                CurrentSuspension.Tr2Moved,
+                CurrentSuspension.WcnMoved,
+                CurrentSuspension.SpnMoved
+        
+                );
 
             _suspensionVisualization.UpdateModels();
 

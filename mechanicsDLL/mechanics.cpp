@@ -46,8 +46,8 @@ private:
 
 	float wheelbase;
 	float cogHeight;
-	float driveBias;
 
+	float driveBias;
 	float brakeBias;
 
 	int suspPos;      // front or rear suspension 0 for front, 1 for rear	
@@ -61,13 +61,12 @@ private:
 	Eigen::Vector3f uca12;
 	Eigen::MatrixXf lca3Glob;// (vertIncr * 2 + 1, 3);
 	Eigen::MatrixXf uca3Glob;// (vertIncr * 2 + 1, 3);
+	Eigen::MatrixXf tr1Glob;// (vertIncr * 2 + 1, 3);
 	Eigen::MatrixXf tr2Glob;// (vertIncr * 2 + 1, 3);
 	Eigen::MatrixXf wcnGlob;// (vertIncr * 2 + 1, 3);
 	Eigen::MatrixXf spnGlob;// (vertIncr * 2 + 1, 3);
 	Eigen::MatrixXf cpGlob;// (vertIncr * 2 + 1, 3);
 
-
-	/* initializers */
 
 public:
 
@@ -79,9 +78,10 @@ public:
 		float brakeBiasin, int suspPosin, int drivePosin, int brakePosin,
 		float wVertin, float wSteerin,
 		int vertIncrin, int steerIncrin, float precisionin) :
-		lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3),
-		tr2Glob(vertIncrin * 2 + 1, 3), wcnGlob(vertIncrin * 2 + 1, 3),
-		spnGlob(vertIncrin * 2 + 1, 3), cpGlob(vertIncrin * 2 + 1, 3)
+		lca3Glob(vertIncrin * 2 + 1, 3), uca3Glob(vertIncrin * 2 + 1, 3), 
+		tr1Glob(steerIncrin * 2 + 1, 3), 
+		tr2Glob((vertIncrin * 2 + 1) * (steerIncrin * 2 + 1), 3), wcnGlob((vertIncrin * 2 + 1) * (steerIncrin * 2 + 1), 3), 
+		spnGlob((vertIncrin * 2 + 1) * (steerIncrin * 2 + 1), 3), cpGlob((vertIncrin * 2 + 1) * (steerIncrin * 2 + 1), 3)
 	{
 		lca1ref << hps[0], hps[1], hps[2];
 		lca2ref << hps[3], hps[4], hps[5];
@@ -263,6 +263,7 @@ public:
 
 
 
+
 		// global positions of LCA3 for whole wheel movement
 		lca3Glob = (lca3LocLCA * rotLCA.transpose()).array().rowwise() + lca12.array().transpose();
 
@@ -317,42 +318,41 @@ public:
 
 		uca3Glob = (uca3LocUCA * rotUCA.transpose()).array().rowwise() + uca12.array().transpose();
 
+		
+
+		// calculating TR2 positions
+
+		tr1Glob.col(0) <<
+			Eigen::VectorXf::LinSpaced(2 * steerIncr + 1, tr1ref(0), tr1ref(0));
+		tr1Glob.col(1) <<
+			Eigen::VectorXf::LinSpaced(steerIncr, tr1ref(1) - wSteer, tr1ref(1) - wSteer / steerIncr),
+			tr1ref(1),
+			Eigen::VectorXf::LinSpaced(steerIncr, tr1ref(1) + wSteer / steerIncr, tr1ref(1) + wSteer);
+		tr1Glob.col(2) <<
+			Eigen::VectorXf::LinSpaced(2 * steerIncr + 1, tr1ref(2), tr1ref(2));
+
+		tr2prGlob = (uca3Glob - lca3Glob) * t_param + lca3Glob;
 
 
-
-		// calculating TR2, WCN, SPN and CP
-		// steering is not enabled, for optimization
-		// condition should be if (steerIncr = 0 || wSteer = 0)
-		if (steerIncr == 0 || wSteer == 0)
+		for (int i = 0; i < vertIncr * 2 + 1; i++)
 		{
+			Eigen::Matrix3f rotTR;
+			Eigen::Vector3f tr2locTR;
 
-			// calculating TR2 position
+			Eigen::Vector3f xCol{ 30, 0, -30 * (uca3Glob(i, 0) - lca3Glob(i, 0)) / (uca3Glob(i, 2) - lca3Glob(i, 2)) };
+			Eigen::Vector3f zCol{ (lca3Glob.row(i) - uca3Glob.row(i)).transpose() };
+			Eigen::Vector3f yCol{ zCol.cross(xCol) };
 
-			tr2prGlob = (uca3Glob - lca3Glob) * t_param + lca3Glob;
 
-
-			for (int i = 0; i < vertIncr * 2 + 1; i++)
+			rotTR.col(0) << xCol / xCol.norm();
+			rotTR.col(1) << yCol / yCol.norm();
+			rotTR.col(2) << zCol / zCol.norm();
+			for (int j = 0; j < steerIncr * 2 + 1; j++)
 			{
-				Eigen::Matrix3f rotTR;
-				Eigen::Vector3f tr2locTR;
-
-				Eigen::Vector3f xCol{ 30, 0, -30 * (uca3Glob(i, 0) - lca3Glob(i, 0)) / (uca3Glob(i, 2) - lca3Glob(i, 2)) };
-				Eigen::Vector3f zCol{ (lca3Glob.row(i) - uca3Glob.row(i)).transpose() };
-				Eigen::Vector3f yCol{ zCol.cross(xCol) };
-
-
-				rotTR.col(0) << xCol / xCol.norm();
-				rotTR.col(1) << yCol / yCol.norm();
-				rotTR.col(2) << zCol / zCol.norm();
-
-
 				// calculate local position of TR1
 				Eigen::Vector3f tr1locTR;
 
-				//lca3LocUCA = lca3Glob.rowwise() - uca12.transpose();
-				//lca3LocUCA = lca3LocUCA * rotUCA;
-
-				tr1locTR = -tr2prGlob.row(i) + tr1ref.transpose();
+				tr1locTR = -tr2prGlob.row(i) + tr1Glob.row(j);
 				tr1locTR = rotTR.transpose() * tr1locTR;
 
 
@@ -395,14 +395,14 @@ public:
 				tr2locTR(1) = (tr1locTR(1) * temp1TR2 + tr1locTR(0) * temp7TR2) / temp2TR2;
 				tr2locTR(2) = 0;
 
-				tr2Glob.row(i) << (rotTR * tr2locTR).transpose() + tr2prGlob.row(i);
+				tr2Glob.row(i * (2 * steerIncr + 1) + j) << (rotTR * tr2locTR).transpose() + tr2prGlob.row(i);
 
 
 
 				// calculating WCN and SPN 
 				Eigen::Matrix3f _rotTRk; // TR rotation matrix defined by TR2ref
 
-				Eigen::Vector3f _xCol{ tr2prGlob.row(i) - tr2Glob.row(i) };
+				Eigen::Vector3f _xCol{ tr2prGlob.row(i) - tr2Glob.row(i * (2 * steerIncr + 1) + j) };
 				Eigen::Vector3f _zCol{ lca3Glob.row(i) - uca3Glob.row(i) };
 				Eigen::Vector3f _yCol{ _zCol.cross(_xCol) };
 
@@ -411,75 +411,54 @@ public:
 				_rotTRk.col(1) << _yCol / _yCol.norm();
 				_rotTRk.col(2) << _zCol / _zCol.norm();
 
-				wcnGlob.row(i) << (_rotTRk * wcnlocTRk).transpose() + tr2prGlob.row(i);
-				spnGlob.row(i) << (_rotTRk * spnlocTRk).transpose() + tr2prGlob.row(i);
+				wcnGlob.row(i * (2 * steerIncr + 1) + j) << (_rotTRk * wcnlocTRk).transpose() + tr2prGlob.row(i);
+				spnGlob.row(i * (2 * steerIncr + 1) + j) << (_rotTRk * spnlocTRk).transpose() + tr2prGlob.row(i);
 
+
+				// CP calculation
+				float temp1cp{ -20 }; // this is actually vector 0,0,-20
+				Eigen::MatrixXf temp2cp((vertIncr * 2 + 1) * (steerIncr * 2 + 1), 3);
+				Eigen::MatrixXf temp3cp((vertIncr * 2 + 1) * (steerIncr * 2 + 1), 3);
+
+				temp2cp << spnGlob - wcnGlob;
+
+				temp3cp.col(0) << -temp2cp.col(0).array() * temp2cp.col(2).array() * temp1cp;
+				temp3cp.col(1) << -temp2cp.col(1).array() * temp2cp.col(2).array() * temp1cp;
+				temp3cp.col(2) <<
+					temp2cp.col(1).array() * temp2cp.col(1).array() * temp1cp +
+					temp2cp.col(0).array() * temp2cp.col(0).array() * temp1cp;
+
+				temp3cp.rowwise().normalize();
+
+
+				cpGlob << -temp3cp * wRadius + wcnGlob;
 			}
-
-			// CP calculation
-			float temp1cp{ -20 }; // this is actually vector 0,0,-20
-			Eigen::MatrixXf temp2cp(vertIncr * 2 + 1, 3);
-			Eigen::MatrixXf temp3cp(vertIncr * 2 + 1, 3);
-
-			temp2cp << spnGlob - wcnGlob;
-
-			temp3cp.col(0) << -temp2cp.col(0).array() * temp2cp.col(2).array() * temp1cp;
-			temp3cp.col(1) << -temp2cp.col(1).array() * temp2cp.col(2).array() * temp1cp;
-			temp3cp.col(2) <<
-				temp2cp.col(1).array() * temp2cp.col(1).array() * temp1cp +
-				temp2cp.col(0).array() * temp2cp.col(0).array() * temp1cp;
-
-			temp3cp.rowwise().normalize();
-
-
-			cpGlob << -temp3cp * wRadius + wcnGlob;
-
-
-
-
-			/* output params :
-			0  objective function
-			1  camber angle down
-			2 			    up
-			3  toe angle down
-			4 		     up
-			5  caster angle
-			6  roll centre height
-			7  caster trail
-			8  scrub radius
-			9  kingpin angle
-			10 anti squat / anti dive drive
-			11 anti rise / anti lift  brake
-			12 half track change down
-			13 wheelbase change down
-			14 half track change up
-			15 wheelbase change up
-			16 distance lca3 to wcn-spn line
-			17 distance uca3 to wcn-spn line
-			18 distance tr2 to wcn-spn line
-			19 distance lca3 to plane with wcn-spn normal through wcn point
-			20 distance uca3 to plane with wcn-spn normal through wcn point
-			21 distance tr2 to plane with wcn-spn normal through wcn point
-			*/
-
 		}
-
-		// steering is enabled
-		else
-		{
-		}
-
-
 	}
 
 	void LogToConsole()
 	{
 
 		std::cout << "lca3\n " << lca3Glob << "\n";
+		std::cout << "\n";
 		std::cout << "uca3\n " << uca3Glob << "\n";
+		std::cout << "\n";
+
+		std::cout << "tr1\n " << tr1Glob << "\n";
+		std::cout << "\n";
+
 		std::cout << "tr2\n " << tr2Glob << "\n";
+		std::cout << "\n";
+
 		std::cout << "wcn\n " << wcnGlob << "\n";
+		std::cout << "\n";
+
 		std::cout << "spn\n " << spnGlob << "\n";
+		std::cout << "\n";
+
+		std::cout << "cp\n " << cpGlob << "\n";
+		std::cout << "\n";
+
 	}
 
 	float ObjFuncModule(float peakWidth, float flatness, float variable, float target)
@@ -498,11 +477,11 @@ public:
 		return objFuncScore;
 	}
 
-	float GetCamberAngle(int position)
+	float GetCamberAngle(int vertPos, int steerPos)
 	{
 		float camberAngle;
-		int L = position;
-		int R = cpGlob.rows() - 1 - position;
+		int L = vertPos * (2 * steerIncr + 1) + steerPos;
+		int R = (cpGlob.rows() - 1 - vertPos) * (2 * steerIncr + 1) + steerPos;
 
 
 		Eigen::Vector3f wheelAxis{
@@ -518,10 +497,7 @@ public:
 			-cpGlob.row(R)(1) - cpGlob.row(L)(1)
 		};
 
-
-
 		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
-
 		float temp1_wcnpr =
 			spnGlob.row(L)(1) * groundNormal(1)
 			+ spnGlob.row(L)(2) * groundNormal(2)
@@ -555,13 +531,12 @@ public:
 		{
 			camberAngle = asin(camber) * 180 / 3.14159f;
 			return camberAngle;
-
 		}
 	}
 
-	float GetToeAngle(int position)
+	float GetToeAngle(int vertPos, int steerPos)
 	{
-		float toeAngle;
+		int position = vertPos * (2 * steerIncr + 1) + steerPos;
 		// positive toe angle for toe in and negative for toe out
 		Eigen::Vector3f wheelAxis = wcnGlob.row(position) - spnGlob.row(position);
 		Eigen::Vector3f refAxis{
@@ -570,25 +545,16 @@ public:
 			wcnGlob.row(position)(2) - spnGlob.row(position)(2)
 		};
 
-		float toe = acos(refAxis.norm() / wheelAxis.norm());
-
 		if (wcnGlob.row(position)(0) < spnGlob.row(position)(0)) // toe out case
-		{
-			toeAngle = -toe * 180 / 3.14159f;
-			return toeAngle;
-		}
+			return -acos(refAxis.norm() / wheelAxis.norm()) * 180 / 3.14159f;
 
 		else // toe in case
-		{
-			toeAngle = toe * 180 / 3.14159f;
-			return toeAngle;
-
-		}
-
+			return acos(refAxis.norm() / wheelAxis.norm()) * 180 / 3.14159f;
 	}
 
-	float GetCasterAngle(int position)
+	float GetCasterAngle(int vertPos, int steerPos)
 	{
+		int position = vertPos * (2 * steerIncr + 1) + steerPos;
 		float casterAngle;
 		float caster =
 			atan2f(
@@ -599,26 +565,30 @@ public:
 		return casterAngle;
 	}
 
-	float GetRollCentreHeight(int position)
+	float GetRollCentreHeight(int vertPos, int steerPos)
 	{
 		float rollCentreHeight;
-		int L = position;                  // L means left
-		int R = cpGlob.rows() - 1 - position;  // R means right
+
+		int Lv = vertPos;							// Left wheel only vertical position, UCA3, LCA3 points
+		int Rv = cpGlob.rows() - 1 - vertPos;		// Right wheel only vertical position, UCA3, LCA3 points
+
+		int Lvs = vertPos * (2 * steerIncr + 1) + steerPos;							// Left wheel position including vertical and steering movement
+		int Rvs = (cpGlob.rows() - 1 - vertPos) * (2 * steerIncr + 1) + steerPos;		// Right wheel position including vertical and steering movement
 
 		float slopePrecision{ 0.001f }; // if difference between slopes is less than this value, than they are considered parallel
 
-		Eigen::Vector3f lca3L{ lca3Glob.row(L) };
-		Eigen::Vector3f uca3L{ uca3Glob.row(L) };
-		Eigen::Vector3f cpL{ cpGlob.row(L) };
+		Eigen::Vector3f lca3L{ lca3Glob.row(Lv) };
+		Eigen::Vector3f uca3L{ uca3Glob.row(Lv) };
+		Eigen::Vector3f cpL{ cpGlob.row(Lvs) };
 
-		Eigen::Vector3f lca1R{ lca1ref(0),-lca1ref(1),lca1ref(2) };
-		Eigen::Vector3f lca2R{ lca2ref(0),-lca2ref(1),lca2ref(2) };
-		Eigen::Vector3f lca3R{ lca3Glob.row(R)(0),-lca3Glob.row(R)(1),lca3Glob.row(R)(2) };
+		Eigen::Vector3f lca1R{ lca1ref(0), -lca1ref(1), lca1ref(2) };
+		Eigen::Vector3f lca2R{ lca2ref(0), -lca2ref(1), lca2ref(2) };
+		Eigen::Vector3f lca3R{ lca3Glob.row(Rv)(0), -lca3Glob.row(Rv)(1), lca3Glob.row(Rv)(2) };
 
-		Eigen::Vector3f uca1R{ uca1ref(0),-uca1ref(1),uca1ref(2) };
-		Eigen::Vector3f uca2R{ uca2ref(0),-uca2ref(1),uca2ref(2) };
-		Eigen::Vector3f uca3R{ uca3Glob.row(R)(0),-uca3Glob.row(R)(1),uca3Glob.row(R)(2) };
-		Eigen::Vector3f cpR{ cpGlob.row(R)(0),-cpGlob.row(R)(1),cpGlob.row(R)(2) };
+		Eigen::Vector3f uca1R{ uca1ref(0), -uca1ref(1), uca1ref(2) };
+		Eigen::Vector3f uca2R{ uca2ref(0), -uca2ref(1), uca2ref(2) };
+		Eigen::Vector3f uca3R{ uca3Glob.row(Rv)(0), -uca3Glob.row(Rv)(1), uca3Glob.row(Rv)(2) };
+		Eigen::Vector3f cpR{ cpGlob.row(Rvs)(0), -cpGlob.row(Rvs)(1), cpGlob.row(Rvs)(2) };
 
 		float aLCAL;
 		float aUCAL;
@@ -657,8 +627,6 @@ public:
 		float bICL;
 		float bICR;
 
-
-
 		// CALCULATE LEFT SIDE
 		// case if LEFT LCA and UCA are parallel
 		if (abs(aLCAL - aUCAL) / abs(aLCAL) < precision)
@@ -693,11 +661,9 @@ public:
 			bICR = -cpR(1) * aICR + cpR(2);
 		}
 
-
 		// instantenous centre lines are parallel
 		if (abs(aICR - aICL) / abs(aICR) < precision)
 		{
-
 			rollCentreHeight = 0;
 			return rollCentreHeight;
 		}
@@ -714,21 +680,24 @@ public:
 				sqrt(pow((cpR(2) - cpL(2)), 2) + pow((cpR(1) - cpL(1)), 2));
 			return rollCentreHeight;
 		}
-
 	}
 
-	float GetCasterTrail(int position)
+	float GetCasterTrail(int vertPos, int steerPos)
 	{
 		float casterTrail;
-		int L = position;                  // L means left
-		int R = cpGlob.rows() - 1 - position;  // R means right
 
-		Eigen::Vector3f cpL{ cpGlob.row(L) };
-		Eigen::Vector3f cpR{ cpGlob.row(R) };
-		Eigen::Vector3f wcn{ wcnGlob.row(L) };
-		Eigen::Vector3f spn{ spnGlob.row(L) };
-		Eigen::Vector3f lca3L{ lca3Glob.row(L) };
-		Eigen::Vector3f uca3L{ uca3Glob.row(L) };
+		int Lv = vertPos;							// Left wheel only vertical position, UCA3, LCA3 points
+		int Rv = cpGlob.rows() - 1 - vertPos;		// Right wheel only vertical position, UCA3, LCA3 points
+
+		int Lvs = vertPos * (2 * steerIncr + 1) + steerPos;							// Left wheel position including vertical and steering movement
+		int Rvs = (cpGlob.rows() - 1 - vertPos) * (2 * steerIncr + 1) + steerPos;		// Right wheel position including vertical and steering movement
+
+		Eigen::Vector3f cpL{ cpGlob.row(Lvs) };
+		Eigen::Vector3f cpR{ cpGlob.row(Rvs) };
+		Eigen::Vector3f wcn{ wcnGlob.row(Lvs) };
+		Eigen::Vector3f spn{ spnGlob.row(Lvs) };
+		Eigen::Vector3f lca3L{ lca3Glob.row(Lv) };
+		Eigen::Vector3f uca3L{ uca3Glob.row(Lv) };
 
 		Eigen::Vector3f grndNormal{
 			0,
@@ -801,22 +770,25 @@ public:
 		{
 			casterTrail = -caster_trail;
 			return casterTrail;
-
 		}
 	}
 
-	float GetScrubRadius(int position)
+	float GetScrubRadius(int vertPos, int steerPos)
 	{
 		float scrubRadius;
-		int L = position;                  // L means left
-		int R = cpGlob.rows() - 1 - position;  // R means right
 
-		Eigen::Vector3f cpL{ cpGlob.row(L) };
-		Eigen::Vector3f cpR{ cpGlob.row(R) };
-		Eigen::Vector3f wcn{ wcnGlob.row(L) };
-		Eigen::Vector3f spn{ spnGlob.row(L) };
-		Eigen::Vector3f lca3L{ lca3Glob.row(L) };
-		Eigen::Vector3f uca3L{ uca3Glob.row(L) };
+		int Lv = vertPos;							// Left wheel only vertical position, UCA3, LCA3 points
+		int Rv = cpGlob.rows() - 1 - vertPos;		// Right wheel only vertical position, UCA3, LCA3 points
+
+		int Lvs = vertPos * (2 * steerIncr + 1) + steerPos;							// Left wheel position including vertical and steering movement
+		int Rvs = (cpGlob.rows() - 1 - vertPos) * (2 * steerIncr + 1) + steerPos;		// Right wheel position including vertical and steering movement
+
+		Eigen::Vector3f cpL{ cpGlob.row(Lvs) };
+		Eigen::Vector3f cpR{ cpGlob.row(Rvs) };
+		Eigen::Vector3f wcn{ wcnGlob.row(Lvs) };
+		Eigen::Vector3f spn{ spnGlob.row(Lvs) };
+		Eigen::Vector3f lca3L{ lca3Glob.row(Lv) };
+		Eigen::Vector3f uca3L{ uca3Glob.row(Lv) };
 
 		Eigen::Vector3f grndNormal{
 			0,
@@ -889,30 +861,33 @@ public:
 
 	}
 
-	float GetKingpinAngle(int position)
+	float GetKingpinAngle(int vertPos, int steerPos)
 	{
 		float kingpinAngle;
-		int L = position;                  // L means left
-		int R = cpGlob.rows() - 1 - position;  // R means right
 
-		Eigen::Vector3f cpL{ cpGlob.row(L) };
-		Eigen::Vector3f cpR{ cpGlob.row(R) };
+		int Lv = vertPos;							// Left wheel only vertical position, UCA3, LCA3 points
+		int Rv = cpGlob.rows() - 1 - vertPos;		// Right wheel only vertical position, UCA3, LCA3 points
+
+		int Lvs = vertPos * (2 * steerIncr + 1) + steerPos;							// Left wheel position including vertical and steering movement
+		int Rvs = (cpGlob.rows() - 1 - vertPos) * (2 * steerIncr + 1) + steerPos;		// Right wheel position including vertical and steering movement
+
+		Eigen::Vector3f cpL{ cpGlob.row(Lvs) };
+		Eigen::Vector3f cpR{ cpGlob.row(Rvs) };
 
 		Eigen::Vector3f grndNormal{
 			0,
 			-cpR(2) + cpL(2),
 			-cpR(1) - cpL(1)
-
 		};
 
 		Eigen::Vector3f l3u3pr{
 			0,
-			-uca3Glob.row(L)(1) + lca3Glob.row(L)(1),
-			-uca3Glob.row(L)(2) + lca3Glob.row(L)(2)
+			-uca3Glob.row(Lv)(1) + lca3Glob.row(Lv)(1),
+			-uca3Glob.row(Lv)(2) + lca3Glob.row(Lv)(2)
 		};
 
 		// if uca3 is closer to chassis centre then kingpin angle is positive
-		if (abs(uca3Glob.row(L)(1)) < abs(lca3Glob.row(L)(1)))
+		if (abs(uca3Glob.row(Lv)(1)) < abs(lca3Glob.row(Lv)(1)))
 		{
 			kingpinAngle = acos(grndNormal.dot(l3u3pr) / grndNormal.norm() / l3u3pr.norm()) * 180.0f / 3.14159f;
 			return kingpinAngle;
@@ -926,15 +901,17 @@ public:
 		}
 	}
 
-	float GetAntiDrive(int position)
+	float GetAntiDrive(int vertPos, int steerPos)
 	{
 		float antiDrive;
-		int L = position;
 
-		Eigen::Vector3f lca3{ lca3Glob.row(L) };
-		Eigen::Vector3f uca3{ uca3Glob.row(L) };
-		Eigen::Vector3f cp{ cpGlob.row(position) };
-		Eigen::Vector3f wcn{ wcnGlob.row(position) };
+		int Lv = vertPos;							// Left wheel only vertical position, UCA3, LCA3 points
+		int Lvs = vertPos * (2 * steerIncr + 1) + steerPos;							// Left wheel position including vertical and steering movement
+
+		Eigen::Vector3f lca3{ lca3Glob.row(Lv) };
+		Eigen::Vector3f uca3{ uca3Glob.row(Lv) };
+		Eigen::Vector3f cp{ cpGlob.row(Lvs) };
+		Eigen::Vector3f wcn{ wcnGlob.row(Lvs) };
 
 		float aLCA;
 		float aUCA;
@@ -1006,16 +983,19 @@ public:
 		return antiDrive;
 	}
 
-	float GetAntiBrake(int position)
+	float GetAntiBrake(int vertPos, int steerPos)
 	{
 		float antiBrakes;
 
-		int L = position;
+		int Lv = vertPos;							// Left wheel only vertical position, UCA3, LCA3 points
+		int Lvs = vertPos * (2 * steerIncr + 1) + steerPos;							// Left wheel position including vertical and steering movement
 
-		Eigen::Vector3f lca3{ lca3Glob.row(L) };
-		Eigen::Vector3f uca3{ uca3Glob.row(L) };
-		Eigen::Vector3f cp{ cpGlob.row(position) };
-		Eigen::Vector3f wcn{ wcnGlob.row(position) };
+
+
+		Eigen::Vector3f lca3{ lca3Glob.row(Lv) };
+		Eigen::Vector3f uca3{ uca3Glob.row(Lv) };
+		Eigen::Vector3f cp{ cpGlob.row(Lvs) };
+		Eigen::Vector3f wcn{ wcnGlob.row(Lvs) };
 
 		float aLCA;
 		float aUCA;
@@ -1087,16 +1067,19 @@ public:
 		return antiBrakes;
 	}
 
-	float GetHalfTrackChange(int position)
+	float GetHalfTrackChange(int vertPos, int steerPos)
 	{
+		int position = vertPos * (2 * steerIncr + 1) + steerPos;
 		float halfTrackChange;
 		// if current wheelbase or half track is smaller than reference than negative sign, otherwise positive
 		halfTrackChange = cpGlob.row(cpGlob.rows() / 2)[1] - cpGlob.row(position)[1];
 		return halfTrackChange;
 	}
 
-	float GetWheelbaseChange(int position)
+	float GetWheelbaseChange(int vertPos, int steerPos)
 	{
+		int position = vertPos * (2 * steerIncr + 1) + steerPos;
+
 		float wheelbaseChange;
 		// if current wheelbase or half track is smaller than reference than negative sign, otherwise positive
 		wheelbaseChange = -cpGlob.row(cpGlob.rows() / 2)[0] + cpGlob.row(position)[0];
@@ -1159,21 +1142,21 @@ public:
 	void GetOptimisationCharacteristicsArray(float* characteristicsArray)
 	{
 
-		characteristicsArray[0] = GetCamberAngle(0);
-		characteristicsArray[1] = GetCamberAngle(2);
-		characteristicsArray[2] = GetToeAngle(0);
-		characteristicsArray[3] = GetToeAngle(2);
-		characteristicsArray[4] = GetCasterAngle(1);
-		characteristicsArray[5] = GetRollCentreHeight(1);
-		characteristicsArray[6] = GetCasterTrail(1);
-		characteristicsArray[7] = GetScrubRadius(1);
-		characteristicsArray[8] = GetKingpinAngle(1);
-		characteristicsArray[9] = GetAntiDrive(1);
-		characteristicsArray[10] = GetAntiBrake(1);
-		characteristicsArray[11] = GetHalfTrackChange(0);
-		characteristicsArray[12] = GetHalfTrackChange(2);
-		characteristicsArray[13] = GetWheelbaseChange(0);
-		characteristicsArray[14] = GetWheelbaseChange(2);
+		characteristicsArray[0] = GetCamberAngle(0, 0);
+		characteristicsArray[1] = GetCamberAngle(2, 0);
+		characteristicsArray[2] = GetToeAngle(0, 0);
+		characteristicsArray[3] = GetToeAngle(2, 0);
+		characteristicsArray[4] = GetCasterAngle(1, 0);
+		characteristicsArray[5] = GetRollCentreHeight(1, 0);
+		characteristicsArray[6] = GetCasterTrail(1, 0);
+		characteristicsArray[7] = GetScrubRadius(1, 0);
+		characteristicsArray[8] = GetKingpinAngle(1, 0);
+		characteristicsArray[9] = GetAntiDrive(1, 0);
+		characteristicsArray[10] = GetAntiBrake(1, 0);
+		characteristicsArray[11] = GetHalfTrackChange(0, 0);
+		characteristicsArray[12] = GetHalfTrackChange(2, 0);
+		characteristicsArray[13] = GetWheelbaseChange(0, 0);
+		characteristicsArray[14] = GetWheelbaseChange(2, 0);
 		characteristicsArray[15] = GetLca3DistanceFromWheelAxis();
 		characteristicsArray[16] = GetUca3DistanceFromWheelAxis();
 		characteristicsArray[17] = GetTr2DistanceFromWheelAxis();
@@ -1183,24 +1166,42 @@ public:
 
 	}
 
-	void GetMovedHardpoints(float* movedHardpoints) {
-		movedHardpoints[0] = lca3Glob.row(0)(0);
-		movedHardpoints[1] = lca3Glob.row(0)(1);
-		movedHardpoints[2] = lca3Glob.row(0)(2);
-		movedHardpoints[3] = uca3Glob.row(0)(0);
-		movedHardpoints[4] = uca3Glob.row(0)(1);
-		movedHardpoints[5] = uca3Glob.row(0)(2);
-		movedHardpoints[6] = tr2Glob.row(0)(0);
-		movedHardpoints[7] = tr2Glob.row(0)(1);
-		movedHardpoints[8] = tr2Glob.row(0)(2);
-		movedHardpoints[9] = wcnGlob.row(0)(0);
-		movedHardpoints[10] = wcnGlob.row(0)(1);
-		movedHardpoints[11] = wcnGlob.row(0)(2);
-		movedHardpoints[12] = spnGlob.row(0)(0);
-		movedHardpoints[13] = spnGlob.row(0)(1);
-		movedHardpoints[14] = spnGlob.row(0)(2);
-	}
+	void GetMovedHardpoints(float* outputLca3, float* outputUca3, float* outputTr1, float* outputTr2,
+		float* outputWcn, float* outputSpn) {
+		
+		for (int i = 0; i < vertIncr * 2 + 1; i++)
+		{
+			outputLca3[i * 3] = lca3Glob.row(i)(0);
+			outputLca3[i * 3 + 1] = lca3Glob.row(i)(1);
+			outputLca3[i * 3 + 2] = lca3Glob.row(i)(2);
+			
+			outputUca3[i * 3] = uca3Glob.row(i)(0);
+			outputUca3[i * 3 + 1] = uca3Glob.row(i)(1);
+			outputUca3[i * 3 + 2] = uca3Glob.row(i)(2);
 
+			for (int j = 0; j < steerIncr * 2 + 1; j++)
+			{
+				outputTr2[(i * (2 * steerIncr + 1) + j) * 3] = tr2Glob.row(i * (2 * steerIncr + 1) + j)(0);
+				outputTr2[(i * (2 * steerIncr + 1) + j) * 3 + 1] = tr2Glob.row(i * (2 * steerIncr + 1) + j)(1);
+				outputTr2[(i * (2 * steerIncr + 1) + j) * 3 + 2] = tr2Glob.row(i * (2 * steerIncr + 1) + j)(2);
+
+				outputWcn[(i * (2 * steerIncr + 1) + j) * 3] = wcnGlob.row(i * (2 * steerIncr + 1) + j)(0);
+				outputWcn[(i * (2 * steerIncr + 1) + j) * 3 + 1] = wcnGlob.row(i * (2 * steerIncr + 1) + j)(1);
+				outputWcn[(i * (2 * steerIncr + 1) + j) * 3 + 2] = wcnGlob.row(i * (2 * steerIncr + 1) + j)(2);
+
+				outputSpn[(i * (2 * steerIncr + 1) + j) * 3] = wcnGlob.row(i * (2 * steerIncr + 1) + j)(0);
+				outputSpn[(i * (2 * steerIncr + 1) + j) * 3 + 1] = wcnGlob.row(i * (2 * steerIncr + 1) + j)(1);
+				outputSpn[(i * (2 * steerIncr + 1) + j) * 3 + 2] = wcnGlob.row(i * (2 * steerIncr + 1) + j)(2);
+			}
+		}
+
+		for (int j = 0; j < steerIncr * 2 + 1; j++)
+		{
+			outputTr2[j * 3] = tr1Glob.row(j)(0);
+			outputTr2[j * 3 + 1] = tr1Glob.row(j)(1);
+			outputTr2[j * 3 + 2] = tr1Glob.row(j)(2);
+		}
+	}
 };
 
 
@@ -1221,9 +1222,9 @@ void optimisation_obj_res(float* hardpoints, int suspPos, float wRadius,
 	};
 	susp.CalculateMovement();
 
+
 	susp.GetOptimisationCharacteristicsArray(outputParams);
 	obj_func_res = susp.GetObjFuncScore(peakWidth, flatness, outputParams, targetValues, weightFactors);
-
 }
 
 
@@ -1231,7 +1232,27 @@ void optimisation_obj_res(float* hardpoints, int suspPos, float wRadius,
 void suspension_movement(float* hardpoints, float wRadiusin,
 	float wheelbase, float cogHeight, float frontDriveBias, float frontBrakeBias,
 	int suspPos, int drivePos, int brakePos,
-	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, float* outputParams, float* outputHardpoints)
+	float wVertin, float wSteerin, int vertIncrin, int steerIncrin, float precisionin, 
+
+	float* camberAngle, 
+	float* toeAngle, 
+	float* casterAngle, 
+	float* rcHeight, 
+	float* casterTrail,
+	float* scrubRadius,
+	float* kingpinAngle,
+	float* antiDrive, 
+	float* antiBrake, 
+	float* halfTrackChange,
+	float* wheelbaseChange, 
+	float* constOutputParams,
+
+	float* outputLca3, 
+	float* outputUca3, 
+	float* outputTr1, 
+	float* outputTr2, 
+	float* outputWcn, 
+	float* outputSpn)
 {
 
 	Suspension susp{
@@ -1245,25 +1266,32 @@ void suspension_movement(float* hardpoints, float wRadiusin,
 
 	susp.CalculateMovement();
 
-	susp.GetMovedHardpoints(outputHardpoints);
+	susp.GetMovedHardpoints(outputLca3, outputUca3, outputTr1, outputTr2, outputWcn, outputSpn);
 
-	outputParams[0] = susp.GetCamberAngle(0);
-	outputParams[1] = susp.GetToeAngle(0);
-	outputParams[2] = susp.GetCasterAngle(0);
-	outputParams[3] = susp.GetRollCentreHeight(0);
-	outputParams[4] = susp.GetCasterTrail(0);
-	outputParams[5] = susp.GetScrubRadius(0);
-	outputParams[6] = susp.GetKingpinAngle(0);
-	outputParams[7] = susp.GetAntiDrive(0);
-	outputParams[8] = susp.GetAntiBrake(0);
-	outputParams[9] = susp.GetHalfTrackChange(0);
-	outputParams[10] = susp.GetWheelbaseChange(0);
-	outputParams[11] = susp.GetLca3DistanceFromWheelAxis();
-	outputParams[12] = susp.GetUca3DistanceFromWheelAxis();
-	outputParams[13] = susp.GetTr2DistanceFromWheelAxis();
-	outputParams[14] = susp.GetLca3DistanceToWheelCentrePlane();
-	outputParams[15] = susp.GetUca3DistanceToWheelCentrePlane();
-	outputParams[16] = susp.GetTr2DistanceToWheelCentrePlane();
+	for (int i = 0; i < vertIncrin * 2 + 1; i++)
+	{
 
+		for (int j = 0; j < steerIncrin * 2 + 1; j++)
+		{
+			camberAngle[i * (2 * steerIncrin + 1) + j] = susp.GetCamberAngle(i, j);
+			toeAngle[i * (2 * steerIncrin + 1) + j] = susp.GetToeAngle(i, j);
+			casterAngle[i * (2 * steerIncrin + 1) + j] = susp.GetCasterAngle(i, j);
+			rcHeight[i * (2 * steerIncrin + 1) + j] = susp.GetRollCentreHeight(i, j);
+			casterTrail[i * (2 * steerIncrin + 1) + j] = susp.GetCasterTrail(i, j);
+			scrubRadius[i * (2 * steerIncrin + 1) + j] = susp.GetScrubRadius(i, j);
+			kingpinAngle[i * (2 * steerIncrin + 1) + j] = susp.GetKingpinAngle(i, j);
+			antiDrive[i * (2 * steerIncrin + 1) + j] = susp.GetAntiDrive(i, j);
+			antiBrake[i * (2 * steerIncrin + 1) + j] = susp.GetAntiBrake(i, j);
+			halfTrackChange[i * (2 * steerIncrin + 1) + j] = susp.GetHalfTrackChange(i, j);
+			wheelbaseChange[i * (2 * steerIncrin + 1) + j] = susp.GetWheelbaseChange(i, j);
 
+		}
+	}
+
+	constOutputParams[0] = susp.GetLca3DistanceFromWheelAxis();
+	constOutputParams[1] = susp.GetUca3DistanceFromWheelAxis();
+	constOutputParams[2] = susp.GetTr2DistanceFromWheelAxis();
+	constOutputParams[3] = susp.GetLca3DistanceToWheelCentrePlane();
+	constOutputParams[4] = susp.GetUca3DistanceToWheelCentrePlane();
+	constOutputParams[5] = susp.GetTr2DistanceToWheelCentrePlane();
 }
