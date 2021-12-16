@@ -754,14 +754,14 @@
                                 </Grid>
                                 <Button Width="60" Content="Update" Command="{Binding CalculateSuspensionMovementCommand}"/>
                                 <TextBlock Text="vertical slider"/>
-                                <TextBlock Text="{Binding CurrentSuspension.VertPos}"/>
-                                <Slider Value="{Binding CurrentSuspension.VertPos}"
+                                <TextBlock Text="{Binding VertPos}"/>
+                                <Slider Value="{Binding VertPos}"
                                         Minimum="{Binding CurrentSuspension.VertPosMin}"
                                         Maximum="{Binding CurrentSuspension.VertPosMax}"
                                         />
                                 <TextBlock Text="steering slider"/>
-                                <TextBlock Text="{Binding CurrentSuspension.SteerPos}"/>
-                                <Slider Value="{Binding CurrentSuspension.SteerPos}" 
+                                <TextBlock Text="{Binding SteerPos}"/>
+                                <Slider Value="{Binding SteerPos}" 
                                         Minimum="{Binding CurrentSuspension.SteerPosMin}"
                                         Maximum="{Binding CurrentSuspension.SteerPosMax}"
                                         />
@@ -789,6 +789,7 @@
                                 <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
                                          Text="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value, StringFormat={}{0:#,0.00}}"
                                          Grid.Row="1"/>
+                                <Button Content="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value, StringFormat={}{0:#,0.00}}" Grid.Row="1" Width="50"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>

@@ -9,10 +9,11 @@ using System.Windows.Input;
 using System.Windows;
 using System.Runtime.InteropServices;
 using FS_BMK_ui.HelperClasses;
+using System.ComponentModel;
 
 namespace FS_BMK_ui.ViewModels
 {
-    class CurrentSuspensionViewModel
+    class CurrentSuspensionViewModel : INotifyPropertyChanged
     {
         public const string MechanicsDLL = @"MechanicsDll.dll";
         [DllImport(MechanicsDLL, CallingConvention = CallingConvention.Cdecl)]
@@ -27,7 +28,7 @@ namespace FS_BMK_ui.ViewModels
             int drivePos, 
             int brakePos,
             float wVertin, 
-            float wSteerin, 
+            float wSteerin,
             int vertIncrin, 
             int steerIncrin, 
             float precisionin,
@@ -58,6 +59,9 @@ namespace FS_BMK_ui.ViewModels
         private CurrentSuspension _currentSuspension;
         private SuspensionVisualization _suspensionVisualization;
 
+        private int _vertPos;
+        private int _steerPos;
+
         public CurrentSuspensionViewModel()
         {
             _currentSuspension = new CurrentSuspension();
@@ -77,6 +81,57 @@ namespace FS_BMK_ui.ViewModels
             get { return _suspensionVisualization; }
         }
 
+        public int VertPos
+        {
+            get { return _vertPos; }
+            set
+            {
+                if (_vertPos != value)
+                {
+                    _vertPos = value;
+                    OnPropertyChanged("VertPos");
+                    _suspensionVisualization.UpdateModels(VertPos, SteerPos);
+                    CurrentSuspension.SuspensionCharacteristics[0].Value = CurrentSuspension.CamberAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[1].Value = CurrentSuspension.ToeAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[2].Value = CurrentSuspension.CasterAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[3].Value = CurrentSuspension.RcHeight[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[4].Value = CurrentSuspension.CasterTrail[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[5].Value = CurrentSuspension.ScrubRadius[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[6].Value = CurrentSuspension.KingpinAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[7].Value = CurrentSuspension.AntiDrive[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[8].Value = CurrentSuspension.AntiBrake[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[9].Value = CurrentSuspension.HalfTrackChange[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[10].Value = CurrentSuspension.WheelbaseChange[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                }
+            }
+        }
+        public int SteerPos
+        {
+            get { return _steerPos; }
+            set
+            {
+                if (_steerPos != value)
+                {
+                    _steerPos = value;
+                    OnPropertyChanged("SteerPos");
+                    _suspensionVisualization.UpdateModels(VertPos, SteerPos);
+                    CurrentSuspension.SuspensionCharacteristics[0].Value = CurrentSuspension.CamberAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[1].Value = CurrentSuspension.ToeAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[2].Value = CurrentSuspension.CasterAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[3].Value = CurrentSuspension.RcHeight[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[4].Value = CurrentSuspension.CasterTrail[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[5].Value = CurrentSuspension.ScrubRadius[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[6].Value = CurrentSuspension.KingpinAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[7].Value = CurrentSuspension.AntiDrive[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[8].Value = CurrentSuspension.AntiBrake[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[9].Value = CurrentSuspension.HalfTrackChange[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                    CurrentSuspension.SuspensionCharacteristics[10].Value = CurrentSuspension.WheelbaseChange[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+                }
+            }
+        }
+
+
+
 
         private ICommand _CalculateSuspensionMovementCommand;
         public ICommand CalculateSuspensionMovementCommand
@@ -94,7 +149,6 @@ namespace FS_BMK_ui.ViewModels
 
         public void CalculateSuspensionMovement2(object parameter)
         {
-            float[] _suspChars = new float[17];
             float[] hardpoints = {
                 CurrentSuspension.Hardpoints[0].X, CurrentSuspension.Hardpoints[0].Y, CurrentSuspension.Hardpoints[0].Z,
                 CurrentSuspension.Hardpoints[1].X, CurrentSuspension.Hardpoints[1].Y, CurrentSuspension.Hardpoints[1].Z,
@@ -122,6 +176,7 @@ namespace FS_BMK_ui.ViewModels
                 brakeBias = CurrentSuspension.RearBrakeBias;
             }
 
+
             suspension_movement(hardpoints, 
                 CurrentSuspension.WheelRadius,
                 CurrentSuspension.Wheelbase, 
@@ -135,7 +190,7 @@ namespace FS_BMK_ui.ViewModels
                 CurrentSuspension.SteeringMovement,//30f,//float wSteerin, 
                 CurrentSuspension.VertIncr,//int vertIncrin, 
                 CurrentSuspension.SteerIncr,//10,//int steerIncrin, 
-                0.01f,//float precisionin,
+                0.001f,//float precisionin,
 
                 CurrentSuspension.CamberAngle,
                 CurrentSuspension.ToeAngle,
@@ -150,35 +205,35 @@ namespace FS_BMK_ui.ViewModels
                 CurrentSuspension.WheelbaseChange, 
                 CurrentSuspension.ConstOutputParams,
 
-
                 CurrentSuspension.Lca3Moved,
                 CurrentSuspension.Uca3Moved,
                 CurrentSuspension.Tr1Moved,
                 CurrentSuspension.Tr2Moved,
                 CurrentSuspension.WcnMoved,
                 CurrentSuspension.SpnMoved
-        
                 );
 
-            _suspensionVisualization.UpdateModels();
 
-            CurrentSuspension.SuspensionCharacteristics[0].Value = _suspChars[0];
-            CurrentSuspension.SuspensionCharacteristics[1].Value = _suspChars[1];
-            CurrentSuspension.SuspensionCharacteristics[2].Value = _suspChars[2];
-            CurrentSuspension.SuspensionCharacteristics[3].Value = _suspChars[3];
-            CurrentSuspension.SuspensionCharacteristics[4].Value = _suspChars[4];
-            CurrentSuspension.SuspensionCharacteristics[5].Value = _suspChars[5];
-            CurrentSuspension.SuspensionCharacteristics[6].Value = _suspChars[6];
-            CurrentSuspension.SuspensionCharacteristics[7].Value = _suspChars[7];
-            CurrentSuspension.SuspensionCharacteristics[8].Value = _suspChars[8];
-            CurrentSuspension.SuspensionCharacteristics[9].Value = _suspChars[9];
-            CurrentSuspension.SuspensionCharacteristics[10].Value = _suspChars[10];
-            CurrentSuspension.SuspensionCharacteristics[11].Value = _suspChars[11];
-            CurrentSuspension.SuspensionCharacteristics[12].Value = _suspChars[12];
-            CurrentSuspension.SuspensionCharacteristics[13].Value = _suspChars[13];
-            CurrentSuspension.SuspensionCharacteristics[14].Value = _suspChars[14];
-            CurrentSuspension.SuspensionCharacteristics[15].Value = _suspChars[15];
-            CurrentSuspension.SuspensionCharacteristics[16].Value = _suspChars[16];
+
+            _suspensionVisualization.UpdateModels(VertPos, SteerPos);
+
+            CurrentSuspension.SuspensionCharacteristics[0].Value = CurrentSuspension.CamberAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[1].Value = CurrentSuspension.ToeAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[2].Value = CurrentSuspension.CasterAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[3].Value = CurrentSuspension.RcHeight[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[4].Value = CurrentSuspension.CasterTrail[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[5].Value = CurrentSuspension.ScrubRadius[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[6].Value = CurrentSuspension.KingpinAngle[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[7].Value = CurrentSuspension.AntiDrive[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[8].Value = CurrentSuspension.AntiBrake[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[9].Value = CurrentSuspension.HalfTrackChange[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[10].Value = CurrentSuspension.WheelbaseChange[(CurrentSuspension.VertIncr + _vertPos) * (2 * CurrentSuspension.SteerIncr + 1) + CurrentSuspension.SteerIncr + _steerPos];
+            CurrentSuspension.SuspensionCharacteristics[11].Value = CurrentSuspension.ConstOutputParams[0];
+            CurrentSuspension.SuspensionCharacteristics[12].Value = CurrentSuspension.ConstOutputParams[1];
+            CurrentSuspension.SuspensionCharacteristics[13].Value = CurrentSuspension.ConstOutputParams[2];
+            CurrentSuspension.SuspensionCharacteristics[14].Value = CurrentSuspension.ConstOutputParams[3];
+            CurrentSuspension.SuspensionCharacteristics[15].Value = CurrentSuspension.ConstOutputParams[4];
+            CurrentSuspension.SuspensionCharacteristics[16].Value = CurrentSuspension.ConstOutputParams[5];
         }
 
 
@@ -188,6 +243,21 @@ namespace FS_BMK_ui.ViewModels
 
         }
 
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+
+            }
+        }
+        #endregion
 
     }
 }

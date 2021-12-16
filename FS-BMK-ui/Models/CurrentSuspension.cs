@@ -22,16 +22,14 @@ namespace FS_BMK_ui.Models
         private float _frontBrakeBias = 0.6f;
         private float _rearDriveBias;
         private float _rearBrakeBias;
-        private float _verticalMovement = 0f;
-        private float _steeringMovement = 0f;
-        private int _vertIncr = 1;
-        private int _steerIncr = 0;
+        private float _verticalMovement = 30f;
+        private float _steeringMovement = 10f;
+        private int _vertIncr = 20;
+        private int _steerIncr = 20;
         private int _vertPosMin;
         private int _vertPosMax;
-        private int _vertPos;
         private int _steerPosMin;
         private int _steerPosMax;
-        private int _steerPos;
 
         private float[] _camberAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
         private float[] _toeAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
@@ -89,30 +87,30 @@ namespace FS_BMK_ui.Models
             new WPFFloat()    // TR2 - WCN distance
         };
 
-        public int VertPos
+        public CurrentSuspension()
         {
-            get { return _vertPos; }
-            set
-            {
-                if (_vertPos != value)
-                {
-                    _vertPos = value;
-                    OnPropertyChanged("VertPos");
-                }
-            }
+            _camberAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _toeAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _casterAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _rcHeight = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _casterTrail = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _scrubRadius = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _kingpinAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _antiDrive = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _antiBrake = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _halfTrackChange = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _wheelbaseChange = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _constOutputParams = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+
+            _lca3Moved = new float[(VertIncr * 2 + 1) * 3];
+            _uca3Moved = new float[(VertIncr * 2 + 1) * 3];
+            _tr1Moved = new float[(SteerIncr * 2 + 1) * 3];
+            _tr2Moved = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1) * 3];
+            _wcnMoved = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1) * 3];
+            _spnMoved = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1) * 3];
         }
-        public int SteerPos
-        {
-            get { return _steerPos; }
-            set
-            {
-                if (_steerPos != value)
-                {
-                    _steerPos = value;
-                    OnPropertyChanged("SteerPos");
-                }
-            }
-        }
+
+        
 
         public int VertIncr { get { return _vertIncr; } set { _vertIncr = value; OnPropertyChanged("VertPosMin"); OnPropertyChanged("VertPosMax"); } }
         public int VertPosMin { get { return _vertPosMin = -VertIncr; } set { _vertPosMin = value; } }

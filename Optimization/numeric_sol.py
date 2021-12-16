@@ -42,7 +42,7 @@ class Suspension():
     brake_position = 0 # 0 for outboard, 1 for inboard
     vertical_movement = 30
     steering_movement = 10
-    vert_incr = 1
+    vert_incr = 2
     steer_incr = 1
     precision = 0.001
        
@@ -255,22 +255,22 @@ class Suspension():
     
     
     lca3_moved = []															
-    lca3_moved_c = (c.c_float * (vert_incr * 2 + 1))(*lca3_moved)
+    lca3_moved_c = (c.c_float * ((vert_incr * 2 + 1) * 3))(*lca3_moved)
     
     uca3_moved = []															
-    uca3_moved_c = (c.c_float * (vert_incr * 2 + 1))(*uca3_moved)
+    uca3_moved_c = (c.c_float * ((vert_incr * 2 + 1) * 3))(*uca3_moved)
 
     tr1_moved = []															
-    tr1_moved_c = (c.c_float * (steer_incr * 2 + 1))(*tr1_moved)
+    tr1_moved_c = (c.c_float * ((steer_incr * 2 + 1) * 3))(*tr1_moved)
 
     tr2_moved = []															
-    tr2_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*tr2_moved)
+    tr2_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1) * 3))(*tr2_moved)
 
     wcn_moved = []															
-    wcn_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*wcn_moved)
+    wcn_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1) * 3))(*wcn_moved)
 
     spn_moved = []															
-    spn_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1)))(*spn_moved)
+    spn_moved_c = (c.c_float * ((vert_incr * 2 + 1) * (steer_incr * 2 + 1) * 3))(*spn_moved)
 
 
 
@@ -487,10 +487,47 @@ if __name__ == "__main__":
 
     #print("obj func result:")
     #print(Suspension.obj_func_res_c)
-
+    
     print("suspension movement output parameters:")
     suspension.calculateMovement()
- 
+    print("lca3 and uca3")
+    for i in range(Suspension.vert_incr * 2 + 1):   
+        print(suspension.lca3_moved_c[i * 3])
+        print(suspension.lca3_moved_c[i * 3 + 1])
+        print(suspension.lca3_moved_c[i * 3 + 2])
+        #print(suspension.uca3_moved_c[i * 3])
+        #print(suspension.uca3_moved_c[i * 3 + 1])
+        #print(suspension.uca3_moved_c[i * 3 + 2])
+    print()
+    print("wcn spn")
+
+    for i in range((Suspension.vert_incr * 2 + 1) * (Suspension.steer_incr * 2 + 1)):
+        #print(suspension.tr2_moved_c[i * 3])
+        #print(suspension.tr2_moved_c[i * 3 + 1])
+        #print(suspension.tr2_moved_c[i * 3 + 2])
+        #print(suspension.wcn_moved_c[i * 3])
+        #print(suspension.wcn_moved_c[i * 3 + 1])
+        #print(suspension.wcn_moved_c[i * 3 + 2])
+        print(suspension.spn_moved_c[i * 3])
+        print(suspension.spn_moved_c[i * 3 + 1])
+        print(suspension.spn_moved_c[i * 3 + 2])
+    print()
+    print("chars")
+    for i in range((Suspension.vert_incr * 2 + 1) * (Suspension.steer_incr * 2 + 1)):
+        #print(Suspension.camberAngle_c[i])
+        #print(Suspension.toeAngle_c[i])
+        print(Suspension.casterAngle_c[i]) # bugs
+        #print(Suspension.rcHeight_c[i])
+        #print(Suspension.casterTrail_c[i])
+        #print(Suspension.scrubRadius_c[i])
+        #print(Suspension.kingpinAngle_c[i])
+        #print(Suspension.antiDrive_c[i])
+        #print(Suspension.antiBrake_c[i])
+        #print(Suspension.halfTrackChange_c[i])
+        #print(Suspension.wheelbaseChange_c[i])
+
+    print("const chars")
+    
     for i in range(6):
         print(Suspension.const_output_params_movement_c[i])
 
