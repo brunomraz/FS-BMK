@@ -31,25 +31,25 @@ namespace FS_BMK_ui.Models
         private int _steerPosMin;
         private int _steerPosMax;
 
-        private float[] _camberAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _toeAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _casterAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _rcHeight = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _casterTrail = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _scrubRadius = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _kingpinAngle = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _antiDrive = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _antiBrake = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _halfTrackChange = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _wheelbaseChange = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _constOutputParams = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _camberAngle; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _toeAngle; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _casterAngle; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _rcHeight; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _casterTrail; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _scrubRadius; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _kingpinAngle; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _antiDrive; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _antiBrake; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _halfTrackChange; /* lca3, uca3, tr2, wcn, spn*/
+        private CurrentSuspCharacteristics _wheelbaseChange; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _constOutputParams; /* lca3, uca3, tr2, wcn, spn*/
 
-        private float[] _lca3Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _uca3Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _tr1Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _tr2Moved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _wcnMoved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
-        private float[] _spnMoved = new float[15]; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _lca3Moved; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _uca3Moved; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _tr1Moved; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _tr2Moved; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _wcnMoved; /* lca3, uca3, tr2, wcn, spn*/
+        private float[] _spnMoved; /* lca3, uca3, tr2, wcn, spn*/
 
         private int _suspensionPos = 1; // front or rear suspension 0 for front, 1 for rear
         private int _drivePos = 1;  // outboard or inboard drive 0 for outboard, 1 for inboard
@@ -89,17 +89,17 @@ namespace FS_BMK_ui.Models
 
         public CurrentSuspension()
         {
-            _camberAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _toeAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _casterAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _rcHeight = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _casterTrail = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _scrubRadius = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _kingpinAngle = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _antiDrive = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _antiBrake = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _halfTrackChange = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
-            _wheelbaseChange = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
+            _camberAngle = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Camber angle", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _toeAngle = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Toe angle", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _casterAngle = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Caster angle", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _rcHeight = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Roll centre height", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _casterTrail = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Caster trail", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _scrubRadius = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "scrub radius", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _kingpinAngle = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Kingpin angle", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _antiDrive = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Anti drive", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _antiBrake = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Anti brake", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _halfTrackChange = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Half track change", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
+            _wheelbaseChange = new CurrentSuspCharacteristics(_verticalMovement, _vertIncr, _steerIncr, "Wheelbase change", new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)]);
             _constOutputParams = new float[(VertIncr * 2 + 1) * (SteerIncr * 2 + 1)];
 
             _lca3Moved = new float[(VertIncr * 2 + 1) * 3];
@@ -122,19 +122,18 @@ namespace FS_BMK_ui.Models
         public int SuspensionPos { get { return _suspensionPos; } set { _suspensionPos = value; OnPropertyChanged("SuspensionPos"); } }
         public int DrivePos { get { return _drivePos; } set { _drivePos = value; OnPropertyChanged("DrivePos"); } }
         public int BrakesPos { get { return _brakesPos; } set { _brakesPos = value; OnPropertyChanged("BrakesPos"); } }
-        //public float[] HardpointsMoved { get { return _hardpointsMoved; } set { _hardpointsMoved = value; } }
 
-        public float[] CamberAngle { get { return _camberAngle; } }
-        public float[] ToeAngle { get { return _toeAngle; } }
-        public float[] CasterAngle { get { return _casterAngle; } }
-        public float[] RcHeight { get { return _rcHeight; } }
-        public float[] CasterTrail { get { return _casterTrail; } }
-        public float[] ScrubRadius { get { return _scrubRadius; } }
-        public float[] KingpinAngle { get { return _kingpinAngle; } }
-        public float[] AntiDrive { get { return _antiDrive; } }
-        public float[] AntiBrake { get { return _antiBrake; } }
-        public float[] HalfTrackChange { get { return _halfTrackChange; } }
-        public float[] WheelbaseChange { get { return _wheelbaseChange; } }
+        public CurrentSuspCharacteristics CamberAngle { get { return _camberAngle; } }
+        public CurrentSuspCharacteristics ToeAngle { get { return _toeAngle; } }
+        public CurrentSuspCharacteristics CasterAngle { get { return _casterAngle; } }
+        public CurrentSuspCharacteristics RcHeight { get { return _rcHeight; } }
+        public CurrentSuspCharacteristics CasterTrail { get { return _casterTrail; } }
+        public CurrentSuspCharacteristics ScrubRadius { get { return _scrubRadius; } }
+        public CurrentSuspCharacteristics KingpinAngle { get { return _kingpinAngle; } }
+        public CurrentSuspCharacteristics AntiDrive { get { return _antiDrive; } }
+        public CurrentSuspCharacteristics AntiBrake { get { return _antiBrake; } }
+        public CurrentSuspCharacteristics HalfTrackChange { get { return _halfTrackChange; } }
+        public CurrentSuspCharacteristics WheelbaseChange { get { return _wheelbaseChange; } }
         public float[] ConstOutputParams { get { return _constOutputParams; } }
 
         public float[] Lca3Moved { get { return _lca3Moved; } }

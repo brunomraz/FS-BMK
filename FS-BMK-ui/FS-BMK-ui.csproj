@@ -97,6 +97,7 @@
     <Compile Include="CameraController\SphericalCameraController.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\RadioButtonPositionConverter.cs" />
+    <Compile Include="HelperClasses\CurrentSuspCharacteristics.cs" />
     <Compile Include="HelperClasses\Hardpoint.cs" />
     <Compile Include="HelperClasses\HardpointLimits.cs" />
     <Compile Include="HelperClasses\OptimisationCharacteristic.cs" />
@@ -108,9 +109,13 @@
     <Compile Include="UserControls\FeatureLimitsUserControl.xaml.cs">
       <DependentUpon>FeatureLimitsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\CharacteristicsGraphWindowViewModel.cs" />
     <Compile Include="ViewModels\GraphWindowViewModel.cs" />
     <Compile Include="ViewModels\OptimizationSuspensionViewModel.cs" />
     <Compile Include="ViewModels\CurrentSuspensionViewModel.cs" />
+    <Compile Include="Views\CharacteristicsGraphWindow.xaml.cs">
+      <DependentUpon>CharacteristicsGraphWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GraphWindow.xaml.cs">
       <DependentUpon>GraphWindow.xaml</DependentUpon>
     </Compile>
@@ -165,6 +170,10 @@
     <Page Include="UserControls\FeatureLimitsUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CharacteristicsGraphWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\GraphWindow.xaml">
       <SubType>Designer</SubType>

@@ -20,6 +20,22 @@
         <vm:OptimizationSuspensionViewModel x:Key="OptimizationSuspensionVM"/>
         <vm:CurrentSuspensionViewModel x:Key="CurrentSuspensionVM"/>
         <intboolconverter:RadioButtonPositionConverter x:Key="IntBoolConverter"/>
+        <Style x:Key="GraphButton" 
+               TargetType="{x:Type TextBox}">
+
+            <Setter Property="Background"
+                    Value="LightGray" />
+            <Setter Property="Width"
+                    Value="50"/>
+            <Setter Property="Margin"
+                    Value="0,0,0,5"/>
+            <Setter Property="HorizontalAlignment"
+                    Value="Left"/>
+            <Setter Property="BorderBrush"
+                    Value="Black"/>
+            <Setter Property="BorderThickness"
+                    Value="1"/>
+        </Style>
         <Style x:Key="ReadOnlyTextBoxStyle" 
                TargetType="{x:Type TextBox}">
             <Setter Property="IsReadOnly"
@@ -786,10 +802,11 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Camber angle"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                         Text="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value, StringFormat={}{0:#,0.00}}"
-                                         Grid.Row="1"/>
-                                <Button Content="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value, StringFormat={}{0:#,0.00}}" Grid.Row="1" Width="50"/>
+
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[0].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.CamberAngle}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -797,9 +814,11 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Toe angle"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[1].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[1].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.ToeAngle}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -807,9 +826,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Caster angle"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[2].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[2].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.CasterAngle}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -817,9 +837,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="RC Height"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[3].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[3].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.RcHeight}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -827,9 +848,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Caster Trail"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[4].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[4].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.CasterTrail}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -837,9 +859,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Scrub radius"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[5].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[5].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.ScrubRadius}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -847,9 +870,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Kingpin Angle"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[6].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[6].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.KingpinAngle}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -857,9 +881,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Anti Drive"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[7].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[7].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.AntiDrive}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -867,9 +892,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Anti Brake"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[8].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[8].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.AntiBrake}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -877,9 +903,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Half track Change"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[9].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[9].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.HalfTrackChange}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
@@ -887,9 +914,10 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="Wheelbase Change"/>
-                                <TextBox Style="{StaticResource ReadOnlyTextBoxStyle}" 
-                                        Text="{Binding CurrentSuspension.SuspensionCharacteristics[10].Value, StringFormat={}{0:#,0.00}}" 
-                                             Grid.Row="1"/>
+                                <Button Background="LightGray" Margin="0,0,0,5" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="1"
+                                    Content="{Binding CurrentSuspension.SuspensionCharacteristics[10].Value}" ContentStringFormat="{}{0:#,0.00}" Grid.Row="1" Width="50"
+                                        Command="{Binding OpenCharacteristicsGraphWindowCommand}"
+                                        CommandParameter="{Binding CurrentSuspension.WheelbaseChange}"/>
                             </Grid>
                             <Grid Width="110">
                                 <Grid.RowDefinitions>
