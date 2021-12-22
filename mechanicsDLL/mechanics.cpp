@@ -496,11 +496,7 @@ public:
 			-cpGlob.row(R)(2) + cpGlob.row(L)(2),
 			-cpGlob.row(R)(1) - cpGlob.row(L)(1)
 		};
-		std::cout << "vertPos" << vertPos << "\n";
-		std::cout << "steerPos" << steerPos << "\n";
-		std::cout << "R" << R << "\n";
-		std::cout << "L" << L << "\n";
-
+		
 		// calculate plane parallel to ground going through SPN point with respect to which camber is measured
 		float temp1_wcnpr =
 			spnGlob.row(L)(1) * groundNormal(1)
@@ -1291,14 +1287,12 @@ void suspension_movement(float* hardpoints, float wRadiusin,
 	susp.CalculateMovement();
 
 	susp.GetMovedHardpoints(outputLca3, outputUca3, outputTr1, outputTr2, outputWcn, outputSpn);
-	susp.LogToConsole();
 	for (int i = 0; i < vertIncrin * 2 + 1; i++)
 	{
 
 		for (int j = 0; j < steerIncrin * 2 + 1; j++)
 		{
 			camberAngle[i * (2 * steerIncrin + 1) + j] = susp.GetCamberAngle(i, j);
-			std::cout << "camber angle " << susp.GetCamberAngle(i, j)<<"\n";
 			toeAngle[i * (2 * steerIncrin + 1) + j] = susp.GetToeAngle(i, j);
 			casterAngle[i * (2 * steerIncrin + 1) + j] = susp.GetCasterAngle(i);
 			rcHeight[i * (2 * steerIncrin + 1) + j] = susp.GetRollCentreHeight(i, j);

@@ -42,8 +42,8 @@ class Suspension():
     brake_position = 0 # 0 for outboard, 1 for inboard
     vertical_movement = 30
     steering_movement = 10
-    vert_incr = 2
-    steer_incr = 1
+    vert_incr = 1  # 1 for optimisation testing, 1 or greater for movement testing
+    steer_incr = 0 # 0 for optimisation testing, 0 or greater for movement testing
     precision = 0.001
        
     # OUTPUT PARAMETERS
@@ -81,6 +81,43 @@ class Suspension():
     const_output_params_movement = []
     const_output_params_movement_c = (c.c_float * 6)(*const_output_params_movement)
 
+
+    # point coordinates from CAD
+    # -2038.666, -411.709, -132.316
+    # -2241.147, -408.195, -126.205
+    # -2135, -600, -140
+    # -2040.563, -416.249, -275.203
+    # -2241.481, -417.314, -270.739
+    # -2153, -578, -315
+    # -2234.8, -411.45, -194.6
+    # -2225, -582, -220
+    # -2143.6, -620.5, -220.07
+    # -2143.6, -595.5, -219.34
+
+    # CAD suspension characteristics for optimisation
+    # -2.65 camber lo pos 
+    # -0.98 camber up pos 
+    # -0.07 toe lo pos 
+    # 0.05 toe up pos 
+    # 5.87 caster angle
+    # 55.97 roll centre height
+    # 21.96 caster trail
+    # -10.3 scrub radius
+    # 7.17 kingpin angle
+    # 16.9 anti drive
+    # 5.48 anti brake
+    # -4.93 half track change lo pos
+    # 0.76 half track change up pos
+    # 0.77 wheelbase change lo pos
+    # -0.74 wheelbase change up pos
+    # 79.9 lca3 free radius
+    # 96.59 uca3 free radius
+    # 81.41 tr2 free radius
+    # -22.83 lca3 wcn distance
+    # -39.71 uca3 wcn distance
+    # -38.49 tr2 wcn distance
+
+
     # hps boundaries
     hps_boundaries = [-2038.666,-490,-335,-180,-80,     # 0 lca1x_opt, 1 lca1y_lo, 2 lca1y_up, 3 lca1z_lo, 4 lca1z_up
         -2241.147,-490,-335,-180,-80,     # 5 lca2x_opt, 6 lca2y_lo, 7 lca2y_up, 8 lca2z_lo, 9 lca2z_up
@@ -104,7 +141,7 @@ class Suspension():
     characteristics_boundaries = [-2.7, -2.6,        # indices: 0, 1, # camber down pos lo hi lim
         -1, -0.9,          # indices: 2, 3, # camber up pos lo hi lim
         -0.08, 0,          # indices: 4, 5, # toe down pos lo hi lim
-        0, 0.05,           # indices: 6, 7, # toe up pos lo hi lim
+        0, 0.06,           # indices: 6, 7, # toe up pos lo hi lim
         4, 15,             # indices: 8, 9, # caster angle lo hi lim
         50, 65,            # indices: 10, 11, # roll centre height lo hi lim
         10, 25,            # indices: 12, 13, # caster trail lo hi lim
@@ -182,27 +219,27 @@ class Suspension():
         # INPUT FOR DLL FILE OBJECTIVE FUNCTION
     characteristics_target_values = [
         #-2.65, -0.95, 0, 0, 4, 50, 10, -15, 3, 10, 10, 0, 0, 0, 0, 70, 70, 70, -80, -80, -80
-        -2.6500000953674316 ,
-        -0.949999988079071 ,
-        0,
-        0,
-        7,
-        50,
-        15,
-        -7,
-        4,
-        18,
-        10,
-        0,
-        0,
-        0,
-        0,
-        100,
-        100,
-        100,
-        -20,
-        -20,
-        -20
+        -2.65,
+        -0.98,
+        -0.074,
+        0.048,
+        5.87,
+        55.97,
+        21.955,
+        -10.3,
+        7.165,
+        16.9,
+        5.47,
+        -4.93,
+        0.76,
+        0.77,
+        -0.74,
+        79.9,
+        96.588,
+        81.41,
+        -22.83,
+        -39.71,
+        -38.49
 
         ]
     # INPUT FOR DLL FILE OBJECTIVE FUNCTION
@@ -478,57 +515,57 @@ if __name__ == "__main__":
 
 
     print("done creating class")
-    #suspension.calculateOptimisationMovement()
-    #print("done calculating movement")
+    suspension.calculateOptimisationMovement()
+    print("done calculating movement")
 
-    #print("Suspension optimisation output parameters:")
-    #for i in range(21):
-    #    print(Suspension.output_params_optimisation_c[i])
+    print("Suspension optimisation output parameters:")
+    for i in range(21):
+        print(Suspension.output_params_optimisation_c[i])
 
-    #print("obj func result:")
-    #print(Suspension.obj_func_res_c)
+    print("obj func result:")
+    print(Suspension.obj_func_res_c.value)
     
-    print("suspension movement output parameters:")
-    suspension.calculateMovement()
-    print("lca3 and uca3")
-    for i in range(Suspension.vert_incr * 2 + 1):   
-        print(suspension.lca3_moved_c[i * 3])
-        print(suspension.lca3_moved_c[i * 3 + 1])
-        print(suspension.lca3_moved_c[i * 3 + 2])
-        #print(suspension.uca3_moved_c[i * 3])
-        #print(suspension.uca3_moved_c[i * 3 + 1])
-        #print(suspension.uca3_moved_c[i * 3 + 2])
-    print()
-    print("wcn spn")
+    #print("suspension movement output parameters:")
+    #suspension.calculateMovement()
+    #print("lca3 and uca3")
+    #for i in range(Suspension.vert_incr * 2 + 1):   
+    #    print(suspension.lca3_moved_c[i * 3])
+    #    print(suspension.lca3_moved_c[i * 3 + 1])
+    #    print(suspension.lca3_moved_c[i * 3 + 2])
+    #    #print(suspension.uca3_moved_c[i * 3])
+    #    #print(suspension.uca3_moved_c[i * 3 + 1])
+    #    #print(suspension.uca3_moved_c[i * 3 + 2])
+    #print()
+    #print("wcn spn")
 
-    for i in range((Suspension.vert_incr * 2 + 1) * (Suspension.steer_incr * 2 + 1)):
-        #print(suspension.tr2_moved_c[i * 3])
-        #print(suspension.tr2_moved_c[i * 3 + 1])
-        #print(suspension.tr2_moved_c[i * 3 + 2])
-        #print(suspension.wcn_moved_c[i * 3])
-        #print(suspension.wcn_moved_c[i * 3 + 1])
-        #print(suspension.wcn_moved_c[i * 3 + 2])
-        print(suspension.spn_moved_c[i * 3])
-        print(suspension.spn_moved_c[i * 3 + 1])
-        print(suspension.spn_moved_c[i * 3 + 2])
-    print()
-    print("chars")
-    for i in range((Suspension.vert_incr * 2 + 1) * (Suspension.steer_incr * 2 + 1)):
-        #print(Suspension.camberAngle_c[i])
-        #print(Suspension.toeAngle_c[i])
-        print(Suspension.casterAngle_c[i]) # bugs
-        #print(Suspension.rcHeight_c[i])
-        #print(Suspension.casterTrail_c[i])
-        #print(Suspension.scrubRadius_c[i])
-        #print(Suspension.kingpinAngle_c[i])
-        #print(Suspension.antiDrive_c[i])
-        #print(Suspension.antiBrake_c[i])
-        #print(Suspension.halfTrackChange_c[i])
-        #print(Suspension.wheelbaseChange_c[i])
+    #for i in range((Suspension.vert_incr * 2 + 1) * (Suspension.steer_incr * 2 + 1)):
+    #    #print(suspension.tr2_moved_c[i * 3])
+    #    #print(suspension.tr2_moved_c[i * 3 + 1])
+    #    #print(suspension.tr2_moved_c[i * 3 + 2])
+    #    #print(suspension.wcn_moved_c[i * 3])
+    #    #print(suspension.wcn_moved_c[i * 3 + 1])
+    #    #print(suspension.wcn_moved_c[i * 3 + 2])
+    #    print(suspension.spn_moved_c[i * 3])
+    #    print(suspension.spn_moved_c[i * 3 + 1])
+    #    print(suspension.spn_moved_c[i * 3 + 2])
+    #print()
+    #print("chars")
+    #for i in range((Suspension.vert_incr * 2 + 1) * (Suspension.steer_incr * 2 + 1)):
+    #    #print(Suspension.camberAngle_c[i])
+    #    #print(Suspension.toeAngle_c[i])
+    #    print(Suspension.casterAngle_c[i]) # bugs
+    #    #print(Suspension.rcHeight_c[i])
+    #    #print(Suspension.casterTrail_c[i])
+    #    #print(Suspension.scrubRadius_c[i])
+    #    #print(Suspension.kingpinAngle_c[i])
+    #    #print(Suspension.antiDrive_c[i])
+    #    #print(Suspension.antiBrake_c[i])
+    #    #print(Suspension.halfTrackChange_c[i])
+    #    #print(Suspension.wheelbaseChange_c[i])
 
-    print("const chars")
+    #print("const chars")
     
-    for i in range(6):
-        print(Suspension.const_output_params_movement_c[i])
+    #for i in range(6):
+    #    print(Suspension.const_output_params_movement_c[i])
 
     input("numeric_sol program finished, press any key")

@@ -20,7 +20,7 @@
         // private members
         private OptimizationSuspension _optimizationSuspension;
         private bool _canPressOptimizeButton = true;
-        private string _pythonFilesPath = @"C:\dev\FS-BMK\Optimization\optimisation.py";
+        private string _pythonFilesPath = @"C:\dev\FS-BMK\Optimization\optimisation2.py";
         private string _pythonEnvironmentPath = @"C:\ProgramData\Anaconda3\python.exe";
 
         public OptimizationSuspensionViewModel( )
@@ -39,7 +39,6 @@
             get { return _pythonEnvironmentPath; }
             set { _pythonEnvironmentPath = value; }
         }
-
 
         public bool CanPressOptimizeButton
         {

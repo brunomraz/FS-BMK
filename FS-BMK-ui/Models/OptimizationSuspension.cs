@@ -9,16 +9,16 @@
     {
 
         private HardpointLimits[] _hardpointsLimits = new HardpointLimits[10] {
-            new HardpointLimits("LCA1", -2040.1f,0,-420,-400,-140,-130, false, true,true),
-            new HardpointLimits("LCA2", -2240,0,-420,-400,-140,-120, false, true,true),
-            new HardpointLimits("LCA3", -2140,-2130,-610,-590,-150,-130,true,true,true),
-            new HardpointLimits("UCA1", -2040,0,-420,-400,-280,-270,false,true,true),
-            new HardpointLimits("UCA2", -2240,0,-420,-400,-275,-265, false, true,true),
-            new HardpointLimits("UCA3", -2160,-2150,-590,-570,-320,-310,true,true,true),
-            new HardpointLimits("TR1", -2240,-2230,-420,-400,-200,-190,true,true,true),
-            new HardpointLimits("TR2", -2240,-2210,-600,-570,-230,-210,true,true,true),
-            new HardpointLimits("WCN", -2143.6f,0,-620.5f,0,-220.07f,0,false,false,false),
-            new HardpointLimits("SPN", -2143.6f,0,-595.5f,0,-219.34f,0,false,false,false)
+            new HardpointLimits("LCA1", -2038.666f, 0, -490, -335, -180, -80, false, true, true),
+            new HardpointLimits("LCA2", -2241.147f, 0, -490, -335, -180, -80, false, true, true),
+            new HardpointLimits("LCA3", -2160, -2100, -630, -570, -170, -110, true, true, true),
+            new HardpointLimits("UCA1", -2040.563f, 0, -490, -335, -325, -225, false, true, true),
+            new HardpointLimits("UCA2", -2241.481f, 0, -490, -335, -325,-225, false, true, true),
+            new HardpointLimits("UCA3", -2180, -2120, -610, -550, -345, -285, true, true, true),
+            new HardpointLimits("TR1", -2280, -2190, -485, -335, -245, -145, true, true, true),
+            new HardpointLimits("TR2", -2270, -2180, -610, -550, -280, -160, true, true, true),
+            new HardpointLimits("WCN", -2143.6f, 0, -620.5f, 0, -220.07f, 0, false, false, false),
+            new HardpointLimits("SPN", -2143.6f, 0, -595.5f, 0, -219.34f, 0, false, false, false)
         };
 
 
@@ -26,28 +26,26 @@
         {
             //new OptimisationCharacteristic(string name, float target, float peakWidth, float peakFlatness, float lower, float upper),
             new OptimisationCharacteristic("camber down pos", -2.65f, 0.5f, 1f, -2.7f, -2.6f),
-            new OptimisationCharacteristic("camber up pos", -0.95f, 0.8f, 1f, -1f, -0.9f),
-            new OptimisationCharacteristic("toe down pos", 0f, 0.1f, 2f, -0.08f, 0f),
-            new OptimisationCharacteristic("toe up pos", 0f, 0.1f, 2f, 0f, 0.05f),
-            new OptimisationCharacteristic("caster angle", 8f, 2f, 5f, 4f, 20f),
-            new OptimisationCharacteristic("roll centre height", 50f, 100f, 3f, 50f, 65f),
-            new OptimisationCharacteristic("csater trail", 11f, 10_000f, 4f, 5f, 25f),
-            new OptimisationCharacteristic("scrub radius", -7f, 10f, 2f, -15f, -7f),
-            new OptimisationCharacteristic("kingpin angle", 4f, 10f, 2f, 4f, 8f),
-            new OptimisationCharacteristic("anti drive", 18f, 100f, 2f, 10f, 18f),
-            new OptimisationCharacteristic("anti brake", 10f, 100f, 2f, 0f, 10f),
-            new OptimisationCharacteristic("half track change down pos", 0f, 100f, 2f, -10f, 0f),
-            new OptimisationCharacteristic("half track change up pos", 0f, 100f, 2f, 0f, 3f),
-            new OptimisationCharacteristic("wheelbase change down pos", 0f, 100f, 2f, -1.5f, 1.5f),
-            new OptimisationCharacteristic("wheelbase change up pos", 0f, 100f, 2f, -1.5f, 1.5f),
-            new OptimisationCharacteristic("LCA3 free radius", 80f, 10f, 2f, 60f, 100f),
-            new OptimisationCharacteristic("UCA3 free radius", 96f, 10f, 2f, 60f, 100f),
-            new OptimisationCharacteristic("TR2 free radius", 80f, 10f, 2f, 60f, 100f),
-            new OptimisationCharacteristic("LCA3 WCN distance", -20f, 10f, 2f, -100f, -20f),
-            new OptimisationCharacteristic("UCA3 WCN distance", -40f, 10f, 2f, -100f, -20f),
-            new OptimisationCharacteristic("TR2 WCN distance", -40f, 10f, 2f, -100f, -20f),
-
-
+            new OptimisationCharacteristic("camber up pos", -0.98f, 0.8f, 1f, -1f, -0.9f),
+            new OptimisationCharacteristic("toe down pos", -0.074f, 0.1f, 2f, -0.08f, 0f),
+            new OptimisationCharacteristic("toe up pos", 0.048f, 0.1f, 2f, 0f, 0.05f),
+            new OptimisationCharacteristic("caster angle", 5.87f, 2f, 5f, 4f, 20f),
+            new OptimisationCharacteristic("roll centre height", 55.97f, 100f, 3f, 50f, 65f),
+            new OptimisationCharacteristic("caster trail", 21.955f, 10_000f, 4f, 5f, 25f),
+            new OptimisationCharacteristic("scrub radius", -10.3f, 10f, 2f, -15f, -7f),
+            new OptimisationCharacteristic("kingpin angle", 7.165f, 10f, 2f, 4f, 8f),
+            new OptimisationCharacteristic("anti drive", 16.9f, 100f, 2f, 10f, 18f),
+            new OptimisationCharacteristic("anti brake", 5.47f, 100f, 2f, 0f, 10f),
+            new OptimisationCharacteristic("half track change down pos", -4.93f, 100f, 2f, -10f, 0f),
+            new OptimisationCharacteristic("half track change up pos", 0.76f, 100f, 2f, 0f, 3f),
+            new OptimisationCharacteristic("wheelbase change down pos", 0.77f, 100f, 2f, -1.5f, 1.5f),
+            new OptimisationCharacteristic("wheelbase change up pos", -0.74f, 100f, 2f, -1.5f, 1.5f),
+            new OptimisationCharacteristic("LCA3 free radius", 79.9f, 10f, 2f, 60f, 100f),
+            new OptimisationCharacteristic("UCA3 free radius", 96.588f, 10f, 2f, 60f, 100f),
+            new OptimisationCharacteristic("TR2 free radius", 81.41f, 10f, 2f, 60f, 100f),
+            new OptimisationCharacteristic("LCA3 WCN distance", -22.83f, 10f, 2f, -100f, -20f),
+            new OptimisationCharacteristic("UCA3 WCN distance", -39.71f, 10f, 2f, -100f, -20f),
+            new OptimisationCharacteristic("TR2 WCN distance", -38.49f, 10f, 2f, -100f, -20f),
         };
 
         public OptimisationCharacteristic[] OptimisationCharacteristics { get { return _optimisationCharacteristics; } }

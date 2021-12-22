@@ -29,6 +29,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="numeric_sol.py" />
+    <Compile Include="optimisation2.py" />
     <Compile Include="optimisation.py" />
   </ItemGroup>
   <ItemGroup>
