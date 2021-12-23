@@ -1,13 +1,13 @@
 # FS-BMK
 Calculation and optimization of basic motion and kinematics in Formula Student car
 
-## C++ packages
+## C++ Libraries
 Eigen 3.39
 
-## Python Packages
+## Python Libraries
 numpy
 scipy
 pandas
 
-## C#
+## C# Libraries
 ScottPlot
