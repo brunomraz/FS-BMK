@@ -537,18 +537,23 @@ public:
 	{
 		int position = vertPos * (2 * steerIncr + 1) + steerPos;
 		// positive toe angle for toe in and negative for toe out
-		Eigen::Vector3f wheelAxis = wcnGlob.row(position) - spnGlob.row(position);
-		Eigen::Vector3f refAxis{
-			0,
-			wcnGlob.row(position)(1) - spnGlob.row(position)(1),
-			wcnGlob.row(position)(2) - spnGlob.row(position)(2)
+		Eigen::Vector3d wheelAxis{
+			(double)(wcnGlob.row(position)(0) - spnGlob.row(position)(0)),
+			(double)(wcnGlob.row(position)(1) - spnGlob.row(position)(1)),
+			(double)(wcnGlob.row(position)(2) - spnGlob.row(position)(2))
+		};
+			//(Eigen::Vector3d)(wcnGlob.row(position) - spnGlob.row(position));
+		Eigen::Vector3d refAxis{
+			0.0,
+			(double)(wcnGlob.row(position)(1) - spnGlob.row(position)(1)),
+			(double)(wcnGlob.row(position)(2) - spnGlob.row(position)(2))
 		};
 
 		if (wcnGlob.row(position)(0) < spnGlob.row(position)(0)) // toe out case
-			return -acos(refAxis.norm() / wheelAxis.norm()) * 180 / 3.14159f;
+			return float(-acos(refAxis.norm() / wheelAxis.norm()) * 180.0 / 3.14159);
 
 		else // toe in case
-			return acos(refAxis.norm() / wheelAxis.norm()) * 180 / 3.14159f;
+			return float(acos(refAxis.norm() / wheelAxis.norm()) * 180.0 / 3.14159);
 	}
 
 	float GetCasterAngle(int vertPos)

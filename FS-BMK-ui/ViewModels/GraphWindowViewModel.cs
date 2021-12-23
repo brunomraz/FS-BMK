@@ -29,7 +29,7 @@ namespace FS_BMK_ui.ViewModels
             PlotPoints pts = PlotFunction(target, peakWidth, peakFlatness, 15);
 
             Graph.Plot.AddScatter(pts.X, pts.Y);
-            Graph.Plot.Title($"{name} {target} {peakWidth} {peakFlatness}");
+            Graph.Plot.Title($"{name}\n Target: {target} Peak Width: {peakWidth} Peak Flatness: {peakFlatness}");
             Graph.Plot.YLabel("Objective function\nmodule result");
             Graph.Plot.XLabel("Variable");
             Graph.Refresh();

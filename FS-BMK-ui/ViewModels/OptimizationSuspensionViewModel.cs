@@ -214,7 +214,7 @@
 
         private void OpenGraphWindow(object parameter)
         {
-            MessageBox.Show(((OptimisationCharacteristic)parameter).Name);
+            //MessageBox.Show(((OptimisationCharacteristic)parameter).Name);
             var viewModel = new GraphWindowViewModel(
                 ((OptimisationCharacteristic)parameter).Target, 
                 ((OptimisationCharacteristic)parameter).PeakWidth, 

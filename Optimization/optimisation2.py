@@ -125,56 +125,17 @@ test_initial_hardpoints = [
 #print(sol)
 #time.sleep(0.1)
 #if sol.success==False:
-#    print("nije constrint")
+#    print("Not constrained")
 
 #if sol.success==True:
-#    print("uspjelo constrint")
-#print(f"trajalo je {time.time()-start_time-0.1}")
+#    print("Successfully constrained")
+#print(f"lasted for {time.time()-start_time-0.1}")
 
 if __name__ == "__main__":
-   
-    with open("sysargv.txt", "w") as file1:
-        toFile = ""
-        for i in range(188):
-            toFile+=sys.argv[i] + " "
-        # Writing data to a file
-        file1.write(toFile)
-
-    for i in range(len(S.hps_boundaries)):
-        S.hps_boundaries[i] = float(sys.argv[i + 1])
-    
-    
-    
-    with open("suspParams.txt", "w") as file1:
-        # Writing data to a file
-        stringParam = ""
-        for i in range(len(S.hps_boundaries)):
-            stringParam+=str(S.hps_boundaries[i]) + " "
-        stringParam+="\n"
-        print(f"i value {i}")
-        for i in range(len(S.characteristics_target_values_c)):
-            stringParam += str(S.characteristics_boundaries[2 * i] ) + " "
-            stringParam += str(S.characteristics_boundaries[2 * i + 1]) + " "
-            stringParam += str(S.characteristics_target_values_c[i]) + " "
-            stringParam += str(S.characteristics_weight_factors_c[i]) + " "
-            stringParam += str(S.peak_width_values_c[i]) + " "
-            stringParam += str(S.peak_flatness_values_c[i]) + "\n "
-        stringParam+=str(S.suspension_position_c) + "\n"
-        stringParam+=str(S.wheel_radius_c) + "\n"
-        stringParam+=str(S.wheelbase_c) + "\n"
-        stringParam+=str(S.cog_height_c) + "\n"
-        stringParam+=str(S.drive_bias_c) + "\n"
-        stringParam+=str(S.brake_bias_c) + "\n"
-        stringParam+=str(S.drive_position_c) + "\n"
-        stringParam+=str(S.brake_position_c) + "\n"
-        stringParam+=str(S.vertical_movement_c) + "\n"
-        stringParam+=sys.argv[186] + "\n"
-        stringParam+=sys.argv[187] + " "
-        file1.write(stringParam)
-
+     
     started_on = datetime.datetime.now()
     print(started_on)
-    ## MANAGER objdeinjuje rjesenja pojedinih procesa u jednu listu
+    ## MANAGER joins solutions from optimisations in different processes into a single list
     manager = mp.Manager()
     return_dict = manager.list()
     num_of_processes = int(sys.argv[186])  # sets how many processes will the optimisation use
@@ -184,12 +145,10 @@ if __name__ == "__main__":
         p = mp.Process(target=optim_process_cobyla, args=(return_dict, sys.argv))
         print(p)
         p.start()
-        # dodaje pokrenuti proces u dict sa kljucem naziva process 1,2,...  te
-        # value je lista koja ima vrijeme kad je zapocet
-        # proces i sam proces
         processes[f"process {i}"] = [p, time.time()]
     print(processes)
-    
+
+    # waits for processes to finish then continues writing to csv file, etc.
     time.sleep(int(sys.argv[187]) + 3)
 
     for current_process in processes.keys():
@@ -223,40 +182,5 @@ if __name__ == "__main__":
 
 
 
-if False:
-    
-    initial_hps = random_initial_susp()
-
-    # slsqp
-    #sol = minimize(call_suspension_objective, random_initial_susp(),
-    #constraints=hps_constraints_slsqp, bounds=hps_bounds_slsqp, #method='SLSQP',
-    #options={"maxiter":200,"disp":True})
-
-
-    print(f"call obj: {call_suspension_objective(initial_hps)}")
-
-    start_time=time.time()
-     # cobyla
-    sol = minimize(fun=call_suspension_objective, 
-                   x0=initial_hps,
-                   constraints=hps_constraints_cobyla,
-                   method='COBYLA',
-                   options={"maxiter":2000,"disp":True})
-
-    print(sol)
-    time.sleep(0.1)
-    if sol.success==False:
-        print("nije constrint")
-
-    if sol.success==True:
-        print("uspjelo constrint")
-        print(sol.x)
-        print(S.return_hps_and_parameters())
-        print(f"call obj: {call_suspension_objective(sol.x)}")
-        for i in range(21):
-            print(Suspension.output_params_optimisation_c[i])
-
-
-    print(f"trajalo je {time.time()-start_time-0.1}")
 
     
